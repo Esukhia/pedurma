@@ -23,7 +23,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="Apache2",
-    url="https://github.com/Esukhia/annotation_transfer",
+    url="https://github.com/Esukhia/pedurma",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
