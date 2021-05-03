@@ -34,6 +34,6 @@ setuptools.setup(
         "antx>=0.1.8, <1.0",
         "openpecha>=0.7.31, <1.0",
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     tests_require=["pytest"],
 )
