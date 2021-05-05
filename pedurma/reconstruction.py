@@ -210,7 +210,7 @@ def double_mid_syl_marker(result):
         Boolean: True if double consecutive marker detected in case of mid syl esle false
     """
     i = -1
-    while not is_punct(result[i][1]):
+    while abs(i)<len(result) and not is_punct(result[i][1]):
         if result[i][2] == "marker":
             return False
         else:
