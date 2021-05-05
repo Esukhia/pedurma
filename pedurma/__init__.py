@@ -5,4 +5,4 @@ from .utils import *
 from .reconstruction import *
 from .preprocess import *
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
