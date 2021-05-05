@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.2 (2021-05-05)
+### Fix
+* **text:** Text module added ([`fd77eae`](https://github.com/Esukhia/pedurma/commit/fd77eae6d76be9d649fd9306edc12f97fcc4c2ec))
+
 ## v0.1.1 (2021-05-05)
 ### Fix
 * **hot-fix:** Double mid syl marker index out of range bug ([`fe32659`](https://github.com/Esukhia/pedurma/commit/fe32659b39804ea79c1f2e558ade277dcd28a5a4))
