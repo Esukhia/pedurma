@@ -559,7 +559,12 @@ def filter_diffs(diffs_list, type, vol_num):
     for i, diff in enumerate(diffs):
         diff_type, diff_text = diff
         if diff_type == 0:  # in both
-            result.append([diff_type, diff_text, ""])
+            if re.search(
+                fr"{vol_num}་?\D་?\d+", diff_text
+            ):  # checking diff text is page or not
+                result.append([0, diff_text, "pedurma-page"])
+            else:
+                result.append([diff_type, diff_text, ""])
 
         elif diff_type == 1:  # in target
             result.append([diff_type, diff_text, ""])
@@ -891,6 +896,8 @@ def get_page_num(body_text, vol_num):
     pg_num = int(pg_pat.group(1))
     return pg_num
 
+def rm_line_ann(text):
+    return re.sub(r"\[\w+\.\d+\]", "", text)
 
 def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
     g_body_page_content = g_body_page.content

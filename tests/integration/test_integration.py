@@ -6,4 +6,7 @@ from pedurma import *
 
 if __name__ == "__main__":
     text_id = "D1119"
-    dg_text = get_derge_google_text_obj(text_id)
+    google_text = get_text_obj("P000791", text_id)
+    namsel_text = get_text_obj("P000792", text_id)
+    preview = get_preview_page(google_text.pages[0], namsel_text.pages[0], google_text.notes[0], namsel_text.notes[0])
+    # dg_text = get_derge_google_text_obj(text_id)
