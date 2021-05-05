@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.3 (2021-05-05)
+### Fix
+* **test-case:** Test case added for text obj generator ([`d044ead`](https://github.com/Esukhia/pedurma/commit/d044ead102ab54fc0902e570fc527fa52b0baf3f))
+
 ## v0.1.2 (2021-05-05)
 ### Fix
 * **text:** Text module added ([`fd77eae`](https://github.com/Esukhia/pedurma/commit/fd77eae6d76be9d649fd9306edc12f97fcc4c2ec))
