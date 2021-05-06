@@ -79,7 +79,7 @@ def test_text_obj_serializer_corssvol():
             NotesPage(
                 id="46d97ed3d9ca4ddabc3c413f306df03a",
                 page_no=4,
-                content="[2b]\n[2b.1]<\U00030d40dརྒྱ་གར་གྱི་\n[2b.2]༢༦༤ ༧པེ་〉〉་\n[2b.3]བཞུགས་གོ།d>",
+                content="[\U00030d432b]\n[2b.1]<\U00030d40dརྒྱ་གར་གྱི་\n[2b.2]༢༦༤ ༧པེ་〉〉་\n[2b.3]བཞུགས་གོ།d>\n",
                 name="Page 4",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
@@ -87,7 +87,7 @@ def test_text_obj_serializer_corssvol():
             NotesPage(
                 id="05d117045b0c4ea5aee3aeba558e94bd",
                 page_no=4,
-                content="[2b]\n[2b.1]<\U00030d40dའབྱོར་ཆེན་པོ་དེར་\n[2b.2]སྡུག་བསྔལ་གྱིས་\n[2b.3]དེ་ཡི་སྐུ་ལས་d>",
+                content="[\U00030d432b]\n[2b.1]<\U00030d40dའབྱོར་ཆེན་པོ་དེར་\n[2b.2]སྡུག་བསྔལ་གྱིས་\n[2b.3]དེ་ཡི་སྐུ་ལས་d>\n",
                 name="Page 4",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
@@ -133,7 +133,7 @@ def test_text_obj_serializer():
             NotesPage(
                 id="9efa117a2b9444ac8cb09c198d21cdd8",
                 page_no=7,
-                content="[4a]\n[4a.1]<\U00030d41dདེ་ལ་ནམ་མཁའི་\n[4a.2]བ་ཡང་དག་པར་\n[4a.3]གིས་ནི་ཆོས་སྟོན་པའི་d>",
+                content="[\U00030d464a]\n[4a.1]<\U00030d41dདེ་ལ་ནམ་མཁའི་\n[4a.2]བ་ཡང་དག་པར་\n[4a.3]གིས་ནི་ཆོས་སྟོན་པའི་d>\n",
                 name="Page 7",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",

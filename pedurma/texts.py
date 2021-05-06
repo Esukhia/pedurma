@@ -1,3 +1,4 @@
+from pedurma.reconstruction import get_preview_page
 from pedurma.preprocess import get_derge_google_text
 import re
 from pathlib import Path
@@ -38,19 +39,31 @@ def get_meta_data(pecha_id, text_uuid, meta_data):
     return meta
 
 
-def get_hfml_text(opf_path, text_id):
-    serializer = HFMLSerializer(opf_path, text_id=text_id)
+def get_hfml_text(opf_path, text_id, index=None):
+    serializer = HFMLSerializer(opf_path, text_id=text_id, index_layer=index)
     serializer.apply_layers()
     hfml_text = serializer.get_result()
     return hfml_text
 
+def get_prev_pg_ann(pg_num, pg_face):
+    prev_pg_ann = '['
+    if pg_face == 'a':
+        prev_pg_ann += f'{pg_num-1}b]'
+    else:
+        prev_pg_ann += f'{pg_num}b]'
+    return prev_pg_ann
 
 def add_first_page_ann(text):
-    lines = text.splitlines()
-    line_pat = re.search(r"\[(\w+)\.(\d+)\]", lines[1])
-    page_ann = f"[{line_pat.group(1)}]"
-    line_ann = f"[{line_pat.group(1)}.{int(line_pat.group(2))-1}]"
-    new_text = f"{page_ann}\n{line_ann}{text}"
+    pg_pat = re.search(r"\[[𰵀-󴉱]?([0-9]+)([a-z]{1})\]", text)
+    pg_num = pg_pat.group(1)
+    pg_face = pg_pat.group(2)
+    prev_pg_ann = get_prev_pg_ann(pg_num, pg_face)
+    new_text = f'{prev_pg_ann}\n{text}'
+    # lines = text.splitlines()
+    # line_pat = re.search(r"\[(\w+)\.(\d+)\]", lines[1])
+    # page_ann = f"[{line_pat.group(1)}]"
+    # line_ann = f"[{line_pat.group(1)}.{int(line_pat.group(2))-1}]"
+    # new_text = f"{page_ann}\n{line_ann}{text}"
     return new_text
 
 
@@ -65,13 +78,16 @@ def get_body_text(text_with_durchen):
 
 def get_durchen(text_with_durchen):
     durchen = ""
-    try:
-        durchen_start = re.search("<[𰵀-󴉱]?d", text_with_durchen).start()
-        durchen_end = re.search("d>", text_with_durchen).end()
-        durchen = text_with_durchen[durchen_start:durchen_end]
-        durchen = add_first_page_ann(durchen)
-    except Exception:
-        print("durchen not found")
+    durchen_start = False
+    pages = get_pages(text_with_durchen)
+    for page in pages:
+        if re.search("<[𰵀-󴉱]?d", page) or durchen_start == True:
+            durchen += page
+            durchen_start = True
+        if re.search('d>', page):
+            return durchen
+    if not durchen:
+        print('INFO: durchen not found..')
     return durchen
 
 
@@ -206,12 +222,11 @@ def get_derge_google_text_obj(text_id):
     derge_pecha_id = "P000002"
     google_pecha_id = "P000791"
     derge_pecha_path = download_pecha(derge_pecha_id, needs_update=False)
-    derge_meta_data = from_yaml(Path(f"{derge_pecha_path}/{derge_pecha_id}.opf/meta.yml"))
     derge_hfmls = get_hfml_text(f"{derge_pecha_path}/{derge_pecha_id}.opf/", text_id)
     google_pecha_path = download_pecha(google_pecha_id, needs_update=False)
     google_meta_data = from_yaml(Path(f"{google_pecha_path}/{google_pecha_id}.opf/meta.yml"))
-    google_hfmls = get_hfml_text(f"{google_pecha_path}/{google_pecha_id}.opf/", text_id)
     google_index = from_yaml(Path(f"{google_pecha_path}/{google_pecha_id}.opf/index.yml"))
+    google_hfmls = get_hfml_text(f"{google_pecha_path}/{google_pecha_id}.opf/", text_id, google_index)
     text_uuid, google_text = get_text_info(text_id, google_index)
     google_text_meta = get_meta_data(google_pecha_id, text_uuid, google_meta_data)
     for (vol_id, d_hfml),(v_id, g_hfml) in zip(derge_hfmls.items(), google_hfmls.items()):
@@ -222,8 +237,8 @@ def get_derge_google_text_obj(text_id):
 def get_text_obj(pecha_id, text_id):
     pecha_path = download_pecha(pecha_id, needs_update=False)
     meta_data = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/meta.yml"))
-    hfmls = get_hfml_text(f"{pecha_path}/{pecha_id}.opf/", text_id)
     index = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/index.yml"))
+    hfmls = get_hfml_text(f"{pecha_path}/{pecha_id}.opf/", text_id, index)
     text_uuid, text = get_text_info(text_id, index)
     text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
     text = construct_text_obj(hfmls, text_meta, pecha_path)
