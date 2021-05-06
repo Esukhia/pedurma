@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.6 (2021-05-06)
+### Fix
+* **notes:** Removed redundant methods ([`c48c66d`](https://github.com/Esukhia/pedurma/commit/c48c66d19b163a7c05b574d21a74139b86eef077))
+
 ## v0.1.5 (2021-05-06)
 ### Fix
 * **text-obj:** Durchen not found bug fix ([`30afa6a`](https://github.com/Esukhia/pedurma/commit/30afa6ae2ab2e8dfb6c441e9fdf3464a7a6cfb48))
