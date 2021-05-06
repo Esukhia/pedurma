@@ -1,5 +1,3 @@
-from pedurma.reconstruction import get_preview_page
-from pedurma.preprocess import get_derge_google_text
 import re
 from pathlib import Path
 from typing import List, Optional
@@ -12,7 +10,7 @@ from openpecha.serializers import HFMLSerializer
 from pydantic import BaseModel
 
 from pedurma.pecha import *
-
+from pedurma.preprocess import get_derge_google_text
 
 def from_yaml(yml_path):
     return yaml.safe_load(yml_path.read_text(encoding="utf-8"))
@@ -59,11 +57,6 @@ def add_first_page_ann(text):
     pg_face = pg_pat.group(2)
     prev_pg_ann = get_prev_pg_ann(pg_num, pg_face)
     new_text = f'{prev_pg_ann}\n{text}'
-    # lines = text.splitlines()
-    # line_pat = re.search(r"\[(\w+)\.(\d+)\]", lines[1])
-    # page_ann = f"[{line_pat.group(1)}]"
-    # line_ann = f"[{line_pat.group(1)}.{int(line_pat.group(2))-1}]"
-    # new_text = f"{page_ann}\n{line_ann}{text}"
     return new_text
 
 

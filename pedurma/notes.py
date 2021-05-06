@@ -6,6 +6,8 @@ from openpecha.cli import download_pecha
 from openpecha.serializers import HFMLSerializer
 
 from pedurma.pecha import PedurmaNoteEdit
+from pedurma.texts import get_durchen, get_hfml_text, get_link
+from pedurma.preprocess import preprocess_namsel_notes
 
 
 def from_yaml(yml_path):
@@ -23,28 +25,6 @@ def get_meta_data(text_uuid, meta_data):
     except Exception:
         meta = {}
     return meta
-
-
-def add_first_page_ann(text):
-    lines = text.splitlines()
-    line_pat = re.search(r"\[(\w+)\.(\d+)\]", lines[1])
-    page_ann = f"[{line_pat.group(1)}]"
-    line_ann = f"[{line_pat.group(1)}.{int(line_pat.group(2))-1}]"
-    new_text = f"{page_ann}\n{line_ann}{text}"
-    return new_text
-
-
-def get_durchen(text_with_durchen):
-    durchen = ""
-    try:
-        durchen_start = re.search("<[𰵀-󴉱]?d", text_with_durchen).start()
-        durchen_end = re.search("d>", text_with_durchen).end()
-        durchen = text_with_durchen[durchen_start:durchen_end]
-        durchen = add_first_page_ann(durchen)
-    except Exception:
-        print("durchen not found")
-    return durchen
-
 
 def get_durchen_pages(vol_text):
     durchen_pages = {}
@@ -67,74 +47,11 @@ def get_page_num(page_ann):
     return pg_num
 
 
-def get_link(pg_num, text_meta):
-    vol = text_meta["vol"]
-    img_group_offset = text_meta["img_grp_offset"]
-    pref = text_meta["pref"]
-    igroup = f"{pref}{img_group_offset+vol}"
-    link = f"https://iiif.bdrc.io/bdr:{igroup}::{igroup}{int(pg_num):04}.jpg/full/max/0/default.jpg"
-    return link
-
-
 def rm_annotations(text, annotations):
     clean_text = text
     for ann in annotations:
         clean_text = re.sub(ann, "", clean_text)
     return clean_text
-
-
-def preprocess_namsel_notes(text):
-    """
-    this cleans up all note markers
-    :param text: plain text
-    :return: cleaned text
-    """
-
-    patterns = [
-        # normalize single zeros '༥༥་' --> '༥༥༠'
-        [r"([༠-༩])[་༷]", r"\g<1>༠"],
-        # normalize double zeros '༧༷་' --> '༧༠༠'
-        [r"༠[་༷]", r"༠༠"],
-        [r"༠[་༷]", r"༠༠"],
-        # normalize punct
-        [r"\r", r"\n"],
-        [r"༑", r"།"],
-        [r"།།", r"། །"],
-        [r"།་", r"། "],
-        [r"\s+", r" "],
-        [r"།\s།\s*\n", r"།\n"],
-        [r"།\s།\s«", r"། «"],
-        [r"༌", r"་"],  # normalize NB tsek
-        [r"ག\s*།", r"ག"],
-        [r"་\s*", r"་"],
-        [r"་\s*", r"་"],
-        [r"་\s*\n", r"་"],
-        [r"་+", r"་"],
-        # normalize and tag page numbers '73ཝ་768' --> ' <p73-768> '
-        [r"([0-9]+?)[ཝ—-]་?([0-9]+)", r" <p\g<1>-\g<2>> "],
-        # tag page references '༡༤༥ ①' --> <p༡༤༥> ①'
-        [r" ?([༠-༩]+?)(\s\(?[①-⓪༠-༩ ཿ༅]\)?)", r" \n<r\g<1>>\g<2>"],  # basic page ref
-        # normalize edition marks «<edition>»
-        [r"〈〈?", r"«"],
-        [r"〉〉?", r"»"],
-        [r"《", r"«"],
-        [r"》", r"»"],
-        [r"([ཀགཤ།]) །«", r"\g<1> «"],
-        [r"([ཀགཤ།])་?«", r"\g<1> «"],
-        [r"»\s+", r"»"],
-        [r"«\s+«", r"«"],
-        [r"»+", r"»"],
-        [r"[=—]", r"-"],
-        [r"\s+-", r"-"],
-        [r"\s+\+", r"+"],
-        [r"»\s+«", r"»«"],
-    ]
-
-    for p in patterns:
-        text = re.sub(p[0], p[1], text)
-
-    return text
-
 
 def get_num(line):
     tib_num = re.sub(r"\W", "", line)

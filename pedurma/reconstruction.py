@@ -896,9 +896,6 @@ def get_page_num(body_text, vol_num):
     pg_num = int(pg_pat.group(1))
     return pg_num
 
-def rm_line_ann(text):
-    return re.sub(r"\[\w+\.\d+\]", "", text)
-
 def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
     g_body_page_content = g_body_page.content
     n_body_page_content = n_body_page.content
