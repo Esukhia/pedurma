@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.5 (2021-05-06)
+### Fix
+* **text-obj:** Durchen not found bug fix ([`30afa6a`](https://github.com/Esukhia/pedurma/commit/30afa6ae2ab2e8dfb6c441e9fdf3464a7a6cfb48))
+
 ## v0.1.4 (2021-05-05)
 ### Fix
 * **reconstruction:** Pg ref bug fixed ([`9023d3e`](https://github.com/Esukhia/pedurma/commit/9023d3e8b698c502cf3bac7f801ae882a7f7d70d))
