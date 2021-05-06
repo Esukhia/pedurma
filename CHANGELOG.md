@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.4 (2021-05-05)
+### Fix
+* **reconstruction:** Pg ref bug fixed ([`9023d3e`](https://github.com/Esukhia/pedurma/commit/9023d3e8b698c502cf3bac7f801ae882a7f7d70d))
+
 ## v0.1.3 (2021-05-05)
 ### Fix
 * **test-case:** Test case added for text obj generator ([`d044ead`](https://github.com/Esukhia/pedurma/commit/d044ead102ab54fc0902e570fc527fa52b0baf3f))
