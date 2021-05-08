@@ -56,10 +56,44 @@ def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
 def update_old_layers(pecha_opf_path, pecha_id, text_obj, pecha_idx = None):
     if not pecha_idx:
         pecha_idx = yaml.safe_load((pecha_opf_path / f"{pecha_id}.opf/index.yml").read_text(encoding='utf-8'))
-    old_vols = get_old_vol(pecha_opf_path, text_obj)
+    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_obj)
     new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
     for (vol_id, old_vol_base), (_, new_vol_base) in zip(old_vols.items(), new_vols.items()):
         updater = Blupdate(old_vol_base, new_vol_base)
         old_layers = get_old_layers(pecha_opf_path, pecha_id, vol_id)
         update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater)
+
+def update_other_text_index(pecha_idx, text_id, cur_vol_offset, vol_num):
+    check_flag = False
+    for text_uuid, text in pecha_idx['annotations'].items():
+        if check_flag:
+            for vol_walker, vol_span in enumerate(text['span']):
+                if vol_span['vol'] == vol_num:
+                    pecha_idx["annotations"][text_uuid]['span'][vol_walker]['start'] += cur_vol_offset
+                    pecha_idx["annotations"][text_uuid]['span'][vol_walker]['end'] += cur_vol_offset
+                elif vol_span['vol'] > vol_num:
+                    return pecha_idx
+        if text_uuid == text_id:
+            check_flag = True
+    return pecha_idx
+
+def update_index(pecha_opf_path, pecha_id, text_obj, pecha_idx=None):
+    if not pecha_idx:
+        pecha_idx = yaml.safe_load((pecha_opf_path / f"{pecha_id}.opf/index.yml").read_text(encoding='utf-8'))
+    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_obj)
+    new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
+    for (vol_id, old_vol_base), (_, new_vol_base) in zip(old_vols.items(), new_vols.items()):
+        check_next_text = True
+        vol_num = int(vol_id[1:])
+        cur_vol_offset = len(new_vol_base) - len(old_vol_base)
+        if cur_vol_offset != 0:
+            for vol_walker, vol_span in enumerate(pecha_idx["annotations"][text_obj.id]['span']):
+                if vol_span['vol'] == vol_num:
+                    pecha_idx["annotations"][text_obj.id]['span'][vol_walker]['end'] += cur_vol_offset
+                elif vol_span['vol'] > vol_num:
+                    check_next_text = False
+                    break
+            if check_next_text:
+                pecha_idx = update_other_text_index(pecha_idx, text_obj.id, cur_vol_offset, vol_num)
+    return pecha_idx
 
