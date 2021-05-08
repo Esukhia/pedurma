@@ -28,9 +28,9 @@ def get_meta_data(pecha_id, text_uuid, meta_data):
     meta = {}
 
     meta = {
-        "work_id": meta_data["work_id"],
-        "img_grp_offset": meta_data["img_grp_offset"],
-        "pref": meta_data["pref"],
+        "work_id": meta_data.get("work_id", ""),
+        "img_grp_offset": meta_data.get("img_grp_offset",""),
+        "pref": meta_data.get("pref", ""),
         "pecha_id": pecha_id,
         "text_uuid": text_uuid,
     }
@@ -131,19 +131,27 @@ def get_note_ref(pagination):
 
 
 def get_clean_page(page):
-    page_content = re.sub(r"\[([𰵀-󴉱])?[0-9]+[a-z]{1}\]", "", page)
-    page_content = re.sub(r"\[(\w+)\.(\d+)\]", "", page_content)
-    return page_content
+    pat_list = {
+            "page_pattern": r"\[([𰵀-󴉱])?[0-9]+[a-z]{1}\]",
+            "topic_pattern": r"\{([𰵀-󴉱])?\w+\}",
+            "start_durchen_pattern": r"\<([𰵀-󴉱])?d",
+            "end_durchen_pattern": r"d\>",
+            "sub_topic_pattern": r"\{([𰵀-󴉱])?\w+\-\w+\}",
+        }
+    base_page = page
+    for ann, ann_pat in pat_list.items():
+        base_page = re.sub(ann_pat, "", base_page)
+    return base_page
 
 
 def get_page_obj(page, text_meta, tag, pagination_layer):
     page_idx = re.search(r"\[([𰵀-󴉱])?([0-9]+[a-z]{1})\]", page).group(2)
     page_id, pagination = get_page_id(page_idx, pagination_layer)
-    page_content = page
+    page_content = get_clean_page(page)
     pg_num = get_page_num(page_idx)
     page_link = get_link(pg_num, text_meta)
     note_ref = get_note_ref(pagination)
-    if get_clean_page(page_content) == "\n":
+    if page_content == "\n":
         page_obj = None
     else:
         if tag == "note":
@@ -182,7 +190,9 @@ def get_page_obj_list(text, text_meta, pagination_layer, tag="text"):
 def construct_text_obj(hfmls, text_meta, opf_path):
     pages = []
     notes = []
+    vol_span = []
     for vol_num, hfml_text in hfmls.items():
+        vol_span.append(vol_num)
         text_meta["vol"] = int(vol_num[1:])
         pagination_layer = from_yaml(
             Path(
@@ -196,18 +206,20 @@ def construct_text_obj(hfmls, text_meta, opf_path):
         pages += get_page_obj_list(body_text, text_meta, pagination_layer, tag="text")
         if durchen:
             notes += get_page_obj_list(durchen, text_meta, pagination_layer, tag="note")
-    text_obj = Text(id=text_meta["text_uuid"], pages=pages, notes=notes)
+    text_obj = Text(id=text_meta["text_uuid"], vol_span=vol_span, pages=pages, notes=notes)
     return text_obj
 
 
 def serialize_text_obj(text):
-    text_hfml = ""
+    text_hfml = {}
+    for vol_id in text.vol_span:
+        text_hfml[vol_id] = ""
     pages = text.pages
     notes = text.notes
     for page in pages:
-        text_hfml += page.content
+        text_hfml[f"v{int(page.vol):03}"] += page.content
     for note in notes:
-        text_hfml += note.content
+        text_hfml[f"v{int(note.vol):03}"] += note.content
     return text_hfml
 
 def get_derge_google_text_obj(text_id):
@@ -227,8 +239,9 @@ def get_derge_google_text_obj(text_id):
     dg_text = construct_text_obj(dg_hfmls, google_text_meta, google_pecha_path)
     return dg_text
 
-def get_text_obj(pecha_id, text_id):
-    pecha_path = download_pecha(pecha_id, needs_update=False)
+def get_text_obj(pecha_id, text_id, pecha_path = None):
+    if not pecha_path:
+        pecha_path = download_pecha(pecha_id, needs_update=False)
     meta_data = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/meta.yml"))
     index = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/index.yml"))
     hfmls = get_hfml_text(f"{pecha_path}/{pecha_id}.opf/", text_id, index)
