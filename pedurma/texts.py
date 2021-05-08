@@ -38,7 +38,7 @@ def get_meta_data(pecha_id, text_uuid, meta_data):
 
 
 def get_hfml_text(opf_path, text_id, index=None):
-    serializer = HFMLSerializer(opf_path, text_id=text_id, index_layer=index)
+    serializer = HFMLSerializer(opf_path, text_id=text_id, index_layer=index, layers=['Pagination', 'Durchen'])
     serializer.apply_layers()
     hfml_text = serializer.get_result()
     return hfml_text
