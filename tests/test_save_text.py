@@ -1,3 +1,5 @@
+import copy
+import os
 from pathlib import Path
 
 from pedurma.texts import get_text_obj
@@ -186,4 +188,17 @@ def test_update_index():
     new_pecha_idx = yaml.safe_dump(new_pecha_idx, sort_keys=False)
     expected_idx = Path('./tests/data/save_text/expected_index.yml').read_text(encoding='utf-8')
     assert new_pecha_idx == expected_idx
-    
+
+
+def test_integration():
+    os.system('cp -r ./tests/data/save_text/P0003 ./tests/data/save_text/P0003_copy')
+    pecha_opf_path = Path('./tests/data/save_text/P0003_copy/')
+    pecha_id = "P0003"
+    text_id = "D1118"
+    text_obj = get_text_obj(pecha_id, text_id, pecha_opf_path)
+    new_last_page = "\nརིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་kkལ་སོགས།\n"
+    text_obj.pages[-1].content = new_last_page
+    new_pecha_opf_path = update_opf(pecha_opf_path, pecha_id, text_obj)
+    new_text_obj = get_text_obj(pecha_id, text_id, new_pecha_opf_path)
+    assert new_text_obj == text_obj
+    os.system('rm -r ./tests/data/save_text/P0003_copy')
