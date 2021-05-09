@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.7 (2021-05-09)
+### Fix
+* **index-update:** Index update method implemented ([`002e247`](https://github.com/Esukhia/pedurma/commit/002e247213b41f5830cb7e839ff23f0836aa96a2))
+* **text:** Serializing only durchen and pagination annotation ([`6643938`](https://github.com/Esukhia/pedurma/commit/6643938d37e23602d875b9dfb76c133c775813e2))
+* **save_text:** Saving text feature added ([`a1c9535`](https://github.com/Esukhia/pedurma/commit/a1c9535280af54acbb38bfbab35224cc867ef5ee))
+
 ## v0.1.6 (2021-05-06)
 ### Fix
 * **notes:** Removed redundant methods ([`c48c66d`](https://github.com/Esukhia/pedurma/commit/c48c66d19b163a7c05b574d21a74139b86eef077))
