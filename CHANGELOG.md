@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.8 (2021-05-09)
+### Fix
+* **save_text:** Added update opf method ([`0dd4e9d`](https://github.com/Esukhia/pedurma/commit/0dd4e9d2948f87b7fe16efc53eef84de04b44d9f))
+
 ## v0.1.7 (2021-05-09)
 ### Fix
 * **index-update:** Index update method implemented ([`002e247`](https://github.com/Esukhia/pedurma/commit/002e247213b41f5830cb7e839ff23f0836aa96a2))
