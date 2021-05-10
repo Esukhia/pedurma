@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.10 (2021-05-10)
+### Fix
+* **texts:** Removed vol_span attribute as it can be obtain by using text uuid and pecha idx ([`8e3f578`](https://github.com/Esukhia/pedurma/commit/8e3f5785bbb7d5e1735af052a447c35d5a6cfa96))
+
 ## v0.1.9 (2021-05-10)
 ### Fix
 * **save_text:** Pecha-opf path obtained from download pecha method ([`f5bca1a`](https://github.com/Esukhia/pedurma/commit/f5bca1a8a111336dbf67d4769e68abd0894c132e))

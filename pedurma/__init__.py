@@ -7,4 +7,4 @@ from .preprocess import *
 from .texts import *
 from .save_text import *
 
-__version__ = '0.1.9'
+__version__ = '0.1.10'
