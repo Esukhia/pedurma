@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.9 (2021-05-10)
+### Fix
+* **save_text:** Pecha-opf path obtained from download pecha method ([`f5bca1a`](https://github.com/Esukhia/pedurma/commit/f5bca1a8a111336dbf67d4769e68abd0894c132e))
+
 ## v0.1.8 (2021-05-09)
 ### Fix
 * **save_text:** Added update opf method ([`0dd4e9d`](https://github.com/Esukhia/pedurma/commit/0dd4e9d2948f87b7fe16efc53eef84de04b44d9f))
