@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.11 (2021-05-10)
+### Fix
+* **save-text:** Accept optional kwargs of download_pecha ([`782d076`](https://github.com/Esukhia/pedurma/commit/782d076b523f63fe541472318d5893c0d9613538))
+
 ## v0.1.10 (2021-05-10)
 ### Fix
 * **texts:** Removed vol_span attribute as it can be obtain by using text uuid and pecha idx ([`8e3f578`](https://github.com/Esukhia/pedurma/commit/8e3f5785bbb7d5e1735af052a447c35d5a6cfa96))
