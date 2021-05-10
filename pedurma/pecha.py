@@ -23,7 +23,6 @@ class NotesPage(PageBase):
 
 class Text(BaseModel):
     id: str
-    vol_span: List[str]
     pages: List[Page]
     notes: Optional[List[NotesPage]]
 
