@@ -1,8 +1,9 @@
 import re
+import yaml
+from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
 
-import yaml
 
 from antx import transfer
 from openpecha.cli import download_pecha
@@ -192,7 +193,6 @@ def construct_text_obj(hfmls, text_meta, opf_path):
     notes = []
     vol_span = []
     for vol_num, hfml_text in hfmls.items():
-        vol_span.append(vol_num)
         text_meta["vol"] = int(vol_num[1:])
         pagination_layer = from_yaml(
             Path(
@@ -206,14 +206,12 @@ def construct_text_obj(hfmls, text_meta, opf_path):
         pages += get_page_obj_list(body_text, text_meta, pagination_layer, tag="text")
         if durchen:
             notes += get_page_obj_list(durchen, text_meta, pagination_layer, tag="note")
-    text_obj = Text(id=text_meta["text_uuid"], vol_span=vol_span, pages=pages, notes=notes)
+    text_obj = Text(id=text_meta["text_uuid"], pages=pages, notes=notes)
     return text_obj
 
 
 def serialize_text_obj(text):
-    text_hfml = {}
-    for vol_id in text.vol_span:
-        text_hfml[vol_id] = ""
+    text_hfml = defaultdict(str)
     pages = text.pages
     notes = text.notes
     for page in pages:

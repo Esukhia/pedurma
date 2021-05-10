@@ -19,7 +19,6 @@ def test_text_obj_serializer_corssvol():
     text_obj = construct_text_obj(hfmls, text_meta, opf_path)
     expected_text_obj = Text(
         id="259260e8e3544fc1a9a27d7dffc72df6",
-        vol_span=['v001', 'v002'],
         pages=[
             Page(
                 id="1a26fd08bf2b4ebb9e2d7369347e478b",
@@ -110,7 +109,6 @@ def test_text_obj_serializer():
     text_obj = construct_text_obj(hfmls, text_meta, opf_path)
     expected_text_obj = Text(
         id="cf52cbae1a7640b688b24135fe566920",
-        vol_span=['v002'],
         pages=[
             Page(
                 id="3373e79434004aaeb8b2e69649243d2a",

@@ -13,7 +13,6 @@ def test_update_base():
     text_id = "D1116"
     text_obj = Text(
         id="cf52cbae1a7640b688b24135fe566920",
-        vol_span=['v002'],
         pages=[
             Page(
                 id="3373e79434004aaeb8b2e69649243d2a",
@@ -46,7 +45,8 @@ def test_update_base():
         ],
     )
     pecha_idx = yaml.safe_load((pecha_opf_path / f"{pecha_id}.opf/index.yml").read_text(encoding='utf-8'))
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_obj)
+    text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
+    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
     expected_vol = Path('./tests/data/save_text/expected_v002.txt').read_text(encoding='utf-8')
     assert new_vols['v002'] == expected_vol
@@ -57,7 +57,6 @@ def test_update_layers():
     text_id = "D1116"
     text_obj = Text(
         id="cf52cbae1a7640b688b24135fe566920",
-        vol_span=['v002'],
         pages=[
             Page(
                 id="3373e79434004aaeb8b2e69649243d2a",
@@ -90,7 +89,8 @@ def test_update_layers():
         ],
     )
     pecha_idx = yaml.safe_load((pecha_opf_path / f"{pecha_id}.opf/index.yml").read_text(encoding='utf-8'))
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_obj)
+    text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
+    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
     for (vol_id, old_vol_base), (_, new_vol_base) in zip(old_vols.items(), new_vols.items()):
         updater = Blupdate(old_vol_base, new_vol_base)
@@ -107,7 +107,6 @@ def test_update_index():
     text_id = "D1116"
     text_obj = Text(
         id="259260e8e3544fc1a9a27d7dffc72df6",
-        vol_span=['v001', 'v002'],
         pages=[
             Page(
                 id="1a26fd08bf2b4ebb9e2d7369347e478b",

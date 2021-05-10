@@ -4,9 +4,9 @@ from openpecha.cli import download_pecha
 from pedurma.pecha import *
 from pedurma.texts import serialize_text_obj
 
-def get_old_vol(pecha_opf_path, pecha_id, text_obj):
+def get_old_vol(pecha_opf_path, pecha_id, text_vol_span):
     old_vols = {}
-    for vol_id in text_obj.vol_span:
+    for vol_id in text_vol_span:
         old_vols[vol_id] = (pecha_opf_path / f"{pecha_id}.opf/base/{vol_id}.txt").read_text(encoding='utf-8')
     return old_vols
 
@@ -30,8 +30,16 @@ def get_new_vol(old_vols, old_pecha_idx, text_obj):
         new_vols[vol_id] = new_vol_base
     return new_vols
 
+def get_text_vol_span(pecha_idx, text_uuid):
+    text_vol_span = []
+    for span in pecha_idx['annotations'][text_uuid]['span']:
+        vol_num = span['vol']
+        text_vol_span.append(f'v{int(vol_num):03}')
+    return text_vol_span
+
 def update_base(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_obj)
+    text_vol_span = get_text_vol_span(old_pecha_idx, text_obj.id)
+    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
     for vol_id, new_vol_base in new_vols.items():
         (pecha_opf_path / f"{pecha_id}.opf/base/{vol_id}.txt").write_text(new_vol_base, encoding='utf-8')
@@ -54,7 +62,8 @@ def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
         print(f'INFO: {vol_id} {layer_name} has been updated...')
     
 def update_old_layers(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_obj)
+    text_vol_span = get_text_vol_span(old_pecha_idx, text_obj.id)
+    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
     for (vol_id, old_vol_base), (_, new_vol_base) in zip(old_vols.items(), new_vols.items()):
         updater = Blupdate(old_vol_base, new_vol_base)
@@ -76,7 +85,8 @@ def update_other_text_index(old_pecha_idx, text_id, cur_vol_offset, vol_num):
     return old_pecha_idx
 
 def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_obj)
+    text_vol_span = get_text_vol_span(old_pecha_idx, text_obj.id)
+    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
     for (vol_id, old_vol_base), (_, new_vol_base) in zip(old_vols.items(), new_vols.items()):
         check_next_text = True
