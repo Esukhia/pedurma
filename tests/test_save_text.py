@@ -198,7 +198,13 @@ def test_integration():
     text_obj = get_text_obj(pecha_id, text_id, pecha_opf_path)
     new_last_page = "\nརིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་kkལ་སོགས།\n"
     text_obj.pages[-1].content = new_last_page
-    new_pecha_opf_path = update_opf(pecha_opf_path, pecha_id, text_obj)
-    new_text_obj = get_text_obj(pecha_id, text_id, new_pecha_opf_path)
+    old_pecha_idx = yaml.safe_load((pecha_opf_path / f'{pecha_id}.opf/index.yml').read_text(encoding='utf-8'))
+    prev_pecha_idx = copy.deepcopy(old_pecha_idx)
+    new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
+    update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
+    update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
+    new_pecha_idx = yaml.safe_dump(new_pecha_idx, sort_keys=False)
+    (pecha_opf_path / f'{pecha_id}.opf/index.yml').write_text(new_pecha_idx, encoding='utf-8')
+    new_text_obj = get_text_obj(pecha_id, text_id, pecha_opf_path)
     assert new_text_obj == text_obj
     os.system('rm -r ./tests/data/save_text/P0003_copy')

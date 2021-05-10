@@ -1,5 +1,6 @@
 import copy
 from openpecha.blupdate import *
+from openpecha.cli import download_pecha
 from pedurma.pecha import *
 from pedurma.texts import serialize_text_obj
 
@@ -92,7 +93,8 @@ def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
                 old_pecha_idx = update_other_text_index(old_pecha_idx, text_obj.id, cur_vol_offset, vol_num)
     return old_pecha_idx
 
-def update_opf(pecha_opf_path, pecha_id, text_obj):
+def save_text(pecha_id, text_obj):
+    pecha_opf_path = download_pecha(pecha_id)
     old_pecha_idx = yaml.safe_load((pecha_opf_path / f'{pecha_id}.opf/index.yml').read_text(encoding='utf-8'))
     prev_pecha_idx = copy.deepcopy(old_pecha_idx)
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
