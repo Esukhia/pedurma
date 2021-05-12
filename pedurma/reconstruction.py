@@ -10,13 +10,14 @@ A and B, then filter the annotations(dmp diffs) we want to transfer and then app
 text B.
 """
 import re
+import yaml
+
+from antx import transfer
 from collections import defaultdict
 from itertools import zip_longest
 from pathlib import Path
 
-import yaml
-from antx import transfer
-
+from pedurma.exception import PageNumMissing
 from pedurma.preprocess import (
     preprocess_google_notes,
     preprocess_namsel_notes,
@@ -911,5 +912,16 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
         n_durchen_page_content, g_durchen_page_content, vol_num
     )
     pg_num = get_page_num(body_result, vol_num)
-    merge_marker, merge = merge_footnotes_per_page(body_result, footnotes[pg_num])
-    return merge
+    try:
+        if pg_num not in footnotes:
+            cur_pg_footnotes = []
+            raise PageNumMissing
+        else:
+            cur_pg_footnotes = footnotes[pg_num]
+    except PageNumMissing:
+        print('Please correct the page num of preview page in note pages..')
+    if cur_pg_footnotes:
+        merge_marker, merge = merge_footnotes_per_page(body_result, cur_pg_footnotes)
+        return merge
+    else:
+        return ""
