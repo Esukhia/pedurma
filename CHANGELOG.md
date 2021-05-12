@@ -2,6 +2,32 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.11 (2021-05-10)
+### Fix
+* **save-text:** Accept optional kwargs of download_pecha ([`782d076`](https://github.com/Esukhia/pedurma/commit/782d076b523f63fe541472318d5893c0d9613538))
+
+## v0.1.10 (2021-05-10)
+### Fix
+* **texts:** Removed vol_span attribute as it can be obtain by using text uuid and pecha idx ([`8e3f578`](https://github.com/Esukhia/pedurma/commit/8e3f5785bbb7d5e1735af052a447c35d5a6cfa96))
+
+## v0.1.9 (2021-05-10)
+### Fix
+* **save_text:** Pecha-opf path obtained from download pecha method ([`f5bca1a`](https://github.com/Esukhia/pedurma/commit/f5bca1a8a111336dbf67d4769e68abd0894c132e))
+
+## v0.1.8 (2021-05-09)
+### Fix
+* **save_text:** Added update opf method ([`0dd4e9d`](https://github.com/Esukhia/pedurma/commit/0dd4e9d2948f87b7fe16efc53eef84de04b44d9f))
+
+## v0.1.7 (2021-05-09)
+### Fix
+* **index-update:** Index update method implemented ([`002e247`](https://github.com/Esukhia/pedurma/commit/002e247213b41f5830cb7e839ff23f0836aa96a2))
+* **text:** Serializing only durchen and pagination annotation ([`6643938`](https://github.com/Esukhia/pedurma/commit/6643938d37e23602d875b9dfb76c133c775813e2))
+* **save_text:** Saving text feature added ([`a1c9535`](https://github.com/Esukhia/pedurma/commit/a1c9535280af54acbb38bfbab35224cc867ef5ee))
+
+## v0.1.6 (2021-05-06)
+### Fix
+* **notes:** Removed redundant methods ([`c48c66d`](https://github.com/Esukhia/pedurma/commit/c48c66d19b163a7c05b574d21a74139b86eef077))
+
 ## v0.1.5 (2021-05-06)
 ### Fix
 * **text-obj:** Durchen not found bug fix ([`30afa6a`](https://github.com/Esukhia/pedurma/commit/30afa6ae2ab2e8dfb6c441e9fdf3464a7a6cfb48))
