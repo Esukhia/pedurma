@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.12 (2021-05-12)
+### Fix
+* **reconstruction:** Page number missing exception added ([`4fbdf10`](https://github.com/Esukhia/pedurma/commit/4fbdf1029f050c1395a21c18abd5d9b31f0bc67d))
+
 ## v0.1.11 (2021-05-10)
 ### Fix
 * **save-text:** Accept optional kwargs of download_pecha ([`782d076`](https://github.com/Esukhia/pedurma/commit/782d076b523f63fe541472318d5893c0d9613538))
