@@ -17,7 +17,7 @@ from collections import defaultdict
 from itertools import zip_longest
 from pathlib import Path
 
-from pedurma.exception import PageNumMissing
+from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import (
     preprocess_google_notes,
     preprocess_namsel_notes,
@@ -894,7 +894,10 @@ def get_page_index(pg_num):
 def get_page_num(body_text, vol_num):
     vol = vol_num
     pg_pat = re.search(fr"<p{vol}-(\d+)>", body_text)
-    pg_num = int(pg_pat.group(1))
+    try:
+        pg_num = int(pg_pat.group(1))
+    except Exception:
+        pg_num = 0
     return pg_num
 
 def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
@@ -912,14 +915,11 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
         n_durchen_page_content, g_durchen_page_content, vol_num
     )
     pg_num = get_page_num(body_result, vol_num)
-    try:
-        if pg_num not in footnotes:
-            cur_pg_footnotes = []
-            raise PageNumMissing
-        else:
-            cur_pg_footnotes = footnotes[pg_num]
-    except PageNumMissing:
-        print('Please correct the page num of preview page in note pages..')
+    if pg_num not in footnotes:
+        cur_pg_footnotes = []
+        raise PageNumMissing
+    else:
+        cur_pg_footnotes = footnotes[pg_num]
     if cur_pg_footnotes:
         merge_marker, merge = merge_footnotes_per_page(body_result, cur_pg_footnotes)
         return merge
