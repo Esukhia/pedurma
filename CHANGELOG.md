@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.14 (2021-05-14)
+### Fix
+* **pagination update:** Invalid page ref are ignored during pagination update ([`88beeb4`](https://github.com/Esukhia/pedurma/commit/88beeb43afc92276d60e475902be4f22ae90bea9))
+
 ## v0.1.13 (2021-05-13)
 ### Fix
 * **get_preview:** Page missing exception raised ([`90626c8`](https://github.com/Esukhia/pedurma/commit/90626c8e076f48b89ad61bc61698dd6b91f82d9d))
