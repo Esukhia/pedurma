@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.13 (2021-05-13)
+### Fix
+* **get_preview:** Page missing exception raised ([`90626c8`](https://github.com/Esukhia/pedurma/commit/90626c8e076f48b89ad61bc61698dd6b91f82d9d))
+
 ## v0.1.12 (2021-05-12)
 ### Fix
 * **reconstruction:** Page number missing exception added ([`4fbdf10`](https://github.com/Esukhia/pedurma/commit/4fbdf1029f050c1395a21c18abd5d9b31f0bc67d))
