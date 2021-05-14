@@ -1,4 +1,5 @@
 from pathlib import Path
+from pydantic.tools import T
 
 import yaml
 from openpecha.cli import download_pecha
@@ -90,11 +91,32 @@ def add_note_pg_ref(page_to_edit, pagination_layer):
     pagination_layer["annotations"] = paginations
     return pagination_layer
 
+def is_valid_page_to_edit(prev_pg_to_edit, pg_to_edit):
+    try:
+        prev_pg_ref_end = int(prev_pg_to_edit.ref_end_page_no)
+        cur_pg_ref_start = int(pg_to_edit.ref_start_page_no)
+        cur_pg_ref_end = int(pg_to_edit.ref_end_page_no)
+    except:
+        return False
+    if prev_pg_to_edit == pg_to_edit:
+        if cur_pg_ref_end >= cur_pg_ref_start:
+            return True
+        else:
+            return False
+    elif prev_pg_to_edit.vol != pg_to_edit.vol and cur_pg_ref_start <= cur_pg_ref_end:
+        return True
+    elif cur_pg_ref_start <= cur_pg_ref_end and prev_pg_ref_end <= cur_pg_ref_start:
+        return True
+    else:
+        return False
 
 def update_pg_ref(vol, pages_to_edit, pagination_layer):
+    prev_pg_edit = pages_to_edit[0]
     for page_to_edit in pages_to_edit:
         if vol == page_to_edit.vol:
-            pagination_layer = add_note_pg_ref(page_to_edit, pagination_layer)
+            if is_valid_page_to_edit(prev_pg_edit, page_to_edit):
+                pagination_layer = add_note_pg_ref(page_to_edit, pagination_layer)
+        prev_pg_edit = page_to_edit
     return pagination_layer
 
 
