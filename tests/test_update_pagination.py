@@ -17,7 +17,6 @@ def to_yaml(dict_):
 
 def test_pagination_update_crossvol():
     text_id = "D1118"
-    layer_path = "./tests/data/Pagination.yml"
     pecha_path = "./tests/data/"
     index = from_yaml(Path("./tests/data/P000792.opf/index.yml"))
     pages_to_edit = [
@@ -64,7 +63,6 @@ def test_pagination_update_crossvol():
 
 def test_pagination_update():
     text_id = "D1119"
-    layer_path = "./tests/data/Pagination.yml"
     pecha_path = "./tests/data/"
     index = from_yaml(Path("./tests/data/P000792.opf/index.yml"))
     pages_to_edit = [
@@ -89,5 +87,34 @@ def test_pagination_update():
         text_id, pages_to_edit, index, pecha_path
     ):
         layer_path = f"./tests/data/paginations/{text_id}/v{int(vol):03}.yml"
+        expected_layer = from_yaml(Path(layer_path))
+        assert new_pagination_layer == expected_layer
+
+def test_invalid_pg_ref():
+    text_id = "D1119"
+    pecha_path = "./tests/data/"
+    index = from_yaml(Path("./tests/data/P000792.opf/index.yml"))
+    pages_to_edit = [
+        PedurmaNoteEdit(
+            image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
+            image_no=9,
+            page_no=9,
+            ref_start_page_no="9",
+            ref_end_page_no="8",
+            vol=2,
+        ),
+        PedurmaNoteEdit(
+            image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
+            image_no=10,
+            page_no=10,
+            ref_start_page_no="7",
+            ref_end_page_no="10",
+            vol=2,
+        ),
+    ]
+    for vol, new_pagination_layer in update_pagination(
+        text_id, pages_to_edit, index, pecha_path
+    ):
+        layer_path = f"./tests/data/P000792.opf/layers/v002/Pagination.yml"
         expected_layer = from_yaml(Path(layer_path))
         assert new_pagination_layer == expected_layer
