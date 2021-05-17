@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.15 (2021-05-17)
+### Fix
+* **reconstruction:** Preview of whole text can be extracted ([`93cc5fd`](https://github.com/Esukhia/pedurma/commit/93cc5fd3690ad53cf28cfe6ad5ad4a2274a78c44))
+
 ## v0.1.14 (2021-05-14)
 ### Fix
 * **pagination update:** Invalid page ref are ignored during pagination update ([`88beeb4`](https://github.com/Esukhia/pedurma/commit/88beeb43afc92276d60e475902be4f22ae90bea9))
