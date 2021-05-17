@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.16 (2021-05-17)
+### Fix
+* **readme:** Readme update ([`19256ab`](https://github.com/Esukhia/pedurma/commit/19256abc9a65a5605f4cef71ef093579fd642602))
+
 ## v0.1.15 (2021-05-17)
 ### Fix
 * **reconstruction:** Preview of whole text can be extracted ([`93cc5fd`](https://github.com/Esukhia/pedurma/commit/93cc5fd3690ad53cf28cfe6ad5ad4a2274a78c44))
