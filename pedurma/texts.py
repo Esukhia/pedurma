@@ -220,6 +220,12 @@ def serialize_text_obj(text):
         text_hfml[f"v{int(note.vol):03}"] += note.content
     return text_hfml
 
+def get_durchen_page_obj(page, notes):
+    for note in notes:
+        if note.id == page.note_ref:
+            return note
+    return None
+    
 def get_derge_google_text_obj(text_id):
     dg_hfmls = {}
     derge_pecha_id = "P000002"

@@ -1,12 +1,16 @@
 from pathlib import Path
 
+from git.objects.submodule.base import END
+from pedurma.preprocess import get_derge_google_text
+
 
 import pytest
 import yaml
 
 from pedurma.pecha import *
 from pedurma.exceptions import PageNumMissing
-from pedurma.reconstruction import get_preview_page
+from pedurma.reconstruction import get_preview_page, get_preview_text
+from pedurma.texts import get_text_obj
 
 
 def from_yaml(yml_path):
@@ -122,3 +126,13 @@ def test_page_num_missing():
         ).read_text(encoding="utf-8")
         preview_page = get_preview_page(
             g_body_page, n_body_page, g_durchen_page, n_durchen_page)
+def test_get_preview_text():
+    dg_pecha_path = Path('./tests/data/P791')
+    namsel_pecha_path = Path('./tests/data/P792')
+    text_id = "D1111"
+
+    derge_google_text_obj = get_text_obj("P791", text_id, dg_pecha_path)
+    namsel_text_obj = get_text_obj("P792", text_id, namsel_pecha_path)
+    preview_text = get_preview_text(derge_google_text_obj, namsel_text_obj)
+    expected_preview = Path('./tests/data/D1111_preview.txt').read_text(encoding='utf-8')
+    assert preview_text['v001'] == expected_preview
