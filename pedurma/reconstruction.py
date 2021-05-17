@@ -9,7 +9,7 @@ from text A(OCRed etext) to text B(clean etext). We first compute a diff between
 A and B, then filter the annotations(dmp diffs) we want to transfer and then apply them to
 text B.
 """
-from pedurma.texts import get_durchen, get_durchen_page_obj, serialize_text_obj
+from pedurma.texts import get_durchen, get_durchen_page_obj, get_text_obj, serialize_text_obj
 import re
 import yaml
 
@@ -927,7 +927,11 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
     else:
         return ""
 
-def get_preview_text(derge_google_text_obj, namsel_text_obj):
+def get_preview_text(text_id):
+    derge_google_pecha_id = "P000791"
+    namsel_pecha_id = "P000792"
+    derge_google_text_obj = get_text_obj(derge_google_pecha_id, text_id)
+    namsel_text_obj = get_text_obj(namsel_pecha_id, text_id)
     preview_text = defaultdict(str)
     dg_pages = derge_google_text_obj.pages
     dg_notes = derge_google_text_obj.notes

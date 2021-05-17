@@ -1,3 +1,4 @@
+from collections import defaultdict
 from pathlib import Path
 
 from git.objects.submodule.base import END
@@ -10,7 +11,7 @@ import yaml
 from pedurma.pecha import *
 from pedurma.exceptions import PageNumMissing
 from pedurma.reconstruction import get_preview_page, get_preview_text
-from pedurma.texts import get_text_obj
+from pedurma.texts import get_text_obj, get_durchen_page_obj
 
 
 def from_yaml(yml_path):
@@ -133,6 +134,18 @@ def test_get_preview_text():
 
     derge_google_text_obj = get_text_obj("P791", text_id, dg_pecha_path)
     namsel_text_obj = get_text_obj("P792", text_id, namsel_pecha_path)
-    preview_text = get_preview_text(derge_google_text_obj, namsel_text_obj)
+    preview_text = defaultdict(str)
+    dg_pages = derge_google_text_obj.pages
+    dg_notes = derge_google_text_obj.notes
+    namsel_pages = namsel_text_obj.pages
+    namsel_notes = namsel_text_obj.notes
+    for dg_page, namsel_page in zip(dg_pages, namsel_pages):
+        vol_num = dg_page.vol
+        dg_durchen = get_durchen_page_obj(dg_page, dg_notes)
+        namsel_durchen = get_durchen_page_obj(namsel_page, namsel_notes)
+        if dg_durchen == None or namsel_durchen == None:
+            print('Either of durchen is unable to locate')
+            continue
+        preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
     expected_preview = Path('./tests/data/D1111_preview.txt').read_text(encoding='utf-8')
     assert preview_text['v001'] == expected_preview
