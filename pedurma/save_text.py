@@ -104,8 +104,6 @@ def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
     return old_pecha_idx
 
 def save_text(pecha_id, text_obj, **kwargs):
-    if pecha_id == "P000791":
-        text_obj.pages = []
     pecha_opf_path = download_pecha(pecha_id, **kwargs)
     old_pecha_idx = yaml.safe_load((pecha_opf_path / f'{pecha_id}.opf/index.yml').read_text(encoding='utf-8'))
     prev_pecha_idx = copy.deepcopy(old_pecha_idx)
