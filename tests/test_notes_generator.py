@@ -1,21 +1,13 @@
 from pathlib import Path
 
 import pytest
-import yaml
 
 from pedurma.pecha import PedurmaNoteEdit
 from pedurma.notes import (
     get_pedurma_edit_notes,
     get_pedurma_text_edit_notes,
 )
-
-
-def from_yaml(yml_path):
-    return yaml.safe_load(yml_path.read_text(encoding="utf-8"))
-
-
-def to_yaml(dict_):
-    return yaml.safe_dump(dict_, sort_keys=False, allow_unicode=True)
+from pedurma.utils import from_yaml, to_yaml
 
 
 def test_notes_generator_crossvol():

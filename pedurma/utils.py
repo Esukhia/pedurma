@@ -1,9 +1,11 @@
 import io
 import json
 import platform
+import pylibyaml
 import stat
 import subprocess
 import tempfile
+import yaml
 import zipfile
 from pathlib import Path
 
@@ -12,6 +14,11 @@ import requests
 PLATFORM_TYPE = platform.system()
 BASE_DIR = Path.home() / ".antx"
 
+def from_yaml(yml_path):
+    return yaml.load(yml_path.read_text(encoding="utf-8"), Loader=yaml.CLoader)
+
+def to_yaml(dict_):
+    return yaml.dump(dict_, sort_keys=False, allow_unicode=True, Dumper=yaml.CDumper)
 
 def get_bin_metadata():
     """Return platfrom_type and binary_name."""
@@ -105,7 +112,7 @@ class optimized_diff_match_patch:
             stdout=subprocess.PIPE,
         )
         stdout = process.communicate()[0]
-        diffs = json.loads(stdout, encoding="utf-8")
+        diffs = json.loads(stdout)
         diffs = self._unescape_lr(diffs)
         self._delete_text(text1_path, text2_path)
         return diffs

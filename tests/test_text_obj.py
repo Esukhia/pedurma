@@ -1,11 +1,8 @@
 from pathlib import Path
 
-import pytest
-import yaml
-
 from pedurma.pecha import *
-from pedurma.texts import *
-
+from pedurma.texts import get_text_info, construct_text_obj, get_meta_data
+from pedurma.utils import from_yaml
 
 def test_text_obj_serializer_corssvol():
     text_id = "D1115"
