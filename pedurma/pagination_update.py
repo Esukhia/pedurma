@@ -1,18 +1,8 @@
 from pathlib import Path
-from pydantic.tools import T
 
-import yaml
 from openpecha.cli import download_pecha
 
-from pedurma.pecha import PedurmaNoteEdit
-
-
-def from_yaml(yml_path):
-    return yaml.safe_load(yml_path.read_text(encoding="utf-8"))
-
-
-def to_yaml(dict_):
-    return yaml.safe_dump(dict_, sort_keys=False, allow_unicode=True)
+from pedurma.utils import from_yaml, to_yaml
 
 
 def get_text_info(text_id, index):

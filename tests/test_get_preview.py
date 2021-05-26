@@ -12,10 +12,7 @@ from pedurma.pecha import *
 from pedurma.exceptions import PageNumMissing
 from pedurma.reconstruction import get_preview_page, get_preview_text
 from pedurma.texts import get_text_obj, get_durchen_page_obj
-
-
-def from_yaml(yml_path):
-    return yaml.safe_load(yml_path.read_text(encoding="utf-8"))
+from pedurma.utils import from_yaml
 
 
 def test_get_preview_page():

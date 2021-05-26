@@ -1,17 +1,13 @@
 import re
 from pathlib import Path
 
-import yaml
 from openpecha.cli import download_pecha
 from openpecha.serializers import HFMLSerializer
 
 from pedurma.pecha import PedurmaNoteEdit
 from pedurma.texts import get_durchen, get_hfml_text, get_link
 from pedurma.preprocess import preprocess_namsel_notes
-
-
-def from_yaml(yml_path):
-    return yaml.safe_load(yml_path.read_text(encoding="utf-8"))
+from pedurma.utils import from_yaml
 
 
 def get_meta_data(text_uuid, meta_data):

@@ -5,14 +5,7 @@ import yaml
 
 from pedurma.pecha import PedurmaNoteEdit
 from pedurma.pagination_update import update_pagination
-
-
-def from_yaml(yml_path):
-    return yaml.safe_load(yml_path.read_text(encoding="utf-8"))
-
-
-def to_yaml(dict_):
-    return yaml.safe_dump(dict_, sort_keys=False, allow_unicode=True)
+from pedurma.utils import from_yaml
 
 
 def test_pagination_update_crossvol():

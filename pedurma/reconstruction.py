@@ -9,14 +9,12 @@ from text A(OCRed etext) to text B(clean etext). We first compute a diff between
 A and B, then filter the annotations(dmp diffs) we want to transfer and then apply them to
 text B.
 """
-from pedurma.texts import get_durchen, get_durchen_page_obj, get_text_obj, serialize_text_obj
+from pedurma.texts import get_durchen_page_obj, get_text_obj
 import re
-import yaml
 
 from antx import transfer
 from collections import defaultdict
 from itertools import zip_longest
-from pathlib import Path
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import (

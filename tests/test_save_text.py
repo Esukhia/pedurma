@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pedurma.texts import get_text_obj
 from pedurma.save_text import *
-
+from pedurma.utils import from_yaml, to_yaml
 
 
 def test_update_base():
@@ -44,7 +44,7 @@ def test_update_base():
             )
         ],
     )
-    pecha_idx = yaml.safe_load((pecha_opf_path / f"{pecha_id}.opf/index.yml").read_text(encoding='utf-8'))
+    pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf/index.yml"))
     text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
@@ -88,7 +88,7 @@ def test_update_layers():
             )
         ],
     )
-    pecha_idx = yaml.safe_load((pecha_opf_path / f"{pecha_id}.opf/index.yml").read_text(encoding='utf-8'))
+    pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf/index.yml"))
     text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
@@ -97,7 +97,7 @@ def test_update_layers():
         old_layers = get_old_layers(pecha_opf_path, pecha_id, vol_id)
         for layer_name, old_layer in old_layers.items():
             update_ann_layer(old_layer, updater)
-            new_layer = yaml.safe_dump(old_layer, sort_keys=False)
+            new_layer = to_yaml(old_layer)
             expected_layer = Path(f'./tests/data/save_text/expected_layers/{layer_name}.yml').read_text(encoding='utf-8')
             assert new_layer == expected_layer
 
@@ -182,9 +182,9 @@ def test_update_index():
             ),
         ],
     )
-    pecha_idx = yaml.safe_load((pecha_opf_path / f"{pecha_id}.opf/index.yml").read_text(encoding='utf-8'))
+    pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf/index.yml"))
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, pecha_idx)
-    new_pecha_idx = yaml.safe_dump(new_pecha_idx, sort_keys=False)
+    new_pecha_idx = to_yaml(new_pecha_idx)
     expected_idx = Path('./tests/data/save_text/expected_index.yml').read_text(encoding='utf-8')
     assert new_pecha_idx == expected_idx
 
@@ -197,12 +197,12 @@ def test_integration():
     text_obj = get_text_obj(pecha_id, text_id, pecha_opf_path)
     new_last_page = "\nརིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་kkལ་སོགས།\n"
     text_obj.pages[-1].content = new_last_page
-    old_pecha_idx = yaml.safe_load((pecha_opf_path / f'{pecha_id}.opf/index.yml').read_text(encoding='utf-8'))
+    old_pecha_idx = from_yaml((pecha_opf_path / f'{pecha_id}.opf/index.yml'))
     prev_pecha_idx = copy.deepcopy(old_pecha_idx)
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
     update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
-    new_pecha_idx = yaml.safe_dump(new_pecha_idx, sort_keys=False)
+    new_pecha_idx = to_yaml(new_pecha_idx)
     (pecha_opf_path / f'{pecha_id}.opf/index.yml').write_text(new_pecha_idx, encoding='utf-8')
     new_text_obj = get_text_obj(pecha_id, text_id, pecha_opf_path)
     assert new_text_obj == text_obj

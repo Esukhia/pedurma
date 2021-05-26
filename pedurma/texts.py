@@ -1,20 +1,17 @@
 import re
-import yaml
+
 from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
 
-
-from antx import transfer
 from openpecha.cli import download_pecha
 from openpecha.serializers import HFMLSerializer
-from pydantic import BaseModel
 
 from pedurma.pecha import *
 from pedurma.preprocess import get_derge_google_text
+from pedurma.utils import from_yaml
 
-def from_yaml(yml_path):
-    return yaml.safe_load(yml_path.read_text(encoding="utf-8"))
+
 
 
 def get_text_info(text_id, index):

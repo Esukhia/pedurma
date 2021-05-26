@@ -3,6 +3,7 @@ from openpecha.blupdate import *
 from openpecha.cli import download_pecha
 from pedurma.pecha import *
 from pedurma.texts import serialize_text_obj
+from pedurma.utils import from_yaml, to_yaml
 
 def get_old_vol(pecha_opf_path, pecha_id, text_vol_span):
     old_vols = {}
@@ -50,14 +51,14 @@ def get_old_layers(pecha_opf_path, pecha_id, vol_id):
     layer_paths = list((pecha_opf_path / f"{pecha_id}.opf/layers/{vol_id}").iterdir())
     for layer_path in layer_paths:
         layer_name = layer_path.stem
-        layer_content = yaml.safe_load(layer_path.read_text(encoding='utf-8'))
+        layer_content = from_yaml(layer_path)
         old_layers[layer_name] = layer_content
     return old_layers
 
 def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
     for layer_name, old_layer in old_layers.items():
         update_ann_layer(old_layer, updater)
-        new_layer = yaml.safe_dump(old_layer, sort_keys=False)
+        new_layer = to_yaml(old_layer)
         (pecha_opf_path / f"{pecha_id}.opf/layers/{vol_id}/{layer_name}.yml").write_text(new_layer, encoding='utf-8')
         print(f'INFO: {vol_id} {layer_name} has been updated...')
     
@@ -104,14 +105,12 @@ def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
     return old_pecha_idx
 
 def save_text(pecha_id, text_obj, **kwargs):
-    if pecha_id == "P000791":
-        text_obj.pages = []
     pecha_opf_path = download_pecha(pecha_id, **kwargs)
-    old_pecha_idx = yaml.safe_load((pecha_opf_path / f'{pecha_id}.opf/index.yml').read_text(encoding='utf-8'))
+    old_pecha_idx = from_yaml((pecha_opf_path / f'{pecha_id}.opf/index.yml'))
     prev_pecha_idx = copy.deepcopy(old_pecha_idx)
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
     update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
-    new_pecha_idx = yaml.safe_dump(new_pecha_idx, sort_keys=False)
+    new_pecha_idx = to_yaml(new_pecha_idx)
     (pecha_opf_path / f'{pecha_id}.opf/index.yml').write_text(new_pecha_idx, encoding='utf-8')
     return pecha_opf_path
