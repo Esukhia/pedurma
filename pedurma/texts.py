@@ -4,8 +4,6 @@ from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
 
-
-from horology import timed
 from openpecha.cli import download_pecha
 from openpecha.serializers import HFMLSerializer
 
