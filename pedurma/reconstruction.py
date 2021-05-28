@@ -9,7 +9,6 @@ from text A(OCRed etext) to text B(clean etext). We first compute a diff between
 A and B, then filter the annotations(dmp diffs) we want to transfer and then apply them to
 text B.
 """
-from pedurma.texts import get_durchen_page_obj, get_text_obj
 import re
 
 from antx import transfer
@@ -18,9 +17,12 @@ from itertools import zip_longest
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import (
+    get_derge_hfml_text,
     preprocess_google_notes,
     preprocess_namsel_notes,
+    put_derge_line_break
 )
+from pedurma.texts import get_durchen_page_obj, get_text_obj
 from pedurma.utils import optimized_diff_match_patch
 
 
@@ -924,7 +926,7 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
         return merge
     else:
         return ""
-
+  
 def get_preview_text(text_id):
     derge_google_pecha_id = "P000791"
     namsel_pecha_id = "P000792"
@@ -943,4 +945,6 @@ def get_preview_text(text_id):
             print('Either of durchen is unable to locate')
             continue
         preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
-    return preview_text
+    derge_text = get_derge_hfml_text(text_id)
+    collation_text_with_derge_linebr = put_derge_line_break(preview_text, derge_text)
+    return collation_text_with_derge_linebr

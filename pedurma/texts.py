@@ -8,7 +8,6 @@ from openpecha.cli import download_pecha
 from openpecha.serializers import HFMLSerializer
 
 from pedurma.pecha import *
-from pedurma.preprocess import get_derge_google_text
 from pedurma.utils import from_yaml
 
 
@@ -222,23 +221,6 @@ def get_durchen_page_obj(page, notes):
         if note.id == page.note_ref:
             return note
     return None
-    
-def get_derge_google_text_obj(text_id):
-    dg_hfmls = {}
-    derge_pecha_id = "P000002"
-    google_pecha_id = "P000791"
-    derge_pecha_path = download_pecha(derge_pecha_id, needs_update=False)
-    derge_hfmls = get_hfml_text(f"{derge_pecha_path}/{derge_pecha_id}.opf/", text_id)
-    google_pecha_path = download_pecha(google_pecha_id, needs_update=False)
-    google_meta_data = from_yaml(Path(f"{google_pecha_path}/{google_pecha_id}.opf/meta.yml"))
-    google_index = from_yaml(Path(f"{google_pecha_path}/{google_pecha_id}.opf/index.yml"))
-    google_hfmls = get_hfml_text(f"{google_pecha_path}/{google_pecha_id}.opf/", text_id, google_index)
-    text_uuid, google_text = get_text_info(text_id, google_index)
-    google_text_meta = get_meta_data(google_pecha_id, text_uuid, google_meta_data)
-    for (vol_id, d_hfml),(v_id, g_hfml) in zip(derge_hfmls.items(), google_hfmls.items()):
-        dg_hfmls[v_id] = get_derge_google_text(d_hfml, g_hfml)
-    dg_text = construct_text_obj(dg_hfmls, google_text_meta, google_pecha_path)
-    return dg_text
 
 def get_text_obj(pecha_id, text_id, pecha_path = None):
     if not pecha_path:
