@@ -3,7 +3,9 @@ import re
 from pathlib import Path
 
 from antx import transfer
+from openpecha.cli import download_pecha
 
+from pedurma.texts import get_hfml_text
 
 def get_pages(vol_text):
     result = []
@@ -52,6 +54,28 @@ def get_derge_google_text(derge_hfml, google_hfml):
             derge_google_text += dg_page
     return derge_google_text
 
+def get_derge_hfml_text(text_id):
+    derge_pecha_id = "P000002"
+    derge_opf_path = download_pecha(derge_pecha_id, needs_update=False)
+    derge_text = get_hfml_text(derge_opf_path/f'{derge_pecha_id}.opf', text_id)
+    return derge_text
+
+def put_derge_line_break(preview_text, derge_text):
+    collation_text = ''
+    for vol_id, text in preview_text.items():
+        collation_text += re.sub('<p.+?>', '', text)
+    full_derge_text = ''
+    for vol_id, vol_text in derge_text.items():
+        full_derge_text += vol_text
+    anns = [r"\n",]
+    collation_text = rm_ann(collation_text, anns)
+    collation_text_with_derge_linebr = transfer(
+        full_derge_text,
+        [["linebreak", r"(\n)"], ["pg_ann", r"(\[[𰵀-󴉱]?[0-9]+[a-z]{1}\])"]],
+        collation_text,
+        output="txt",
+    )
+    return collation_text_with_derge_linebr
 
 def derge_page_increment(p_num):
     sides = {"a": "b", r"b": "a"}
