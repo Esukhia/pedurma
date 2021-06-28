@@ -143,7 +143,5 @@ def test_get_preview_text():
             print('Either of durchen is unable to locate')
             continue
         preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
-    derge_text = from_yaml(Path('./tests/data/preview/D1111_derge.yml'))
-    collation_text_with_derge_linebr = put_derge_line_break(preview_text, derge_text)
     expected_preview = Path('./tests/data/preview/D1111_preview.txt').read_text(encoding='utf-8')
-    assert collation_text_with_derge_linebr == expected_preview
+    assert preview_text['v001'] == expected_preview
