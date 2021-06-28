@@ -928,8 +928,8 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
         return ""
   
 def get_preview_text(text_id):
-    derge_google_pecha_id = "P000791"
-    namsel_pecha_id = "P000792"
+    derge_google_pecha_id = "12d32eb31c1a4cc59741cda99ebc7211"
+    namsel_pecha_id = "187ed94f85154ea5b1ac374a651e1770"
     derge_google_text_obj = get_text_obj(derge_google_pecha_id, text_id)
     namsel_text_obj = get_text_obj(namsel_pecha_id, text_id)
     preview_text = defaultdict(str)
@@ -945,6 +945,4 @@ def get_preview_text(text_id):
             print('Either of durchen is unable to locate')
             continue
         preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
-    derge_text = get_derge_hfml_text(text_id)
-    collation_text_with_derge_linebr = put_derge_line_break(preview_text, derge_text)
-    return collation_text_with_derge_linebr
+    return preview_text
