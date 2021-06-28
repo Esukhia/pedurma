@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.17 (2021-05-26)
+### Fix
+* **setup:** Pylibyaml included in setup ([`7e6b032`](https://github.com/Esukhia/pedurma/commit/7e6b032cf485c40c386cc3b8820a4b918b1734c3))
+* **yaml:** Replaced safe_load and safe_dump using CLoader and CDumper ([`24af85a`](https://github.com/Esukhia/pedurma/commit/24af85a591f94af913141c322e14b91d9741ba53))
+* **save-text:** Not including body while save for google text excluded ([`f5ee1a5`](https://github.com/Esukhia/pedurma/commit/f5ee1a557f07162b4e066cc85c809516d044afeb))
+
 ## v0.1.16 (2021-05-17)
 ### Fix
 * **readme:** Readme update ([`19256ab`](https://github.com/Esukhia/pedurma/commit/19256abc9a65a5605f4cef71ef093579fd642602))
