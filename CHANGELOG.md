@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.18 (2021-06-28)
+### Fix
+* **reconstruction:** Drege-google and namsel pecha ids updated ([`c99abf7`](https://github.com/Esukhia/pedurma/commit/c99abf7c734c4dda60d4023a21d622bb8eae612b))
+* **preview:** Preview is given in derge line break of the text ([`3570146`](https://github.com/Esukhia/pedurma/commit/35701466efc5c2743162a22a6e6ef9b6d43a1c09))
+
 ## v0.1.17 (2021-05-26)
 ### Fix
 * **setup:** Pylibyaml included in setup ([`7e6b032`](https://github.com/Esukhia/pedurma/commit/7e6b032cf485c40c386cc3b8820a4b918b1734c3))
