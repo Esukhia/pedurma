@@ -114,3 +114,11 @@ def save_text(pecha_id, text_obj, **kwargs):
     new_pecha_idx = to_yaml(new_pecha_idx)
     (pecha_opf_path / f'{pecha_id}.opf/index.yml').write_text(new_pecha_idx, encoding='utf-8')
     return pecha_opf_path
+
+def save_page(text_id, pg_obj, base_path):
+    new_pg_content = pg_obj.content
+    new_notes = to_yaml(pg_obj.notes)
+    pg_id = pg_obj.name
+    (base_path / f'{text_id}/pages/{pg_id}.txt').write_text(new_pg_content, encoding='utf-8')
+    (base_path / f'{text_id}/notes/{pg_id}.txt').write_text(new_notes, encoding='utf-8')
+

@@ -11,8 +11,9 @@ import yaml
 from pedurma.pecha import *
 from pedurma.exceptions import PageNumMissing
 from pedurma.reconstruction import get_preview_page, get_preview_text
+from pedurma.reinsertion import get_preview_pg
 from pedurma.preprocess import put_derge_line_break, get_derge_hfml_text
-from pedurma.texts import get_text_obj, get_durchen_page_obj, get_hfml_text
+from pedurma.texts import get_text_obj, get_durchen_page_obj, get_page_with_note_obj
 from pedurma.utils import from_yaml, to_yaml
 
 
@@ -145,3 +146,11 @@ def test_get_preview_text():
         preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
     expected_preview = Path('./tests/data/preview/D1111_preview.txt').read_text(encoding='utf-8')
     assert preview_text['v001'] == expected_preview
+
+def test_get_reinsert_preview_pg():
+    text_id = "D1119_1"
+    pg_id = '228'
+    base_path = Path('./tests/data/page_with_note/')
+    pg_obj = get_page_with_note_obj(text_id, pg_id, base_path)
+    preview_pg = get_preview_pg(pg_obj)
+    Path('./tests/data/page_with_note/preview_pg.txt').write_text(preview_pg, encoding='utf-8')

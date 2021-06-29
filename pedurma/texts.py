@@ -8,7 +8,7 @@ from openpecha.cli import download_pecha
 from openpecha.serializers import HFMLSerializer
 
 from pedurma.pecha import *
-from pedurma.utils import from_yaml
+from pedurma.utils import from_yaml, get_unique_id
 
 
 
@@ -23,14 +23,15 @@ def get_text_info(text_id, index):
 
 def get_meta_data(pecha_id, text_uuid, meta_data):
     meta = {}
-
-    meta = {
-        "work_id": meta_data.get("work_id", ""),
-        "img_grp_offset": meta_data.get("img_grp_offset",""),
-        "pref": meta_data.get("pref", ""),
-        "pecha_id": pecha_id,
-        "text_uuid": text_uuid,
-    }
+    source_meta = meta_data.get("source_metadata", "")
+    if source_meta:
+        meta = {
+            "work_id": source_meta.get("work_id", ""),
+            "img_grp_offset": source_meta.get("img_grp_offset",""),
+            "pref": source_meta.get("pref", ""),
+            "pecha_id": pecha_id,
+            "text_uuid": text_uuid,
+        }
     return meta
 
 
@@ -232,6 +233,33 @@ def get_text_obj(pecha_id, text_id, pecha_path = None):
     text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
     text = construct_text_obj(hfmls, text_meta, pecha_path)
     return text
+
+def get_vol_num(text_id):
+    text_infos = text_id.split('_')
+    vol_num = text_infos[1]
+    return vol_num
+
+def get_page_with_note_obj(text_id, pg_id, base_path):
+    vol_num = int(get_vol_num(text_id))
+    text_meta = {
+        "work_id": 'W1PD95844',
+        "img_grp_offset": 845,
+        "pref": 'I1PD95',
+        "vol": vol_num
+    }
+    note_content = from_yaml((base_path / f"{text_id}/notes/{pg_id}.yml"))
+    page_with_note = PageWithNote(
+        id=get_unique_id(),
+        page_no = pg_id,
+        name = pg_id,
+        vol = vol_num,
+        content = (base_path / f"{text_id}/pages/{pg_id}.txt").read_text(encoding='utf-8'),
+        image_link = get_link(int(pg_id), text_meta),
+        notes = note_content['notes'],
+        note_pg_link = note_content['note_pg_link'],
+    )
+    
+    return page_with_note
 
 
 # if __name__ == "__main__":

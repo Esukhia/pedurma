@@ -20,6 +20,9 @@ class Page(PageBase):
 class NotesPage(PageBase):
     pass
 
+class PageWithNote(PageBase):
+    notes: dict
+    note_pg_link: str
 
 class Text(BaseModel):
     id: str
