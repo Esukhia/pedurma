@@ -20,9 +20,11 @@ class Page(PageBase):
 class NotesPage(PageBase):
     pass
 
-class PageWithNote(PageBase):
-    notes: dict
-    note_pg_link: str
+class PageWithNote(BaseModel):
+    content: str
+    page_image_link: AnyHttpUrl
+    note: str
+    note_image_link: AnyHttpUrl
 
 class Text(BaseModel):
     id: str
