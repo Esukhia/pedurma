@@ -52,7 +52,7 @@ class Pedurma:
         page_content = self.get_page_content(text_id, page_id)
         page_image_link = self.get_image_link(page_meta)
         page_note = self.get_page_note(text_id, page_id)
-        note = to_yaml(page_note['note'])
+        note = to_yaml(page_note['notes'])
         note_image_link = page_note['note_pg_link']
         page = PageWithNote(
             content= page_content,
@@ -70,7 +70,7 @@ class Pedurma:
         # Note content save
         new_note = yaml.load(page.note, Loader=yaml.CLoader)
         page_note = self.get_page_note(text_id, page_id)
-        page_note['note'] = new_note
+        page_note['notes'] = new_note
         new_page_note = to_yaml(page_note)
         (self.base_path / f"{text_id}/notes/{page_id}.yml").write_text(new_page_note, encoding='utf-8')
 

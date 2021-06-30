@@ -143,10 +143,11 @@ def test_get_preview_text():
 
 def test_get_reinsert_preview_pg():
     text_id = "D1119_001"
-    pg_id = '228'
+    pg_id = '0228'
     base_path = Path('./tests/data/page_with_note/')
     project_name = 'nalanda'
     pedurma = Pedurma(project_name, base_path)
     pg_obj = pedurma.get_page(text_id, pg_id)
     preview_pg = pedurma.get_preview(pg_obj)
-    Path('./tests/data/page_with_note/preview_pg.txt').write_text(preview_pg, encoding='utf-8')
+    expected_preview_pg = Path('./tests/data/page_with_note/preview_pg.txt').read_text(encoding='utf-8')
+    assert expected_preview_pg == preview_pg

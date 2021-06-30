@@ -11,7 +11,7 @@ def construct_notes(note_id, note):
 
 
 def reinsert_pedurma_notes(pg, notes):
-    new_pg = pg
+    new_pg = re.sub('[𰵀-󴉱]', '', pg)
     for note_id, note in notes.items():
         combined_note = construct_notes(note_id, note)
         new_pg = re.sub('#', combined_note, new_pg, 1)
