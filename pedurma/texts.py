@@ -23,14 +23,15 @@ def get_text_info(text_id, index):
 
 def get_meta_data(pecha_id, text_uuid, meta_data):
     meta = {}
-
-    meta = {
-        "work_id": meta_data.get("work_id", ""),
-        "img_grp_offset": meta_data.get("img_grp_offset",""),
-        "pref": meta_data.get("pref", ""),
-        "pecha_id": pecha_id,
-        "text_uuid": text_uuid,
-    }
+    source_meta = meta_data.get("source_metadata", "")
+    if source_meta:
+        meta = {
+            "work_id": source_meta.get("work_id", ""),
+            "img_grp_offset": source_meta.get("img_grp_offset",""),
+            "pref": source_meta.get("pref", ""),
+            "pecha_id": pecha_id,
+            "text_uuid": text_uuid,
+        }
     return meta
 
 

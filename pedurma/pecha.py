@@ -20,6 +20,13 @@ class Page(PageBase):
 class NotesPage(PageBase):
     pass
 
+class PageWithNote(BaseModel):
+    text_id: str
+    page_id: str
+    content: str
+    page_image_link: AnyHttpUrl
+    note: str
+    note_image_link: AnyHttpUrl
 
 class Text(BaseModel):
     id: str

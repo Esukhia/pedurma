@@ -8,11 +8,18 @@ import tempfile
 import yaml
 import zipfile
 from pathlib import Path
+from uuid import uuid4
 
 import requests
 
 PLATFORM_TYPE = platform.system()
 BASE_DIR = Path.home() / ".antx"
+
+
+
+
+def get_unique_id():
+    return uuid4().hex
 
 def from_yaml(yml_path):
     return yaml.load(yml_path.read_text(encoding="utf-8"), Loader=yaml.CLoader)

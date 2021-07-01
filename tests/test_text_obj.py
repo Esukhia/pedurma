@@ -9,7 +9,7 @@ def test_text_obj_serializer_corssvol():
     pecha_id = "P000002"
     opf_path = f"./tests/data/{pecha_id}/"
     index = from_yaml(Path(f"{opf_path}/{pecha_id}.opf/index.yml"))
-    meta_data = {"work_id": "W1PD95844", "img_grp_offset": 845, "pref": "I1PD95"}
+    meta_data = from_yaml(Path(f'{opf_path}/{pecha_id}.opf/meta.yml'))
     text_uuid, text_info = get_text_info(text_id, index)
     text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
     hfmls = from_yaml(Path(f"./tests/data/hfmls/{text_id}.yml"))
@@ -99,7 +99,7 @@ def test_text_obj_serializer():
     pecha_id = "P000002"
     opf_path = f"./tests/data/{pecha_id}/"
     index = from_yaml(Path(f"{opf_path}/{pecha_id}.opf/index.yml"))
-    meta_data = {"work_id": "W1PD95844", "img_grp_offset": 845, "pref": "I1PD95"}
+    meta_data = from_yaml(Path(f'{opf_path}/{pecha_id}.opf/meta.yml'))
     text_uuid, text_info = get_text_info(text_id, index)
     text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
     hfmls = from_yaml(Path(f"./tests/data/hfmls/{text_id}.yml"))
