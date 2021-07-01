@@ -30,8 +30,6 @@ def test_get_page():
     )
     assert pg_obj == expected_pg_obj
 
-
-
 def test_save_page():
     text_id = "D1119_001"
     page_id = '0230'
@@ -68,3 +66,12 @@ def test_get_reinsert_preview_pg():
     preview_pg = pedurma.get_preview(pg_obj)
     expected_preview_pg = Path('./tests/data/page_with_note/preview_pg.txt').read_text(encoding='utf-8')
     assert expected_preview_pg == preview_pg
+
+def test_download_text():
+    text_id = "D1119_001"
+    base_path = Path('./tests/data/page_with_note/')
+    project_name = 'nalanda'
+    pedurma = Pedurma(project_name, base_path)
+    collation_text = pedurma.get_collation_text(text_id)
+    expected_collation_text = (base_path / "collation_text.txt").read_text(encoding='utf-8')
+    assert expected_collation_text == collation_text
