@@ -8,7 +8,6 @@ from pedurma.exceptions import PageNumMissing
 from pedurma.reconstruction import get_preview_page
 from pedurma.texts import get_text_obj, get_durchen_page_obj
 from pedurma.utils import from_yaml
-from pedurma.nalanda_text import Pedurma
 
 
 def test_get_preview_page():
@@ -140,14 +139,3 @@ def test_get_preview_text():
         preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
     expected_preview = Path('./tests/data/preview/D1111_preview.txt').read_text(encoding='utf-8')
     assert preview_text['v001'] == expected_preview
-
-def test_get_reinsert_preview_pg():
-    text_id = "D1119_001"
-    pg_id = '0228'
-    base_path = Path('./tests/data/page_with_note/')
-    project_name = 'nalanda'
-    pedurma = Pedurma(project_name, base_path)
-    pg_obj = pedurma.get_page(text_id, pg_id)
-    preview_pg = pedurma.get_preview(pg_obj)
-    expected_preview_pg = Path('./tests/data/page_with_note/preview_pg.txt').read_text(encoding='utf-8')
-    assert expected_preview_pg == preview_pg
