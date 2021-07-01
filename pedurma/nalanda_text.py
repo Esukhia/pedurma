@@ -84,5 +84,14 @@ class Pedurma:
         notes = yaml.load(page.note, Loader=yaml.CLoader)
         preview_pg = reinsert_pedurma_notes(pg_content, notes)
         return preview_pg
-        
+    
+    def get_collation_text(self, text_id: str) -> str:
+        collation_text = ''
+        page_ids = list((self.base_path / f"{text_id}/notes").iterdir())
+        page_ids.sort()
+        page_ids = [page_id.stem for page_id in page_ids]
+        for page_id in page_ids:
+            page_obj = self.get_page(text_id, page_id)
+            collation_text += f'{self.get_preview(page_obj)}\n\n'
+        return collation_text
 
