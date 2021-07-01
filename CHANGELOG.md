@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.19 (2021-07-01)
+### Fix
+* **test:** Test for nalanda text reinsertion added ([`343bee1`](https://github.com/Esukhia/pedurma/commit/343bee1148488c793cbcde07e73fe327ab94e62d))
+* **test:** Nalanda text test pass ([`b2a8cd3`](https://github.com/Esukhia/pedurma/commit/b2a8cd39a14cbe0db85730b79544f93e4b343da6))
+* **nalanda:** Nalanda text reinsertion code added ([`63d84cc`](https://github.com/Esukhia/pedurma/commit/63d84cc127012d865bdb57a914465e32bf6e7ef7))
+* **pagewithnote:** Nalanda use case adaptations added ([`d2128bf`](https://github.com/Esukhia/pedurma/commit/d2128bf1bec41bfa2eefa851f858972b0de04ebf))
+
 ## v0.1.18 (2021-06-28)
 ### Fix
 * **reconstruction:** Drege-google and namsel pecha ids updated ([`c99abf7`](https://github.com/Esukhia/pedurma/commit/c99abf7c734c4dda60d4023a21d622bb8eae612b))
