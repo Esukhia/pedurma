@@ -109,7 +109,10 @@ def get_pg_ann(diff, vol_num):
     """
     pg_no_pattern = fr"{vol_num}\S*?(\d+)"
     pg_pat = re.search(pg_no_pattern, diff)
-    pg_num = pg_pat.group(1)
+    try:
+        pg_num = pg_pat.group(1)
+    except Exception:
+        pg_num = 0
     return f"<p{vol_num}-{pg_num}>"
 
 
