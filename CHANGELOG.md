@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.20 (2021-07-01)
+### Fix
+* **nalanda:** Collation text generation code added ([`9c595a7`](https://github.com/Esukhia/pedurma/commit/9c595a7eee4192ec4a0e6f6038086eea22b4384f))
+
 ## v0.1.19 (2021-07-01)
 ### Fix
 * **test:** Test for nalanda text reinsertion added ([`343bee1`](https://github.com/Esukhia/pedurma/commit/343bee1148488c793cbcde07e73fe327ab94e62d))
