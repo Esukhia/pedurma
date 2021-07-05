@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.21 (2021-07-04)
+### Fix
+* **reconstruction:** Page num undetected expection handled ([`2d42fe8`](https://github.com/Esukhia/pedurma/commit/2d42fe8fe4daa3d4cc3bca02cc518e43250cd7a6))
+
 ## v0.1.20 (2021-07-01)
 ### Fix
 * **nalanda:** Collation text generation code added ([`9c595a7`](https://github.com/Esukhia/pedurma/commit/9c595a7eee4192ec4a0e6f6038086eea22b4384f))
