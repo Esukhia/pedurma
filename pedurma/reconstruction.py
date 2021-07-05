@@ -738,7 +738,10 @@ def postprocess_footnotes(footnotes, vol_num):
     page_refs = re.findall("<r.+?>", footnotes)
     pages = re.split("<r.+?>", footnotes)[1:]
 
-    first_ref = page_refs[0]
+    try:
+        first_ref = page_refs[0]
+    except Exception:
+        return footnote_result
     table = first_ref.maketrans("༡༢༣༤༥༦༧༨༩༠", "1234567890", "<r>")
     start = int(first_ref.translate(table))
     print(
@@ -860,8 +863,6 @@ def get_clean_namsel_durchen(namsel_footnote):
 
 
 def reconstruct_footnote(namsel_footnote, google_footnote, vol_num):
-    clean_google_footnote = get_clean_google_durchen(google_footnote)
-    clean_namsel_footnote = get_clean_namsel_durchen(namsel_footnote)
     annotations = [
         ["marker", "(<m.+?>)"],
         ["marker", "([①-⑩])"],
@@ -869,7 +870,7 @@ def reconstruct_footnote(namsel_footnote, google_footnote, vol_num):
         ["pedurma-page", "(<p.+?>)"],
     ]
     print("Calculating diffs..")
-    diffs = transfer(clean_namsel_footnote, annotations, clean_google_footnote, output="diff")
+    diffs = transfer(namsel_footnote, annotations, google_footnote, output="diff")
     diffs_list = list(map(list, diffs))
     filtered_diffs = filter_footnotes_diffs(diffs_list, vol_num)
     new_text = format_diff(filtered_diffs, vol_num, type_="footnotes")
