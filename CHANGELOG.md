@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.22 (2021-07-05)
+### Fix
+* **reconstruction:** Preprocessing footnote excluded ([`687eca5`](https://github.com/Esukhia/pedurma/commit/687eca50380ceb70dbf5f92af89a0ddb38d6af7f))
+
 ## v0.1.21 (2021-07-04)
 ### Fix
 * **reconstruction:** Page num undetected expection handled ([`2d42fe8`](https://github.com/Esukhia/pedurma/commit/2d42fe8fe4daa3d4cc3bca02cc518e43250cd7a6))
