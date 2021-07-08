@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.23 (2021-07-08)
+### Fix
+* **reconstruction:** The note marker in namsel durchen are changed to <u ([`0f762c8`](https://github.com/Esukhia/pedurma/commit/0f762c8506a606cedee2d95b6b5724516c9f1dd3))
+
 ## v0.1.22 (2021-07-05)
 ### Fix
 * **reconstruction:** Preprocessing footnote excluded ([`687eca5`](https://github.com/Esukhia/pedurma/commit/687eca50380ceb70dbf5f92af89a0ddb38d6af7f))
