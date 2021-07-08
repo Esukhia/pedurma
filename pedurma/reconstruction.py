@@ -144,7 +144,7 @@ def get_excep_marker(diff):
         str: exception marker
     """
     marker_ = ""
-    patterns = ["<m(.+?)>", "(.*#.*)"]
+    patterns = ["<u(.+?)>", "(.*#.*)"]
     for pattern in patterns:
         marker = re.search(pattern, diff)
         if re.search(pattern, diff):
@@ -511,12 +511,12 @@ def parse_pg_ref_diff(diff, result):
         if line:
             if re.search("<r.+?>", line):
                 result.append([1, line, "page_ref"])
-            elif re.search("(<m.+?>)(.+)", line):
-                marker = re.search("(<m.+?>)(.+)", line)
+            elif re.search("(<u.+?>)(.+)", line):
+                marker = re.search("(<u.+?>)(.+)", line)
                 result.append([1, marker.group(1), "marker"])
                 result.append([1, marker.group(2), ""])
-            elif re.search("<m.+?>", line):
-                marker = re.search("<m.+?>", line)
+            elif re.search("<u.+?>", line):
+                marker = re.search("<u.+?>", line)
                 result.append([1, marker[0], "marker"])
 
 
@@ -781,7 +781,7 @@ def demultiply_diffs(text):
             r"(\n<\d+,)([①-⓪])([①-⓪])([①-⓪])([①-⓪])([①-⓪])(>.+)",
             r"\g<1>\g<2>\g<7>\g<1>\g<3>\g<7>\g<1>\g<4>\g<7>\g<1>\g<5>\g<7>\g<1>\g<6>\g<7>",
         ],
-        [r"(\n<m)([①-⑨])([①-⑨])(>.+)", r"\g<1>\g<2>\g<4>\g<1>\g<3>\g<4>"],
+        [r"(\n<u)([①-⑨])([①-⑨])(>.+)", r"\g<1>\g<2>\g<4>\g<1>\g<3>\g<4>"],
         [
             r"(\n<\d+,)([①-⓪])([①-⓪])([①-⓪])([①-⓪])(>.+)",
             r"\g<1>\g<2>\g<6>\g<1>\g<3>\g<6>\g<1>\g<4>\g<6>\g<1>\g<5>\g<6>",
@@ -864,7 +864,7 @@ def get_clean_namsel_durchen(namsel_footnote):
 
 def reconstruct_footnote(namsel_footnote, google_footnote, vol_num):
     annotations = [
-        ["marker", "(<m.+?>)"],
+        ["marker", "(<u.+?>)"],
         ["marker", "([①-⑩])"],
         ["pg_ref", "(<r.+?>)"],
         ["pedurma-page", "(<p.+?>)"],
