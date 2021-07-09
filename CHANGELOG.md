@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.24 (2021-07-09)
+### Fix
+* **reconstruction:** Docx preview enable ([`0c5ce98`](https://github.com/Esukhia/pedurma/commit/0c5ce98210c5f7d75ec8d0ceb7fb58ec2e07a305))
+
 ## v0.1.23 (2021-07-08)
 ### Fix
 * **reconstruction:** The note marker in namsel durchen are changed to <u ([`0f762c8`](https://github.com/Esukhia/pedurma/commit/0f762c8506a606cedee2d95b6b5724516c9f1dd3))
