@@ -9,18 +9,19 @@ from text A(OCRed etext) to text B(clean etext). We first compute a diff between
 A and B, then filter the annotations(dmp diffs) we want to transfer and then apply them to
 text B.
 """
+import collections
 import re
 
 from antx import transfer
 from collections import defaultdict
+from docx import Document
 from itertools import zip_longest
+from pathlib import Path
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import (
-    get_derge_hfml_text,
     preprocess_google_notes,
     preprocess_namsel_notes,
-    put_derge_line_break
 )
 from pedurma.texts import get_durchen_page_obj, get_text_obj
 from pedurma.utils import optimized_diff_match_patch
@@ -950,3 +951,41 @@ def get_preview_text(text_id):
             continue
         preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
     return preview_text
+
+def split_text(content):
+
+    chunks = re.split("(<.+?>)", content)
+
+    return chunks
+
+def create_docx(text_id, chunks, path=None):
+    if not path:
+        path = Path.home() / "Documents"
+    document = Document()
+    p = document.add_paragraph()
+
+    for chunk in chunks:
+        if chunk and chunk[0] == "<":
+            sub_text = p.add_run(chunk)
+            sub_text.font.subscript = True
+            # sub_text.font.bold = True
+            sub_text.font.name = "Jomolhari"
+        else:
+            normal_text = p.add_run(chunk)
+            normal_text.font.name = "Jomolhari"
+
+    (path / "collation_docx").mkdir(parents=True, exist_ok=True)
+    output_path = path / "collation_docx" / f"{text_id}.docx"
+    document.save(str(output_path))
+    return output_path
+
+def get_docx_text(text_id):
+    collation_text = ''
+    preview_text = get_preview_text(text_id)
+    for vol_id, text in preview_text.items():
+        collation_text += f"{text}\n\n"
+    collation_text = collation_text.replace('\n', '')
+    collation_text = re.sub('(<p.+?>)', '\n\g<1>\n', collation_text)
+    chunks = split_text(collation_text)
+    docx_path = create_docx(text_id, chunks)
+    return docx_path

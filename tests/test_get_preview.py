@@ -1,3 +1,4 @@
+import re
 import pytest
 
 from collections import defaultdict
@@ -5,10 +6,31 @@ from pathlib import Path
 
 from pedurma.pecha import *
 from pedurma.exceptions import PageNumMissing
-from pedurma.reconstruction import get_preview_page
+from pedurma.reconstruction import get_preview_page, split_text, create_docx
 from pedurma.texts import get_text_obj, get_durchen_page_obj
 from pedurma.utils import from_yaml
 
+def get_dummy_preview():
+    dg_pecha_path = Path('./tests/data/preview/P791')
+    namsel_pecha_path = Path('./tests/data/preview/P792')
+    text_id = "D1111"
+
+    derge_google_text_obj = get_text_obj("P791", text_id, dg_pecha_path)
+    namsel_text_obj = get_text_obj("P792", text_id, namsel_pecha_path)
+    preview_text = defaultdict(str)
+    dg_pages = derge_google_text_obj.pages
+    dg_notes = derge_google_text_obj.notes
+    namsel_pages = namsel_text_obj.pages
+    namsel_notes = namsel_text_obj.notes
+    for dg_page, namsel_page in zip(dg_pages, namsel_pages):
+        vol_num = dg_page.vol
+        dg_durchen = get_durchen_page_obj(dg_page, dg_notes)
+        namsel_durchen = get_durchen_page_obj(namsel_page, namsel_notes)
+        if dg_durchen == None or namsel_durchen == None:
+            print('Either of durchen is unable to locate')
+            continue
+        preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
+    return preview_text
 
 def test_get_preview_page():
     gb_pg_yml = from_yaml(
@@ -118,24 +140,20 @@ def test_page_num_missing():
             g_body_page, n_body_page, g_durchen_page, n_durchen_page)
 
 def test_get_preview_text():
-    dg_pecha_path = Path('./tests/data/preview/P791')
-    namsel_pecha_path = Path('./tests/data/preview/P792')
-    text_id = "D1111"
-
-    derge_google_text_obj = get_text_obj("P791", text_id, dg_pecha_path)
-    namsel_text_obj = get_text_obj("P792", text_id, namsel_pecha_path)
-    preview_text = defaultdict(str)
-    dg_pages = derge_google_text_obj.pages
-    dg_notes = derge_google_text_obj.notes
-    namsel_pages = namsel_text_obj.pages
-    namsel_notes = namsel_text_obj.notes
-    for dg_page, namsel_page in zip(dg_pages, namsel_pages):
-        vol_num = dg_page.vol
-        dg_durchen = get_durchen_page_obj(dg_page, dg_notes)
-        namsel_durchen = get_durchen_page_obj(namsel_page, namsel_notes)
-        if dg_durchen == None or namsel_durchen == None:
-            print('Either of durchen is unable to locate')
-            continue
-        preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
+    preview_text = get_dummy_preview()
     expected_preview = Path('./tests/data/preview/D1111_preview.txt').read_text(encoding='utf-8')
     assert preview_text['v001'] == expected_preview
+
+
+def test_get_docx_text():
+    collation_text = ''
+    text_id = "D1111"
+    preview_text = get_dummy_preview()
+    for vol_id, text in preview_text.items():
+        collation_text += f"{text}\n\n"
+    collation_text = collation_text.replace('\n', '')
+    collation_text = re.sub('(<p.+?>)', '\n\g<1>\n', collation_text)
+    chunks = split_text(collation_text)
+    docx_path = create_docx(text_id, chunks)
+    expected_path = Path.home() / "Documents/collation_docx/D1111.docx"
+    assert docx_path == expected_path
