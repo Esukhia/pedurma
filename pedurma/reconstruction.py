@@ -958,9 +958,7 @@ def split_text(content):
 
     return chunks
 
-def create_docx(text_id, chunks, path=None):
-    if not path:
-        path = Path.home() / "Documents"
+def create_docx(text_id, chunks, path):
     document = Document()
     p = document.add_paragraph()
 
@@ -973,19 +971,20 @@ def create_docx(text_id, chunks, path=None):
         else:
             normal_text = p.add_run(chunk)
             normal_text.font.name = "Jomolhari"
-
-    (path / "collation_docx").mkdir(parents=True, exist_ok=True)
-    output_path = path / "collation_docx" / f"{text_id}.docx"
+    output_path = path / f"{text_id}.docx"
     document.save(str(output_path))
     return output_path
 
-def get_docx_text(text_id):
+def get_docx_text(text_id, output_path=None):
+    if not output_path:
+        (Path.home() / '.collation_docx').mkdir(parents=True, exist_ok=True)
+        output_path = (Path.home() / '.collation_docx')
     collation_text = ''
     preview_text = get_preview_text(text_id)
     for vol_id, text in preview_text.items():
         collation_text += f"{text}\n\n"
     collation_text = collation_text.replace('\n', '')
-    collation_text = re.sub('(<p.+?>)', '\n\g<1>\n', collation_text)
+    collation_text = re.sub(r'(<p.+?>)', r'\n\g<1>\n', collation_text)
     chunks = split_text(collation_text)
-    docx_path = create_docx(text_id, chunks)
+    docx_path = create_docx(text_id, chunks, output_path)
     return docx_path
