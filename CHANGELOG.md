@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.25 (2021-07-12)
+### Fix
+* **docx:** Custom path enabled ([`51947e3`](https://github.com/Esukhia/pedurma/commit/51947e3d279bfb002893e1d7ebec06576a7eb77f))
+
 ## v0.1.24 (2021-07-09)
 ### Fix
 * **reconstruction:** Docx preview enable ([`0c5ce98`](https://github.com/Esukhia/pedurma/commit/0c5ce98210c5f7d75ec8d0ceb7fb58ec2e07a305))
