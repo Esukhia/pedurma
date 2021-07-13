@@ -810,13 +810,13 @@ def merge_footnotes_per_page(page, foot_notes):
     """
     with_marker = page
     without_marker = page
-    markers = re.finditer("<.+?>", page)
+    markers = re.findall("<.+?>", page)
     for i, (marker, foot_note) in enumerate(zip(markers, foot_notes)):
-        if re.search("<p.+>", marker[0]):
-            repl1 = marker[0]
-            repl2 = marker[0]
+        if re.search("<p.+>", marker):
+            repl1 = marker
+            repl2 = f'|{marker[2:-1]}|'
         else:
-            marker_parts = marker[0][1:-1].split(",")
+            marker_parts = marker[1:-1].split(",")
             body_incremental = marker_parts[0]
             body_value = marker_parts[1]
             footnotes_parts = foot_note.split(">")
@@ -832,9 +832,10 @@ def merge_footnotes_per_page(page, foot_notes):
 
             repl1 = f"<{body_incremental},{body_value};{footnotes_incremental},{footnotes_value},{note}>"
             repl2 = f"<{note}>"
-        with_marker = with_marker.replace(marker[0], repl1, 1)
-        without_marker = without_marker.replace(marker[0], repl2, 1)
+        with_marker = with_marker.replace(marker, repl1, 1)
+        without_marker = without_marker.replace(marker, repl2, 1)
     result_with_marker = with_marker
+    without_marker = re.sub(f'<p(.+?)>', r'|\g<1>|', without_marker)
     result_without_marker = without_marker
     return result_with_marker, result_without_marker
 
@@ -984,7 +985,7 @@ def get_docx_text(text_id, output_path=None):
     for vol_id, text in preview_text.items():
         collation_text += f"{text}\n\n"
     collation_text = collation_text.replace('\n', '')
-    collation_text = re.sub(r'(<p.+?>)', r'\n\g<1>\n', collation_text)
+    collation_text = re.sub(r'(\|.+?\|)', r'\n\g<1>\n', collation_text)
     chunks = split_text(collation_text)
     docx_path = create_docx(text_id, chunks, output_path)
     return docx_path

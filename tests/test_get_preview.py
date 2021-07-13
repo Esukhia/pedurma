@@ -153,7 +153,7 @@ def test_get_docx_text():
     for vol_id, text in preview_text.items():
         collation_text += f"{text}\n\n"
     collation_text = collation_text.replace('\n', '')
-    collation_text = re.sub(r'(<p.+?>)', r'\n\g<1>\n', collation_text)
+    collation_text = re.sub(r'(\|.+?\|)', r'\n\g<1>\n', collation_text)
     chunks = split_text(collation_text)
     docx_path = create_docx(text_id, chunks, output_path)
     expected_path = Path.home() / "D1111.docx"
