@@ -9,8 +9,9 @@ from text A(OCRed etext) to text B(clean etext). We first compute a diff between
 A and B, then filter the annotations(dmp diffs) we want to transfer and then apply them to
 text B.
 """
-import collections
 import re
+from pydantic.main import validate_custom_root_type
+import pyewts
 
 from antx import transfer
 from collections import defaultdict
@@ -26,6 +27,7 @@ from pedurma.preprocess import (
 from pedurma.texts import get_durchen_page_obj, get_text_obj
 from pedurma.utils import optimized_diff_match_patch
 
+EWTSCONV = pyewts.pyewts()
 
 def rm_google_ocr_header(text):
     """Remove header of google ocr.
@@ -374,6 +376,25 @@ def translate_tib_number(footnotes_marker):
                 value += number[0]
     return value
 
+def get_tib_num(eng_num):
+    tib_num = {
+        "0": "༠",
+        "1": "༡",
+        "2": "༢",
+        "3": "༣",
+        "4": "༤",
+        "5": "༥",
+        "6": "༦",
+        "7": "༧",
+        "8": "༨",
+        "9": "༩",
+    }
+    value = ''
+    if eng_num:
+        for num in str(eng_num):
+            if re.search(r"[0-9]", num):
+                value += tib_num.get(num)
+    return value
 
 def get_value(footnotes_marker):
     """Compute the equivalent numbers in footnotes marker payload and return it.
@@ -443,8 +464,9 @@ def reformatting_body(text):
     pages = re.split(r"<p\S+?>", text)
     for page, ann in zip_longest(pages, page_anns, fillvalue=""):
         markers = re.finditer("<.+?>", page)
-        for i, marker in enumerate(markers, 1):
-            repl = f"<{i},{marker[0][1:-1]}>"
+        for marker_walker, marker in enumerate(markers, 1):
+            marker_walker = get_tib_num(marker_walker)
+            repl = f"<{marker_walker},{marker[0][1:-1]}>"
             page = page.replace(marker[0], repl, 1)
         result += page + ann
     return result
@@ -811,10 +833,10 @@ def merge_footnotes_per_page(page, foot_notes):
     with_marker = page
     without_marker = page
     markers = re.findall("<.+?>", page)
-    for i, (marker, foot_note) in enumerate(zip(markers, foot_notes)):
+    for marker_walker, (marker, foot_note) in enumerate(zip(markers, foot_notes),1):
         if re.search("<p.+>", marker):
             repl1 = marker
-            repl2 = f'|{marker[2:-1]}|'
+            repl2 = f'\n|{marker[2:-1]}|'
         else:
             marker_parts = marker[1:-1].split(",")
             body_incremental = marker_parts[0]
@@ -829,13 +851,13 @@ def merge_footnotes_per_page(page, foot_notes):
                 note = footnotes_parts[1]
             except Exception:
                 note = ""
-
+            marker_walker = get_tib_num(marker_walker)
             repl1 = f"<{body_incremental},{body_value};{footnotes_incremental},{footnotes_value},{note}>"
-            repl2 = f"<{note}>"
+            repl2 = f"<{marker_walker}{note}>"
         with_marker = with_marker.replace(marker, repl1, 1)
         without_marker = without_marker.replace(marker, repl2, 1)
     result_with_marker = with_marker
-    without_marker = re.sub(f'<p(.+?)>', r'|\g<1>|', without_marker)
+    without_marker = re.sub(f'<p(.+?)>', r'\n|\g<1>|', without_marker)
     result_without_marker = without_marker
     return result_with_marker, result_without_marker
 
