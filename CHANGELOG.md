@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.27 (2021-07-15)
+### Fix
+* **reconstruction:** Tibetan serial number added to notes ([`f992aee`](https://github.com/Esukhia/pedurma/commit/f992aee12d10419716f700ebc9334babe0aa5043))
+
 ## v0.1.26 (2021-07-13)
 ### Fix
 * **reconstruction:** Page number in img changed to |pg_num| to not confuse with p tag ([`b3ba0b0`](https://github.com/Esukhia/pedurma/commit/b3ba0b01f8b2459f07a0e7eced9da99d65c89040))
