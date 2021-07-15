@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.26 (2021-07-13)
+### Fix
+* **reconstruction:** Page number in img changed to |pg_num| to not confuse with p tag ([`b3ba0b0`](https://github.com/Esukhia/pedurma/commit/b3ba0b01f8b2459f07a0e7eced9da99d65c89040))
+
 ## v0.1.25 (2021-07-12)
 ### Fix
 * **docx:** Custom path enabled ([`51947e3`](https://github.com/Esukhia/pedurma/commit/51947e3d279bfb002893e1d7ebec06576a7eb77f))
