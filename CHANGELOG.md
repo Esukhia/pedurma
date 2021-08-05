@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.28 (2021-08-05)
+### Fix
+* **note:** Text wise opf supported ([`92b5a0c`](https://github.com/Esukhia/pedurma/commit/92b5a0c5188816a5a42098b44bcd45940d85f859))
+
 ## v0.1.27 (2021-07-15)
 ### Fix
 * **reconstruction:** Tibetan serial number added to notes ([`f992aee`](https://github.com/Esukhia/pedurma/commit/f992aee12d10419716f700ebc9334babe0aa5043))
