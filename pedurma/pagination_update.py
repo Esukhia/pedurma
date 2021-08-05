@@ -110,22 +110,22 @@ def update_pg_ref(vol, pages_to_edit, pagination_layer):
     return pagination_layer
 
 
-def update_pagination(text_id, pedurma_edit_notes, index, pecha_path):
+def update_pagination(pecha_id, text_id, pedurma_edit_notes, index, pecha_path):
     text_uuid, text_info = get_text_info(text_id, index)
     for span in text_info["span"]:
         vol = span["vol"]
         pagination_layer = from_yaml(
-            Path(f"{pecha_path}/P000792.opf/layers/v{int(vol):03}/Pagination.yml")
+            Path(f"{pecha_path}/{pecha_id}.opf/layers/v{int(vol):03}/Pagination.yml")
         )
         pagination_layer = update_pg_ref(vol, pedurma_edit_notes, pagination_layer)
         yield vol, pagination_layer
 
 
-def update_text_pagination(text_id, pedurma_edit_notes):
-    pecha_path = download_pecha("P000792", needs_update=False)
-    index = from_yaml(Path(f"{pecha_path}/P000792.opf/index.yml"))
+def update_text_pagination(pecha_id, text_id, pedurma_edit_notes):
+    pecha_path = download_pecha(pecha_id, needs_update=False)
+    index = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/index.yml"))
     for vol, new_pagination in update_pagination(
-        text_id, pedurma_edit_notes, index, pecha_path
+        pecha_id, text_id, pedurma_edit_notes, index, pecha_path
     ):
         new_pagination_yml = to_yaml(new_pagination)
         Path(

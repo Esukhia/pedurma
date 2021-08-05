@@ -51,7 +51,7 @@ def get_prev_pg_ann(pg_num, pg_face):
 
 def add_first_page_ann(text):
     pg_pat = re.search(r"\[[𰵀-󴉱]?([0-9]+)([a-z]{1})\]", text)
-    pg_num = pg_pat.group(1)
+    pg_num = int(pg_pat.group(1))
     pg_face = pg_pat.group(2)
     prev_pg_ann = get_prev_pg_ann(pg_num, pg_face)
     new_text = f'{prev_pg_ann}\n{text}'

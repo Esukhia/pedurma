@@ -112,8 +112,8 @@ def get_pages_to_edit(durchen_pages, text_meta):
     return pages_to_edit
 
 
-def get_hfml_text(opf_path, text_id):
-    serializer = HFMLSerializer(f"{opf_path}/P000792.opf", text_id=text_id)
+def get_hfml_text(opf_path, pecha_id):
+    serializer = HFMLSerializer(f"{opf_path}/{pecha_id}.opf",)
     serializer.apply_layers()
     hfml_text = serializer.get_result()
     return hfml_text
@@ -129,9 +129,9 @@ def get_pedurma_edit_notes(hfml_text, text_meta):
     return pedurma_edit_notes
 
 
-def get_pedurma_text_edit_notes(text_id):
-    pecha_path = download_pecha("P000792", needs_update=False)
-    meta_data = from_yaml(Path(f"{pecha_path}/P000792.opf/meta.yml"))
-    hfmls = get_hfml_text(pecha_path, text_id)
+def get_pedurma_text_edit_notes(pecha_id):
+    pecha_path = download_pecha(pecha_id, needs_update=False)
+    meta_data = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/meta.yml"))
+    hfmls = get_hfml_text(pecha_path, pecha_id)
     pedurma_edit_notes = get_pedurma_edit_notes(hfmls, meta_data)
     return pedurma_edit_notes
