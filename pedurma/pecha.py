@@ -33,6 +33,10 @@ class Text(BaseModel):
     pages: List[Page]
     notes: Optional[List[NotesPage]]
 
+class PedurmaText(BaseModel):
+    namsel: Text
+    google: Text
+
 
 class PedurmaPreviewPage(BaseModel):
     content: str

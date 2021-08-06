@@ -6,30 +6,18 @@ from pathlib import Path
 
 from pedurma.pecha import *
 from pedurma.exceptions import PageNumMissing
-from pedurma.reconstruction import get_preview_page, split_text, create_docx
-from pedurma.texts import get_text_obj, get_durchen_page_obj
+from pedurma.reconstruction import get_preview_page, get_preview_text, split_text, create_docx
 from pedurma.utils import from_yaml
 
 def get_dummy_preview():
     dg_pecha_path = Path('./tests/data/preview/P791')
     namsel_pecha_path = Path('./tests/data/preview/P792')
     text_id = "D1111"
-
-    derge_google_text_obj = get_text_obj("P791", text_id, dg_pecha_path)
-    namsel_text_obj = get_text_obj("P792", text_id, namsel_pecha_path)
-    preview_text = defaultdict(str)
-    dg_pages = derge_google_text_obj.pages
-    dg_notes = derge_google_text_obj.notes
-    namsel_pages = namsel_text_obj.pages
-    namsel_notes = namsel_text_obj.notes
-    for dg_page, namsel_page in zip(dg_pages, namsel_pages):
-        vol_num = dg_page.vol
-        dg_durchen = get_durchen_page_obj(dg_page, dg_notes)
-        namsel_durchen = get_durchen_page_obj(namsel_page, namsel_notes)
-        if dg_durchen == None or namsel_durchen == None:
-            print('Either of durchen is unable to locate')
-            continue
-        preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
+    pecha_paths = {
+        'namsel': namsel_pecha_path,
+        'google': dg_pecha_path
+    }
+    preview_text = get_preview_text(text_id, pecha_paths)
     return preview_text
 
 def test_get_preview_page():

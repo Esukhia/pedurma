@@ -1,4 +1,7 @@
+import json
+from pedurma.exceptions import TextMappingNotFound
 import re
+import requests
 
 from collections import defaultdict
 from pathlib import Path
@@ -223,6 +226,19 @@ def get_durchen_page_obj(page, notes):
             return note
     return None
 
+def get_pecha_paths(text_id, text_mapping=None):
+    pecha_paths = {}
+    if not text_mapping:
+        text_mapping = requests.get('https://raw.githubusercontent.com/OpenPecha-dev/editable-text/main/text_pecha_mapping.json')
+        text_mapping = json.loads(text_mapping)
+    text_info = text_mapping.get(text_id, {})
+    if text_info:
+        for src, pecha_id in text_info.items():
+            pecha_paths[src] = download_pecha(pecha_id)
+    else:
+        raise TextMappingNotFound
+    return pecha_paths
+
 def get_text_obj(pecha_id, text_id, pecha_path = None):
     if not pecha_path:
         pecha_path = download_pecha(pecha_id, needs_update=False)
@@ -233,6 +249,16 @@ def get_text_obj(pecha_id, text_id, pecha_path = None):
     text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
     text = construct_text_obj(hfmls, text_meta, pecha_path)
     return text
+
+def get_pedurma_text_obj(text_id, pecha_paths=None):
+    if not pecha_paths:
+        pecha_paths = get_pecha_paths(text_id)
+    text = {}
+    for pecha_src, pecha_path in pecha_paths.items():
+        pecha_id = pecha_path.stem
+        text[pecha_src] = get_text_obj(pecha_id, text_id, pecha_path)
+    pedurma_text = PedurmaText(namsel=text['namsel'], google=text['google'])
+    return pedurma_text
 
 
 # if __name__ == "__main__":
