@@ -1,19 +1,14 @@
 from pathlib import Path
 
 from pedurma.pecha import *
-from pedurma.texts import get_text_info, construct_text_obj, get_meta_data
+from pedurma.texts import get_pedurma_text_obj, get_text_info, construct_text_obj, get_meta_data, get_text_obj
 from pedurma.utils import from_yaml
 
 def test_text_obj_serializer_corssvol():
     text_id = "D1115"
     pecha_id = "P000002"
     opf_path = f"./tests/data/{pecha_id}/"
-    index = from_yaml(Path(f"{opf_path}/{pecha_id}.opf/index.yml"))
-    meta_data = from_yaml(Path(f'{opf_path}/{pecha_id}.opf/meta.yml'))
-    text_uuid, text_info = get_text_info(text_id, index)
-    text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
-    hfmls = from_yaml(Path(f"./tests/data/hfmls/{text_id}.yml"))
-    text_obj = construct_text_obj(hfmls, text_meta, opf_path)
+    text_obj = get_text_obj(pecha_id, text_id, pecha_path=opf_path)
     expected_text_obj = Text(
         id="259260e8e3544fc1a9a27d7dffc72df6",
         pages=[
@@ -76,7 +71,7 @@ def test_text_obj_serializer_corssvol():
             NotesPage(
                 id="46d97ed3d9ca4ddabc3c413f306df03a",
                 page_no=4,
-                content="\nརྒྱ་གར་གྱི་\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།\n",
+                content="\nརྒྱ་གར་གྱི་\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
                 name="Page 4",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
@@ -98,12 +93,7 @@ def test_text_obj_serializer():
     text_id = "D1116"
     pecha_id = "P000002"
     opf_path = f"./tests/data/{pecha_id}/"
-    index = from_yaml(Path(f"{opf_path}/{pecha_id}.opf/index.yml"))
-    meta_data = from_yaml(Path(f'{opf_path}/{pecha_id}.opf/meta.yml'))
-    text_uuid, text_info = get_text_info(text_id, index)
-    text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
-    hfmls = from_yaml(Path(f"./tests/data/hfmls/{text_id}.yml"))
-    text_obj = construct_text_obj(hfmls, text_meta, opf_path)
+    text_obj = text_obj = get_text_obj(pecha_id, text_id, pecha_path=opf_path)
     expected_text_obj = Text(
         id="cf52cbae1a7640b688b24135fe566920",
         pages=[
@@ -130,7 +120,7 @@ def test_text_obj_serializer():
             NotesPage(
                 id="9efa117a2b9444ac8cb09c198d21cdd8",
                 page_no=7,
-                content="\nདེ་ལ་ནམ་མཁའི་\nབ་ཡང་དག་པར་\nགིས་ནི་ཆོས་སྟོན་པའི་\n",
+                content="\nདེ་ལ་ནམ་མཁའི་\nབ་ཡང་དག་པར་\nགིས་ནི་ཆོས་སྟོན་པའི་",
                 name="Page 7",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
@@ -138,3 +128,48 @@ def test_text_obj_serializer():
         ],
     )
     assert text_obj == expected_text_obj
+
+
+def test_pedurma_text_obj():
+    dg_pecha_path = Path('./tests/data/P000002')
+    namsel_pecha_path = Path('./tests/data/P000002')
+    text_id = "D1116"
+    pecha_paths = {
+        'namsel': namsel_pecha_path,
+        'google': dg_pecha_path
+    }
+    expected_namsel_text_obj = Text(
+        id="cf52cbae1a7640b688b24135fe566920",
+        pages=[
+            Page(
+                id="3373e79434004aaeb8b2e69649243d2a",
+                page_no=5,
+                content="\nངོས་ལྗོན་ཤིང་\nལེན་པ་པོ་ཕུན་སུམ་ཚོགས་པའོ།\nའདི་དག་གིས་ནི་སྦྱིན་པར་\n",
+                name="Page 5",
+                vol="2",
+                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
+                note_ref="9efa117a2b9444ac8cb09c198d21cdd8",
+            ),
+            Page(
+                id="71dff610d4c841c58e9c815582bf8508",
+                page_no=6,
+                content="\nམངའ་དབང་མཛད་པ་\nའདི་དག་གིས་ནི་དེའི་\nགིས་ནི་སྐྱེ་བ་ལ་\n",
+                name="Page 6",
+                vol="2",
+                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
+                note_ref="9efa117a2b9444ac8cb09c198d21cdd8",
+            ),
+        ],
+        notes=[
+            NotesPage(
+                id="9efa117a2b9444ac8cb09c198d21cdd8",
+                page_no=7,
+                content="\nདེ་ལ་ནམ་མཁའི་\nབ་ཡང་དག་པར་\nགིས་ནི་ཆོས་སྟོན་པའི་",
+                name="Page 7",
+                vol="2",
+                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
+            )
+        ],
+    )
+    pedurma_text = get_pedurma_text_obj(text_id, pecha_paths)
+    assert pedurma_text.namsel == expected_namsel_text_obj

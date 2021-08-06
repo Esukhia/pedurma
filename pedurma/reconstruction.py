@@ -9,6 +9,7 @@ from text A(OCRed etext) to text B(clean etext). We first compute a diff between
 A and B, then filter the annotations(dmp diffs) we want to transfer and then apply them to
 text B.
 """
+
 import re
 from pydantic.main import validate_custom_root_type
 import pyewts
@@ -24,7 +25,8 @@ from pedurma.preprocess import (
     preprocess_google_notes,
     preprocess_namsel_notes,
 )
-from pedurma.texts import get_durchen_page_obj, get_text_obj
+from pedurma.pecha import PedurmaText
+from pedurma.texts import get_durchen_page_obj, get_pedurma_text_obj
 from pedurma.utils import optimized_diff_match_patch
 
 EWTSCONV = pyewts.pyewts()
@@ -955,11 +957,10 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
     else:
         return ""
   
-def get_preview_text(text_id):
-    derge_google_pecha_id = "12d32eb31c1a4cc59741cda99ebc7211"
-    namsel_pecha_id = "187ed94f85154ea5b1ac374a651e1770"
-    derge_google_text_obj = get_text_obj(derge_google_pecha_id, text_id)
-    namsel_text_obj = get_text_obj(namsel_pecha_id, text_id)
+def get_preview_text(text_id, pecha_paths=None):
+    pedurmatext = get_pedurma_text_obj(text_id, pecha_paths)
+    derge_google_text_obj = pedurmatext.google
+    namsel_text_obj = pedurmatext.namsel
     preview_text = defaultdict(str)
     dg_pages = derge_google_text_obj.pages
     dg_notes = derge_google_text_obj.notes
