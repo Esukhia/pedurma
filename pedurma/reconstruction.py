@@ -855,7 +855,7 @@ def merge_footnotes_per_page(page, foot_notes):
                 note = ""
             marker_walker = get_tib_num(marker_walker)
             repl1 = f"<{body_incremental},{body_value};{footnotes_incremental},{footnotes_value},{note}>"
-            repl2 = f"<{marker_walker}{note}>"
+            repl2 = f"{marker_walker} <{note}>"
         with_marker = with_marker.replace(marker, repl1, 1)
         without_marker = without_marker.replace(marker, repl2, 1)
     result_with_marker = with_marker
