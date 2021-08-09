@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.29 (2021-08-06)
+### Fix
+* **text:** Text mapping bug fixed ([`471f8ab`](https://github.com/Esukhia/pedurma/commit/471f8ab75ee573234399ab074878928b61930f0e))
+* **text:** Dedicated method for pedurma text obj implemented ([`468f0b5`](https://github.com/Esukhia/pedurma/commit/468f0b523aa8a3a4bfe3627195e256f20085b833))
+
 ## v0.1.28 (2021-08-05)
 ### Fix
 * **note:** Text wise opf supported ([`92b5a0c`](https://github.com/Esukhia/pedurma/commit/92b5a0c5188816a5a42098b44bcd45940d85f859))
