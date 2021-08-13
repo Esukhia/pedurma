@@ -191,19 +191,13 @@ def test_update_index():
 
 def test_integration():
     os.system('cp -r ./tests/data/save_text/P0003 ./tests/data/save_text/P0003_copy')
-    pecha_opf_path = Path('./tests/data/save_text/P0003_copy/')
+    pecha_opf_path = './tests/data/save_text/P0003_copy/'
     pecha_id = "P0003"
     text_id = "D1118"
     text_obj = get_text_obj(pecha_id, text_id, pecha_opf_path)
     new_last_page = "\nརིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་kkལ་སོགས།\n"
     text_obj.pages[-1].content = new_last_page
-    old_pecha_idx = from_yaml((pecha_opf_path / f'{pecha_id}.opf/index.yml'))
-    prev_pecha_idx = copy.deepcopy(old_pecha_idx)
-    new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
-    update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
-    update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
-    new_pecha_idx = to_yaml(new_pecha_idx)
-    (pecha_opf_path / f'{pecha_id}.opf/index.yml').write_text(new_pecha_idx, encoding='utf-8')
+    pecha_opf_path = save_text(pecha_id, text_obj, pecha_opf_path)
     new_text_obj = get_text_obj(pecha_id, text_id, pecha_opf_path)
     assert new_text_obj == text_obj
     os.system('rm -r ./tests/data/save_text/P0003_copy')

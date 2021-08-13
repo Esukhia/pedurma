@@ -10,8 +10,8 @@ from pedurma.reconstruction import get_preview_page, get_preview_text, split_tex
 from pedurma.utils import from_yaml
 
 def get_dummy_preview():
-    dg_pecha_path = Path('./tests/data/preview/P791')
-    namsel_pecha_path = Path('./tests/data/preview/P792')
+    dg_pecha_path = './tests/data/preview/P791'
+    namsel_pecha_path = './tests/data/preview/P792'
     text_id = "D1111"
     pecha_paths = {
         'namsel': namsel_pecha_path,

@@ -255,7 +255,7 @@ def get_pedurma_text_obj(text_id, pecha_paths=None):
         pecha_paths = get_pecha_paths(text_id)
     text = {}
     for pecha_src, pecha_path in pecha_paths.items():
-        pecha_id = pecha_path.stem
+        pecha_id = Path(pecha_path).stem
         text[pecha_src] = get_text_obj(pecha_id, text_id, pecha_path)
     pedurma_text = PedurmaText(namsel=text['namsel'], google=text['google'])
     return pedurma_text

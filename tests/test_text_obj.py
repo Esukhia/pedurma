@@ -131,8 +131,8 @@ def test_text_obj_serializer():
 
 
 def test_pedurma_text_obj():
-    dg_pecha_path = Path('./tests/data/P000002')
-    namsel_pecha_path = Path('./tests/data/P000002')
+    dg_pecha_path = './tests/data/P000002'
+    namsel_pecha_path = './tests/data/P000002'
     text_id = "D1116"
     pecha_paths = {
         'namsel': namsel_pecha_path,

@@ -1,6 +1,7 @@
 import copy
 from openpecha.blupdate import *
 from openpecha.cli import download_pecha
+from openpecha.utils import load_yaml, dump_yaml
 from pedurma.pecha import *
 from pedurma.texts import serialize_text_obj
 from pedurma.utils import from_yaml, to_yaml
@@ -8,7 +9,7 @@ from pedurma.utils import from_yaml, to_yaml
 def get_old_vol(pecha_opf_path, pecha_id, text_vol_span):
     old_vols = {}
     for vol_id in text_vol_span:
-        old_vols[vol_id] = (pecha_opf_path / f"{pecha_id}.opf/base/{vol_id}.txt").read_text(encoding='utf-8')
+        old_vols[vol_id] = Path(f"{pecha_opf_path}/{pecha_id}.opf/base/{vol_id}.txt").read_text(encoding='utf-8')
     return old_vols
 
 def get_old_text_base(old_pecha_idx, old_vol_base, text_id, text_vol_num):
@@ -43,12 +44,12 @@ def update_base(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
     for vol_id, new_vol_base in new_vols.items():
-        (pecha_opf_path / f"{pecha_id}.opf/base/{vol_id}.txt").write_text(new_vol_base, encoding='utf-8')
+        Path(f"{pecha_opf_path}/{pecha_id}.opf/base/{vol_id}.txt").write_text(new_vol_base, encoding='utf-8')
         print(f'INFO: {vol_id} base updated..')
 
 def get_old_layers(pecha_opf_path, pecha_id, vol_id):
     old_layers = {}
-    layer_paths = list((pecha_opf_path / f"{pecha_id}.opf/layers/{vol_id}").iterdir())
+    layer_paths = list(Path(f"{pecha_opf_path}/{pecha_id}.opf/layers/{vol_id}").iterdir())
     for layer_path in layer_paths:
         layer_name = layer_path.stem
         layer_content = from_yaml(layer_path)
@@ -58,8 +59,8 @@ def get_old_layers(pecha_opf_path, pecha_id, vol_id):
 def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
     for layer_name, old_layer in old_layers.items():
         update_ann_layer(old_layer, updater)
-        new_layer = to_yaml(old_layer)
-        (pecha_opf_path / f"{pecha_id}.opf/layers/{vol_id}/{layer_name}.yml").write_text(new_layer, encoding='utf-8')
+        new_layer_path = Path(f"{pecha_opf_path}/{pecha_id}.opf/layers/{vol_id}/{layer_name}.yml")
+        dump_yaml(old_layer, new_layer_path)
         print(f'INFO: {vol_id} {layer_name} has been updated...')
     
 def update_old_layers(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
@@ -104,14 +105,15 @@ def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
                 old_pecha_idx = update_other_text_index(old_pecha_idx, text_obj.id, cur_vol_offset, vol_num)
     return old_pecha_idx
 
-def save_text(pecha_id, text_obj, **kwargs):
-    pecha_opf_path = download_pecha(pecha_id, **kwargs)
-    old_pecha_idx = from_yaml((pecha_opf_path / f'{pecha_id}.opf/index.yml'))
+def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
+    if not pecha_opf_path:
+        pecha_opf_path = download_pecha(pecha_id, **kwargs)
+    old_pecha_idx = from_yaml(Path(f'{pecha_opf_path}/{pecha_id}.opf/index.yml'))
     prev_pecha_idx = copy.deepcopy(old_pecha_idx)
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
     update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
-    new_pecha_idx = to_yaml(new_pecha_idx)
-    (pecha_opf_path / f'{pecha_id}.opf/index.yml').write_text(new_pecha_idx, encoding='utf-8')
+    new_pecha_idx_path = Path(f'{pecha_opf_path}/{pecha_id}.opf/index.yml')
+    dump_yaml(new_pecha_idx, new_pecha_idx_path)
     return pecha_opf_path
 
