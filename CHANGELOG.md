@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.30 (2021-08-09)
+### Fix
+* **reconstruction:** Note marker in preview changed ([`635902c`](https://github.com/Esukhia/pedurma/commit/635902cdc139a2261334d0da1b788f42fc3bc5ed))
+
 ## v0.1.29 (2021-08-06)
 ### Fix
 * **text:** Text mapping bug fixed ([`471f8ab`](https://github.com/Esukhia/pedurma/commit/471f8ab75ee573234399ab074878928b61930f0e))
