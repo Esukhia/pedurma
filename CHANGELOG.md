@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.31 (2021-08-17)
+### Fix
+* **text:** Extra line rm for better readibility ([`78d3403`](https://github.com/Esukhia/pedurma/commit/78d34032c288b64c0f58e0979371449eb11318a2))
+* **opf_path:** Opf parameter is changed to str datatype ([`c706226`](https://github.com/Esukhia/pedurma/commit/c70622656f9953957619daf192b2184e30cfd347))
+
 ## v0.1.30 (2021-08-09)
 ### Fix
 * **reconstruction:** Note marker in preview changed ([`635902c`](https://github.com/Esukhia/pedurma/commit/635902cdc139a2261334d0da1b788f42fc3bc5ed))
