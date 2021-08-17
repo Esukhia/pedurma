@@ -832,36 +832,23 @@ def merge_footnotes_per_page(page, foot_notes):
     Returns:
         str: content of page attached with their footnote adjacent to their marker
     """
-    with_marker = page
-    without_marker = page
+    preview_page = page
     markers = re.findall("<.+?>", page)
-    for marker_walker, (marker, foot_note) in enumerate(zip(markers, foot_notes),1):
+    for marker_walker, (marker, foot_note) in enumerate(zip_longest(markers, foot_notes, fillvalue=""),1):
         if re.search("<p.+>", marker):
-            repl1 = marker
             repl2 = f'\n|{marker[2:-1]}|'
         else:
-            marker_parts = marker[1:-1].split(",")
-            body_incremental = marker_parts[0]
-            body_value = marker_parts[1]
             footnotes_parts = foot_note.split(">")
-            footnotes_incremental = footnotes_parts[0].split(",")[0][1:]
-            try:
-                footnotes_value = footnotes_parts[0].split(",")[1]
-            except Exception:
-                footnotes_value = ""
             try:
                 note = footnotes_parts[1]
             except Exception:
                 note = ""
             marker_walker = get_tib_num(marker_walker)
-            repl1 = f"<{body_incremental},{body_value};{footnotes_incremental},{footnotes_value},{note}>"
-            repl2 = f"{marker_walker} <{note}>"
-        with_marker = with_marker.replace(marker, repl1, 1)
-        without_marker = without_marker.replace(marker, repl2, 1)
-    result_with_marker = with_marker
-    without_marker = re.sub(f'<p(.+?)>', r'\n|\g<1>|', without_marker)
-    result_without_marker = without_marker
-    return result_with_marker, result_without_marker
+            repl2 = f"({marker_walker}) <{note}>"
+            
+        preview_page = preview_page.replace(marker, repl2, 1)
+    preview_page = re.sub(f'<p(.+?)>', r'\n|\g<1>|', preview_page)
+    return preview_page
 
 
 def reconstruct_body(source, target, vol_num):
@@ -932,6 +919,7 @@ def get_page_num(body_text, vol_num):
     return pg_num
 
 def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
+    preview_page = ""
     g_body_page_content = g_body_page.content
     n_body_page_content = n_body_page.content
     g_durchen_page_content = g_durchen_page.content
@@ -952,10 +940,8 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
     else:
         cur_pg_footnotes = footnotes[pg_num]
     if cur_pg_footnotes:
-        merge_marker, merge = merge_footnotes_per_page(body_result, cur_pg_footnotes)
-        return merge
-    else:
-        return ""
+        preview_page = merge_footnotes_per_page(body_result, cur_pg_footnotes)
+    return preview_page
   
 def get_preview_text(text_id, pecha_paths=None):
     pedurmatext = get_pedurma_text_obj(text_id, pecha_paths)
@@ -973,12 +959,12 @@ def get_preview_text(text_id, pecha_paths=None):
         if dg_durchen == None or namsel_durchen == None:
             print('Either of durchen is unable to locate')
             continue
-        preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen)
+        preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen) + '\n'
     return preview_text
 
 def split_text(content):
 
-    chunks = re.split("(<.+?>)", content)
+    chunks = re.split(r"(\d+ <.*?>)", content)
 
     return chunks
 
@@ -987,7 +973,7 @@ def create_docx(text_id, chunks, path):
     p = document.add_paragraph()
 
     for chunk in chunks:
-        if chunk and chunk[0] == "<":
+        if chunk and "<" in chunk:
             sub_text = p.add_run(chunk)
             sub_text.font.subscript = True
             # sub_text.font.bold = True

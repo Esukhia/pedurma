@@ -142,6 +142,7 @@ def get_clean_page(page):
     base_page = page
     for ann, ann_pat in pat_list.items():
         base_page = re.sub(ann_pat, "", base_page)
+    base_page = base_page.lstrip()
     return base_page
 
 
@@ -152,7 +153,7 @@ def get_page_obj(page, text_meta, tag, pagination_layer):
     pg_num = get_page_num(page_idx)
     page_link = get_link(pg_num, text_meta)
     note_ref = get_note_ref(pagination)
-    if page_content == "\n":
+    if page_content == "":
         page_obj = None
     else:
         if tag == "note":
@@ -215,9 +216,12 @@ def serialize_text_obj(text):
     pages = text.pages
     notes = text.notes
     for page in pages:
-        text_hfml[f"v{int(page.vol):03}"] += page.content
+        if page.page_no != 1:
+            text_hfml[f"v{int(page.vol):03}"] += f'\n{page.content}'
+        else:
+            text_hfml[f"v{int(page.vol):03}"] += f'{page.content}'
     for note in notes:
-        text_hfml[f"v{int(note.vol):03}"] += note.content
+        text_hfml[f"v{int(note.vol):03}"] += f'\n{note.content}'
     return text_hfml
 
 def get_durchen_page_obj(page, notes):
@@ -255,7 +259,7 @@ def get_pedurma_text_obj(text_id, pecha_paths=None):
         pecha_paths = get_pecha_paths(text_id)
     text = {}
     for pecha_src, pecha_path in pecha_paths.items():
-        pecha_id = pecha_path.stem
+        pecha_id = Path(pecha_path).stem
         text[pecha_src] = get_text_obj(pecha_id, text_id, pecha_path)
     pedurma_text = PedurmaText(namsel=text['namsel'], google=text['google'])
     return pedurma_text
