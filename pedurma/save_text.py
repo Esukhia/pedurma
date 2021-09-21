@@ -3,7 +3,7 @@ from openpecha.blupdate import *
 from openpecha.cli import download_pecha
 from openpecha.utils import load_yaml, dump_yaml
 from pedurma.pecha import *
-from pedurma.texts import serialize_text_obj
+from pedurma.texts import serialize_text_obj, get_pecha_paths
 from pedurma.utils import from_yaml, to_yaml
 
 def get_old_vol(pecha_opf_path, pecha_id, text_vol_span):
@@ -117,3 +117,23 @@ def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
     dump_yaml(new_pecha_idx, new_pecha_idx_path)
     return pecha_opf_path
 
+def get_pedurma_text_mapping(pedurma_text_obj):
+    pedurma_text_mapping = {}
+    pecha_paths = get_pecha_paths(text_id=pedurma_text_obj.text_id)
+    for pecha_src, pecha_path in pecha_paths.items():
+        if pecha_src == 'namsel':
+            text_obj = pedurma_text_obj.namsel
+        else:
+            text_obj = pedurma_text_obj.google
+        pedurma_text_mapping[pecha_src] = {
+            'pecha_id': Path(pecha_path).stem,
+            'text_obj': text_obj,
+            'pecha_path': pecha_path
+        }
+    return pedurma_text_mapping
+
+def save_pedurma_text(pedurma_text_obj, pedurma_text_mapping=None):
+    if not pedurma_text_mapping:
+        pedurma_text_mapping = get_pedurma_text_mapping(pedurma_text_obj)
+    for ocr_engine, pedurma_text in pedurma_text_mapping.items():
+        save_text(pedurma_text['pecha_id'], pedurma_text['text_obj'], pedurma_text['pecha_path'])

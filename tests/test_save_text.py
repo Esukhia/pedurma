@@ -189,15 +189,35 @@ def test_update_index():
     assert new_pecha_idx == expected_idx
 
 
-def test_integration():
-    os.system('cp -r ./tests/data/save_text/P0003 ./tests/data/save_text/P0003_copy')
-    pecha_opf_path = './tests/data/save_text/P0003_copy/'
-    pecha_id = "P0003"
+def test_save_pedurma_text():
+    os.system('cp -r ./tests/data/save_text/P0003 ./tests/data/save_text/P0003_namsel')
+    os.system('cp -r ./tests/data/save_text/P0003 ./tests/data/save_text/P0003_google')
     text_id = "D1118"
-    text_obj = get_text_obj(pecha_id, text_id, pecha_opf_path)
-    new_last_page = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་kkལ་སོགས།"
-    text_obj.pages[-1].content = new_last_page
-    pecha_opf_path = save_text(pecha_id, text_obj, pecha_opf_path)
-    new_text_obj = get_text_obj(pecha_id, text_id, pecha_opf_path)
-    assert new_text_obj == text_obj
-    os.system('rm -r ./tests/data/save_text/P0003_copy')
+    pecha_id = "P0003"
+    namsel_pecha_path = './tests/data/save_text/P0003_namsel'
+    google_pecha_path = './tests/data/save_text/P0003_google'
+    namsel_text_obj = get_text_obj(pecha_id, text_id, namsel_pecha_path)
+    namsel_text_obj.pages[-1].content = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་kkལ་སོགས།\n"
+    google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path)
+    google_text_obj.pages[-1].content = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་llལ་སོགས།\n"
+    pedurma_text_mapping = {
+        'namsel': {
+            'pecha_id': pecha_id,
+            'text_obj': namsel_text_obj,
+            'pecha_path': namsel_pecha_path
+        },
+        'google': {
+            'pecha_id': pecha_id,
+            'text_obj': google_text_obj,
+            'pecha_path': google_pecha_path
+        }
+    }
+    save_pedurma_text(pedurma_text_obj=None, pedurma_text_mapping=pedurma_text_mapping)
+    new_namsel_text_obj = get_text_obj(pecha_id, text_id, namsel_pecha_path)
+    new_google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path)
+    assert new_google_text_obj == google_text_obj
+    assert new_namsel_text_obj == namsel_text_obj
+    os.system('rm -r ./tests/data/save_text/P0003_namsel')
+    os.system('rm -r ./tests/data/save_text/P0003_google')
+
+
