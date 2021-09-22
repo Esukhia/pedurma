@@ -34,6 +34,7 @@ class Text(BaseModel):
     notes: Optional[List[NotesPage]]
 
 class PedurmaText(BaseModel):
+    text_id: str
     namsel: Text
     google: Text
 
