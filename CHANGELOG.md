@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.32 (2021-09-22)
+### Fix
+* **save-text:** Pedurma text obj save method added ([`9beeb07`](https://github.com/Esukhia/pedurma/commit/9beeb07016d2586a2bbb4a68050269615cc69bfc))
+
 ## v0.1.31 (2021-08-17)
 ### Fix
 * **text:** Extra line rm for better readibility ([`78d3403`](https://github.com/Esukhia/pedurma/commit/78d34032c288b64c0f58e0979371449eb11318a2))
