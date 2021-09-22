@@ -7,12 +7,33 @@ from pedurma.texts import serialize_text_obj, get_pecha_paths
 from pedurma.utils import from_yaml, to_yaml
 
 def get_old_vol(pecha_opf_path, pecha_id, text_vol_span):
+    """Generate old base text in which text is located
+
+    Args:
+        pecha_opf_path (str): pecha opf path
+        pecha_id (str): pecha id 
+        text_vol_span (list): list of volume ids in which text is located
+
+    Returns:
+        dict: volid as key and base as value
+    """
     old_vols = {}
     for vol_id in text_vol_span:
         old_vols[vol_id] = Path(f"{pecha_opf_path}/{pecha_id}.opf/base/{vol_id}.txt").read_text(encoding='utf-8')
     return old_vols
 
 def get_old_text_base(old_pecha_idx, old_vol_base, text_id, text_vol_num):
+    """Return old text base
+
+    Args:
+        old_pecha_idx (dict): old index
+        old_vol_base (dict): old vol base and its vol id
+        text_id (str): text id
+        text_vol_num (str): text vol id
+
+    Returns:
+        str: text basetext in that volume
+    """
     text_span = old_pecha_idx['annotations'][text_id]['span']
     for vol_span in text_span:
         if vol_span['vol'] == text_vol_num:
@@ -20,6 +41,16 @@ def get_old_text_base(old_pecha_idx, old_vol_base, text_id, text_vol_num):
     return ''
 
 def get_new_vol(old_vols, old_pecha_idx, text_obj):
+    """Return new base text by replacing updated text from text object
+
+    Args:
+        old_vols (dict): old vol and its id
+        old_pecha_idx (dict): old pecha index
+        text_obj (obj): text object
+
+    Returns:
+        dict: new basetext and its id
+    """
     new_vols = {}
     new_text = serialize_text_obj(text_obj)
     for vol_id, new_text_base in new_text.items():
@@ -33,6 +64,15 @@ def get_new_vol(old_vols, old_pecha_idx, text_obj):
     return new_vols
 
 def get_text_vol_span(pecha_idx, text_uuid):
+    """Return list of volume ids in which text span
+
+    Args:
+        pecha_idx (dict): pecha index
+        text_uuid (uuid): text uuid
+
+    Returns:
+        list: vol ids
+    """
     text_vol_span = []
     for span in pecha_idx['annotations'][text_uuid]['span']:
         vol_num = span['vol']
@@ -40,6 +80,14 @@ def get_text_vol_span(pecha_idx, text_uuid):
     return text_vol_span
 
 def update_base(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
+    """Update base text using text obj
+
+    Args:
+        pecha_opf_path (str): pecha opf path
+        pecha_id (str): pecha id
+        text_obj (obj): text object
+        old_pecha_idx (dict): old pecha index
+    """
     text_vol_span = get_text_vol_span(old_pecha_idx, text_obj.id)
     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
@@ -48,6 +96,16 @@ def update_base(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
         print(f'INFO: {vol_id} base updated..')
 
 def get_old_layers(pecha_opf_path, pecha_id, vol_id):
+    """Return all the layers belonging in volume
+
+    Args:
+        pecha_opf_path (str): pecha opf path
+        pecha_id (str): pecha id
+        vol_id (str): volume id
+
+    Returns:
+        dict: layer name as key and layer annotations as value
+    """
     old_layers = {}
     layer_paths = list(Path(f"{pecha_opf_path}/{pecha_id}.opf/layers/{vol_id}").iterdir())
     for layer_path in layer_paths:
@@ -57,6 +115,15 @@ def get_old_layers(pecha_opf_path, pecha_id, vol_id):
     return old_layers
 
 def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
+    """Update particular layers belonging in given volume id 
+
+    Args:
+        pecha_opf_path (str): pecha opf path
+        pecha_id (str): pecha id
+        vol_id (str): volume id
+        old_layers (dict): layer name as key and annotations as value
+        updater (obj): updater object
+    """
     for layer_name, old_layer in old_layers.items():
         update_ann_layer(old_layer, updater)
         new_layer_path = Path(f"{pecha_opf_path}/{pecha_id}.opf/layers/{vol_id}/{layer_name}.yml")
@@ -64,6 +131,14 @@ def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
         print(f'INFO: {vol_id} {layer_name} has been updated...')
     
 def update_old_layers(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
+    """Update all the layers related to text object
+
+    Args:
+        pecha_opf_path (str): pecha opf path
+        pecha_id (str): pecha id
+        text_obj (obj): text object
+        old_pecha_idx (dict): old pecha index
+    """
     text_vol_span = get_text_vol_span(old_pecha_idx, text_obj.id)
     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
@@ -87,6 +162,17 @@ def update_other_text_index(old_pecha_idx, text_id, cur_vol_offset, vol_num):
     return old_pecha_idx
 
 def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
+    """Update pecha index according to text obj content
+
+    Args:
+        pecha_opf_path (str): pecha opf path
+        pecha_id (str): pecha id
+        text_obj (obj): text object
+        old_pecha_idx (dict): old pecha index
+
+    Returns:
+        dict: new pecha index
+    """
     text_vol_span = get_text_vol_span(old_pecha_idx, text_obj.id)
     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
@@ -106,6 +192,16 @@ def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
     return old_pecha_idx
 
 def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
+    """Update pecha opf according to text object content
+
+    Args:
+        pecha_id (str): pecha id
+        text_obj (text obj): text object
+        pecha_opf_path (str, optional): pecha path. Defaults to None.
+
+    Returns:
+        path: pecha opf path
+    """
     if not pecha_opf_path:
         pecha_opf_path = download_pecha(pecha_id, **kwargs)
     old_pecha_idx = from_yaml(Path(f'{pecha_opf_path}/{pecha_id}.opf/index.yml'))
@@ -118,6 +214,14 @@ def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
     return pecha_opf_path
 
 def get_pedurma_text_mapping(pedurma_text_obj):
+    """Pedurma text obj are parse and added pecha path
+
+    Args:
+        pedurma_text_obj (obj): pedurma text obj
+
+    Returns:
+        dict: ocr engine as key and associated text data as value
+    """
     pedurma_text_mapping = {}
     pecha_paths = get_pecha_paths(text_id=pedurma_text_obj.text_id)
     for pecha_src, pecha_path in pecha_paths.items():
@@ -133,6 +237,12 @@ def get_pedurma_text_mapping(pedurma_text_obj):
     return pedurma_text_mapping
 
 def save_pedurma_text(pedurma_text_obj, pedurma_text_mapping=None):
+    """Save changes to respective pedurma opfs according to pedurma text object content
+
+    Args:
+        pedurma_text_obj (obj): pedurma text object
+        pedurma_text_mapping (dict, optional): pedurma text data mapping. Defaults to None.
+    """
     if not pedurma_text_mapping:
         pedurma_text_mapping = get_pedurma_text_mapping(pedurma_text_obj)
     for ocr_engine, pedurma_text in pedurma_text_mapping.items():
