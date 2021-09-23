@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from pedurma.pecha import *
-from pedurma.texts import get_pedurma_text_obj, get_text_info, construct_text_obj, get_meta_data, get_text_obj
+from pedurma.texts import get_pedurma_text_obj, get_text_obj
 from pedurma.utils import from_yaml
 
 def test_text_obj_serializer_corssvol():
@@ -93,7 +93,7 @@ def test_text_obj_serializer():
     text_id = "D1116"
     pecha_id = "P000002"
     opf_path = f"./tests/data/{pecha_id}/"
-    text_obj = text_obj = get_text_obj(pecha_id, text_id, pecha_path=opf_path)
+    text_obj = get_text_obj(pecha_id, text_id, pecha_path=opf_path)
     expected_text_obj = Text(
         id="cf52cbae1a7640b688b24135fe566920",
         pages=[

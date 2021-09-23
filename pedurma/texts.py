@@ -202,8 +202,9 @@ def construct_text_obj(hfmls, text_meta, opf_path):
         )
         if not re.search(r"\[([𰵀-󴉱])?([0-9]+[a-z]{1})\]", hfml_text[:10]):
             hfml_text = add_first_page_ann(hfml_text)
-        body_text = get_body_text(hfml_text)
         durchen = get_durchen(hfml_text)
+        body_text = hfml_text.replace(durchen, '')
+        
         pages += get_page_obj_list(body_text, text_meta, pagination_layer, tag="text")
         if durchen:
             notes += get_page_obj_list(durchen, text_meta, pagination_layer, tag="note")
