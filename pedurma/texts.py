@@ -231,14 +231,17 @@ def get_durchen_page_obj(page, notes):
     return None
 
 def get_pecha_paths(text_id, text_mapping=None):
-    pecha_paths = {}
+    pecha_paths = {
+        "namsel": None,
+        "google": None
+    }
     if not text_mapping:
         text_mapping = requests.get('https://raw.githubusercontent.com/OpenPecha-dev/editable-text/main/text_pecha_mapping.json')
         text_mapping = json.loads(text_mapping.text)
     text_info = text_mapping.get(text_id, {})
     if text_info:
-        for src, pecha_id in text_info.items():
-            pecha_paths[src] = download_pecha(pecha_id)
+        pecha_paths['namsel'] = download_pecha(text_info['namsel'])
+        pecha_paths['google'] = download_pecha(text_info['google'])
     else:
         raise TextMappingNotFound
     return pecha_paths
