@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.34 (2021-09-23)
+### Fix
+* **text:** Body text extraction updated ([`9434a66`](https://github.com/Esukhia/pedurma/commit/9434a6693311cb6436f9a68f63af0c16521942ad))
+
 ## v0.1.33 (2021-09-23)
 ### Fix
 * **text-obj:** Pecha path extraction bug fix ([`adea953`](https://github.com/Esukhia/pedurma/commit/adea9537c5ae5cfb83309ed3b44424383ddd860a))
