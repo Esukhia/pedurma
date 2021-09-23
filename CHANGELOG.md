@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.33 (2021-09-23)
+### Fix
+* **text-obj:** Pecha path extraction bug fix ([`adea953`](https://github.com/Esukhia/pedurma/commit/adea9537c5ae5cfb83309ed3b44424383ddd860a))
+
 ## v0.1.32 (2021-09-22)
 ### Fix
 * **save-text:** Pedurma text obj save method added ([`9beeb07`](https://github.com/Esukhia/pedurma/commit/9beeb07016d2586a2bbb4a68050269615cc69bfc))
