@@ -213,6 +213,14 @@ def construct_text_obj(hfmls, text_meta, opf_path):
 
 
 def serialize_text_obj(text):
+    """Serialize text object to hfml
+
+    Args:
+        text (obj): text object
+
+    Returns:
+        dict: vol as key and value as hfml
+    """
     text_hfml = defaultdict(str)
     pages = text.pages
     notes = text.notes
