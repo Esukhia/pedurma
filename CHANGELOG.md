@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.35 (2021-09-28)
+### Fix
+* **text:** Serializer doc added ([`b75be05`](https://github.com/Esukhia/pedurma/commit/b75be0500336d011fc092799cb6950d7e207cb00))
+
 ## v0.1.34 (2021-09-23)
 ### Fix
 * **text:** Body text extraction updated ([`9434a66`](https://github.com/Esukhia/pedurma/commit/9434a6693311cb6436f9a68f63af0c16521942ad))
