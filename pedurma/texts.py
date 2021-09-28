@@ -213,6 +213,14 @@ def construct_text_obj(hfmls, text_meta, opf_path):
 
 
 def serialize_text_obj(text):
+    """Serialize text object to hfml
+
+    Args:
+        text (obj): text object
+
+    Returns:
+        dict: vol as key and value as hfml
+    """
     text_hfml = defaultdict(str)
     pages = text.pages
     notes = text.notes
@@ -237,7 +245,7 @@ def get_pecha_paths(text_id, text_mapping=None):
         "google": None
     }
     if not text_mapping:
-        text_mapping = requests.get('https://raw.githubusercontent.com/OpenPecha-dev/editable-text/main/text_pecha_mapping.json')
+        text_mapping = requests.get('https://raw.githubusercontent.com/OpenPecha-dev/editable-text/main/t_text_list.json')
         text_mapping = json.loads(text_mapping.text)
     text_info = text_mapping.get(text_id, {})
     if text_info:
