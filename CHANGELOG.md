@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.37 (2021-10-18)
+### Fix
+* **reconstruction:** Left diff and right diff default value set ([`5316c0b`](https://github.com/Esukhia/pedurma/commit/5316c0bba75ca186b177661238ca5d3297881bc4))
+
+## v0.1.36 (2021-10-18)
+### Fix
+* **text:** Excluded first page addition ([`14a0059`](https://github.com/Esukhia/pedurma/commit/14a00596994c50dc2667f381ef2e4e2176071dbc))
+
 ## v0.1.35 (2021-09-28)
 ### Fix
 * **text:** Serializer doc added ([`b75be05`](https://github.com/Esukhia/pedurma/commit/b75be0500336d011fc092799cb6950d7e207cb00))
