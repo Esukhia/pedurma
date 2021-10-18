@@ -200,8 +200,6 @@ def construct_text_obj(hfmls, text_meta, opf_path):
                 f"{opf_path}/{text_meta['pecha_id']}.opf/layers/v{int(text_meta['vol']):03}/Pagination.yml"
             )
         )
-        # if not re.search(r"\[([𰵀-󴉱])?([0-9]+[a-z]{1})\]", hfml_text[:10]):
-        #     hfml_text = add_first_page_ann(hfml_text)
         durchen = get_durchen(hfml_text)
         body_text = hfml_text.replace(durchen, '')
         
