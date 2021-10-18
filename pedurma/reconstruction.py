@@ -605,7 +605,8 @@ def filter_diffs(diffs_list, type, vol_num):
             ):  # checking diff text is page or not
                 result.append([1, diff_text, "pedurma-page"])
             else:
-
+                left_diff = [0, '']
+                right_diff = [0, '']
                 if i > 0:  # extracting left context of current diff
                     left_diff = diffs[i - 1]
                 left_diff_type, left_diff_text = left_diff
