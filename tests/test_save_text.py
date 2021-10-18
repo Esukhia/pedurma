@@ -197,7 +197,7 @@ def test_save_pedurma_text():
     namsel_pecha_path = './tests/data/save_text/P0003_namsel'
     google_pecha_path = './tests/data/save_text/P0003_google'
     namsel_text_obj = get_text_obj(pecha_id, text_id, namsel_pecha_path)
-    namsel_text_obj.pages[-1].content = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་kkལ་སོགས།\n"
+    namsel_text_obj.pages[0].content = "༄ཚོ། །རྒྱ་གར་སྐད་དུ།\nསྟ་བ་ནཱ་མ། བོད་སྐད་དུ།\nཔར་འོས་པ་བསྔགས་"
     google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path)
     google_text_obj.pages[-1].content = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་llལ་སོགས།\n"
     pedurma_text_mapping = {
