@@ -2,20 +2,32 @@ from pathlib import Path
 
 import pytest
 
+from pedurma.notes import get_pedurma_edit_notes, get_pedurma_text_edit_notes
 from pedurma.pecha import PedurmaNoteEdit
-from pedurma.notes import (
-    get_pedurma_edit_notes,
-    get_pedurma_text_edit_notes,
-)
-from pedurma.utils import from_yaml, to_yaml
+from pedurma.utils import from_yaml
+
+text_meta = {
+    "work_id": "W1PD95844",
+    "source_metadata": {
+        "volumes": {
+            "dbf9e8e4682d45d08efdfe3955b19314": {
+                "image_group_id": "I1PD95846",
+                "title": "",
+                "volume_number": 1,
+            },
+            "ddd6f555295d40b08b29c194e2971d56": {
+                "image_group_id": "I1PD95847",
+                "title": "",
+                "volume_number": 2,
+            },
+        }
+    },
+}
 
 
 def test_notes_generator_crossvol():
     text_id = "D1118"
-    hfml_texts = from_yaml(
-        Path(f"./tests/data/hfmls/{text_id}.yml")
-    )
-    text_meta = {"work_id": "W1PD95844", "img_grp_offset": 845, "pref": "I1PD95"}
+    hfml_texts = from_yaml(Path(f"./tests/data/hfmls/{text_id}.yml"))
     result = get_pedurma_edit_notes(hfml_texts, text_meta)
     expected_result = [
         PedurmaNoteEdit(
@@ -73,10 +85,7 @@ def test_notes_generator_crossvol():
 
 def test_notes_generator():
     text_id = "D1119"
-    hfml_texts = from_yaml(
-        Path(f"./tests/data/hfmls/{text_id}.yml")
-    )
-    text_meta = {"work_id": "W1PD95844", "img_grp_offset": 845, "pref": "I1PD95"}
+    hfml_texts = from_yaml(Path(f"./tests/data/hfmls/{text_id}.yml"))
     result = get_pedurma_edit_notes(hfml_texts, text_meta)
     expected_result = [
         PedurmaNoteEdit(
@@ -104,3 +113,4 @@ def test_notes_generator():
 def test_get_pedurma_edit_notes_from_text_id():
     text_id = "D1111"
     pedurma_edit_notes = get_pedurma_text_edit_notes(text_id)
+    assert pedurma_edit_notes

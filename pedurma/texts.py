@@ -1,19 +1,15 @@
 import json
-from pedurma.exceptions import TextMappingNotFound
 import re
-import requests
-
 from collections import defaultdict
 from pathlib import Path
-from typing import List, Optional
 
+import requests
 from openpecha.cli import download_pecha
 from openpecha.serializers import HFMLSerializer
+from openpecha.utils import load_yaml
 
-from pedurma.pecha import *
-from pedurma.utils import from_yaml
-
-
+from pedurma.exceptions import TextMappingNotFound
+from pedurma.pecha import NotesPage, Page, PedurmaText, Text
 
 
 def get_text_info(text_id, index):
@@ -30,7 +26,7 @@ def get_meta_data(pecha_id, text_uuid, meta_data):
     if source_meta:
         meta = {
             "work_id": source_meta.get("work_id", ""),
-            "img_grp_offset": source_meta.get("img_grp_offset",""),
+            "img_grp_offset": source_meta.get("img_grp_offset", ""),
             "pref": source_meta.get("pref", ""),
             "pecha_id": pecha_id,
             "text_uuid": text_uuid,
@@ -39,25 +35,29 @@ def get_meta_data(pecha_id, text_uuid, meta_data):
 
 
 def get_hfml_text(opf_path, text_id, index=None):
-    serializer = HFMLSerializer(opf_path, text_id=text_id, index_layer=index, layers=['Pagination', 'Durchen'])
+    serializer = HFMLSerializer(
+        opf_path, text_id=text_id, index_layer=index, layers=["Pagination", "Durchen"]
+    )
     serializer.apply_layers()
     hfml_text = serializer.get_result()
     return hfml_text
 
+
 def get_prev_pg_ann(pg_num, pg_face):
-    prev_pg_ann = '['
-    if pg_face == 'a':
-        prev_pg_ann += f'{pg_num-1}b]'
+    prev_pg_ann = "["
+    if pg_face == "a":
+        prev_pg_ann += f"{pg_num-1}b]"
     else:
-        prev_pg_ann += f'{pg_num}b]'
+        prev_pg_ann += f"{pg_num}b]"
     return prev_pg_ann
+
 
 def add_first_page_ann(text):
     pg_pat = re.search(r"\[[𰵀-󴉱]?([0-9]+)([a-z]{1})\]", text)
     pg_num = int(pg_pat.group(1))
     pg_face = pg_pat.group(2)
     prev_pg_ann = get_prev_pg_ann(pg_num, pg_face)
-    new_text = f'{prev_pg_ann}\n{text}'
+    new_text = f"{prev_pg_ann}\n{text}"
     return new_text
 
 
@@ -75,13 +75,13 @@ def get_durchen(text_with_durchen):
     durchen_start = False
     pages = get_pages(text_with_durchen)
     for page in pages:
-        if re.search("<[𰵀-󴉱]?d", page) or durchen_start == True:
+        if re.search("<[𰵀-󴉱]?d", page) or durchen_start:
             durchen += page
             durchen_start = True
-        if re.search('d>', page):
+        if re.search("d>", page):
             return durchen
     if not durchen:
-        print('INFO: durchen not found..')
+        print("INFO: durchen not found..")
     return durchen
 
 
@@ -115,12 +115,9 @@ def get_page_num(page_ann):
     return pg_num
 
 
-def get_link(pg_num, text_meta):
-    vol = text_meta["vol"]
-    img_group_offset = text_meta["img_grp_offset"]
-    pref = text_meta["pref"]
-    igroup = f"{pref}{img_group_offset+vol}"
-    link = f"https://iiif.bdrc.io/bdr:{igroup}::{igroup}{int(pg_num):04}.jpg/full/max/0/default.jpg"
+def get_link(pg_num, vol_meta):
+    image_grp_id = vol_meta["image_group_id"]
+    link = f"https://iiif.bdrc.io/bdr:{image_grp_id}::{image_grp_id}{int(pg_num):04}.jpg/full/max/0/default.jpg"
     return link
 
 
@@ -133,12 +130,12 @@ def get_note_ref(pagination):
 
 def get_clean_page(page):
     pat_list = {
-            "page_pattern": r"\[([𰵀-󴉱])?[0-9]+[a-z]{1}\]",
-            "topic_pattern": r"\{([𰵀-󴉱])?\w+\}",
-            "start_durchen_pattern": r"\<([𰵀-󴉱])?d",
-            "end_durchen_pattern": r"d\>",
-            "sub_topic_pattern": r"\{([𰵀-󴉱])?\w+\-\w+\}",
-        }
+        "page_pattern": r"\[([𰵀-󴉱])?[0-9]+[a-z]{1}\]",
+        "topic_pattern": r"\{([𰵀-󴉱])?\w+\}",
+        "start_durchen_pattern": r"\<([𰵀-󴉱])?d",
+        "end_durchen_pattern": r"d\>",
+        "sub_topic_pattern": r"\{([𰵀-󴉱])?\w+\-\w+\}",
+    }
     base_page = page
     for ann, ann_pat in pat_list.items():
         base_page = re.sub(ann_pat, "", base_page)
@@ -146,12 +143,12 @@ def get_clean_page(page):
     return base_page
 
 
-def get_page_obj(page, text_meta, tag, pagination_layer):
+def get_page_obj(page, vol_meta, tag, pagination_layer):
     page_idx = re.search(r"\[([𰵀-󴉱])?([0-9]+[a-z]{1})\]", page).group(2)
     page_id, pagination = get_page_id(page_idx, pagination_layer)
     page_content = get_clean_page(page)
     pg_num = get_page_num(page_idx)
-    page_link = get_link(pg_num, text_meta)
+    page_link = get_link(pg_num, vol_meta)
     note_ref = get_note_ref(pagination)
     if page_content == "":
         page_obj = None
@@ -162,7 +159,7 @@ def get_page_obj(page, text_meta, tag, pagination_layer):
                 page_no=pg_num,
                 content=page_content,
                 name=f"Page {pg_num}",
-                vol=text_meta["vol"],
+                vol=vol_meta["volume_number"],
                 image_link=page_link,
             )
         else:
@@ -171,7 +168,7 @@ def get_page_obj(page, text_meta, tag, pagination_layer):
                 page_no=pg_num,
                 content=page_content,
                 name=f"Page {pg_num}",
-                vol=text_meta["vol"],
+                vol=vol_meta["volume_number"],
                 image_link=page_link,
                 note_ref=note_ref,
             )
@@ -179,34 +176,42 @@ def get_page_obj(page, text_meta, tag, pagination_layer):
     return page_obj
 
 
-def get_page_obj_list(text, text_meta, pagination_layer, tag="text"):
+def get_page_obj_list(text, vol_meta, pagination_layer, tag="text"):
     page_obj_list = []
     pages = get_pages(text)
     for page in pages:
-        pg_obj = get_page_obj(page, text_meta, tag, pagination_layer)
+        pg_obj = get_page_obj(page, vol_meta, tag, pagination_layer)
         if pg_obj:
             page_obj_list.append(pg_obj)
     return page_obj_list
 
 
-def construct_text_obj(hfmls, text_meta, opf_path):
+def get_vol_meta(vol_num, pecha_meta):
+    vol_meta = {}
+    vol_num = int(vol_num[1:])
+    text_vols = pecha_meta["source_metadata"].get("volumes", {})
+    if text_vols:
+        for vol_id, vol in text_vols.items():
+            if vol["volume_number"] == vol_num:
+                vol_meta = vol
+    return vol_meta
+
+
+def construct_text_obj(hfmls, pecha_meta, opf_path):
     pages = []
     notes = []
-    vol_span = []
     for vol_num, hfml_text in hfmls.items():
-        text_meta["vol"] = int(vol_num[1:])
-        pagination_layer = from_yaml(
-            Path(
-                f"{opf_path}/{text_meta['pecha_id']}.opf/layers/v{int(text_meta['vol']):03}/Pagination.yml"
-            )
+        vol_meta = get_vol_meta(vol_num, pecha_meta)
+        pagination_layer = load_yaml(
+            Path(f"{opf_path}/{pecha_meta['id']}.opf/layers/{vol_num}/Pagination.yml")
         )
         durchen = get_durchen(hfml_text)
-        body_text = hfml_text.replace(durchen, '')
-        
-        pages += get_page_obj_list(body_text, text_meta, pagination_layer, tag="text")
+        body_text = hfml_text.replace(durchen, "")
+
+        pages += get_page_obj_list(body_text, vol_meta, pagination_layer, tag="text")
         if durchen:
-            notes += get_page_obj_list(durchen, text_meta, pagination_layer, tag="note")
-    text_obj = Text(id=text_meta["text_uuid"], pages=pages, notes=notes)
+            notes += get_page_obj_list(durchen, vol_meta, pagination_layer, tag="note")
+    text_obj = Text(id=pecha_meta["text_uuid"], pages=pages, notes=notes)
     return text_obj
 
 
@@ -224,12 +229,13 @@ def serialize_text_obj(text):
     notes = text.notes
     for page in pages:
         if page.page_no != 1:
-            text_hfml[f"v{int(page.vol):03}"] += f'\n{page.content}'
+            text_hfml[f"v{int(page.vol):03}"] += f"\n{page.content}"
         else:
-            text_hfml[f"v{int(page.vol):03}"] += f'{page.content}'
+            text_hfml[f"v{int(page.vol):03}"] += f"{page.content}"
     for note in notes:
-        text_hfml[f"v{int(note.vol):03}"] += f'\n{note.content}'
+        text_hfml[f"v{int(note.vol):03}"] += f"\n{note.content}"
     return text_hfml
+
 
 def get_durchen_page_obj(page, notes):
     for note in notes:
@@ -237,32 +243,34 @@ def get_durchen_page_obj(page, notes):
             return note
     return None
 
+
 def get_pecha_paths(text_id, text_mapping=None):
-    pecha_paths = {
-        "namsel": None,
-        "google": None
-    }
+    pecha_paths = {"namsel": None, "google": None}
     if not text_mapping:
-        text_mapping = requests.get('https://raw.githubusercontent.com/OpenPecha-dev/editable-text/main/t_text_list.json')
+        text_mapping = requests.get(
+            "https://raw.githubusercontent.com/OpenPecha-dev/editable-text/main/t_text_list.json"
+        )
         text_mapping = json.loads(text_mapping.text)
     text_info = text_mapping.get(text_id, {})
     if text_info:
-        pecha_paths['namsel'] = download_pecha(text_info['namsel'])
-        pecha_paths['google'] = download_pecha(text_info['google'])
+        pecha_paths["namsel"] = download_pecha(text_info["namsel"])
+        pecha_paths["google"] = download_pecha(text_info["google"])
     else:
         raise TextMappingNotFound
     return pecha_paths
 
-def get_text_obj(pecha_id, text_id, pecha_path = None):
+
+def get_text_obj(pecha_id, text_id, pecha_path=None):
     if not pecha_path:
         pecha_path = download_pecha(pecha_id, needs_update=False)
-    meta_data = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/meta.yml"))
-    index = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/index.yml"))
+    pecha_meta = load_yaml(Path(f"{pecha_path}/{pecha_id}.opf/meta.yml"))
+    index = load_yaml(Path(f"{pecha_path}/{pecha_id}.opf/index.yml"))
     hfmls = get_hfml_text(f"{pecha_path}/{pecha_id}.opf/", text_id, index)
     text_uuid, text = get_text_info(text_id, index)
-    text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
-    text = construct_text_obj(hfmls, text_meta, pecha_path)
+    pecha_meta["text_uuid"] = text_uuid
+    text = construct_text_obj(hfmls, pecha_meta, pecha_path)
     return text
+
 
 def get_pedurma_text_obj(text_id, pecha_paths=None):
     if not pecha_paths:
@@ -271,7 +279,9 @@ def get_pedurma_text_obj(text_id, pecha_paths=None):
     for pecha_src, pecha_path in pecha_paths.items():
         pecha_id = Path(pecha_path).stem
         text[pecha_src] = get_text_obj(pecha_id, text_id, pecha_path)
-    pedurma_text = PedurmaText(text_id= text_id, namsel=text['namsel'], google=text['google'])
+    pedurma_text = PedurmaText(
+        text_id=text_id, namsel=text["namsel"], google=text["google"]
+    )
     return pedurma_text
 
 
@@ -279,8 +289,8 @@ def get_pedurma_text_obj(text_id, pecha_paths=None):
 #     text_id = 'D1118'
 #     pecha_id = 'P000792'
 #     opf_path = f'./test/{pecha_id}.opf'
-#     index = from_yaml(Path(f"./test/{pecha_id}.opf/index.yml"))
-#     meta_data = from_yaml(Path(f"./test/{pecha_id}.opf/meta.yml"))
+#     index = load_yaml(Path(f"./test/{pecha_id}.opf/index.yml"))
+#     meta_data = load_yaml(Path(f"./test/{pecha_id}.opf/meta.yml"))
 #     text_uuid, text_info = get_text_info(text_id, index)
 #     text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
 #     hfmls = get_hfml_text(text_id, opf_path)

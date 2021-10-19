@@ -1,16 +1,24 @@
-import copy
 import os
 from pathlib import Path
 
+from pedurma.pecha import NotesPage, Page, Text
+from pedurma.save_text import (
+    Blupdate,
+    get_new_vol,
+    get_old_layers,
+    get_old_vol,
+    get_text_vol_span,
+    save_pedurma_text,
+    update_ann_layer,
+    update_index,
+)
 from pedurma.texts import get_text_obj
-from pedurma.save_text import *
 from pedurma.utils import from_yaml, to_yaml
 
 
 def test_update_base():
-    pecha_opf_path = Path('./tests/data/save_text/old_opf')
+    pecha_opf_path = Path("./tests/data/save_text/old_opf")
     pecha_id = "P000002"
-    text_id = "D1116"
     text_obj = Text(
         id="cf52cbae1a7640b688b24135fe566920",
         pages=[
@@ -48,13 +56,15 @@ def test_update_base():
     text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
-    expected_vol = Path('./tests/data/save_text/expected_v002.txt').read_text(encoding='utf-8')
-    assert new_vols['v002'] == expected_vol
+    expected_vol = Path("./tests/data/save_text/expected_v002.txt").read_text(
+        encoding="utf-8"
+    )
+    assert new_vols["v002"] == expected_vol
+
 
 def test_update_layers():
-    pecha_opf_path = Path('./tests/data/save_text/old_opf/')
+    pecha_opf_path = Path("./tests/data/save_text/old_opf/")
     pecha_id = "P000002"
-    text_id = "D1116"
     text_obj = Text(
         id="cf52cbae1a7640b688b24135fe566920",
         pages=[
@@ -92,19 +102,23 @@ def test_update_layers():
     text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
     new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
-    for (vol_id, old_vol_base), (_, new_vol_base) in zip(old_vols.items(), new_vols.items()):
+    for (vol_id, old_vol_base), (_, new_vol_base) in zip(
+        old_vols.items(), new_vols.items()
+    ):
         updater = Blupdate(old_vol_base, new_vol_base)
         old_layers = get_old_layers(pecha_opf_path, pecha_id, vol_id)
         for layer_name, old_layer in old_layers.items():
             update_ann_layer(old_layer, updater)
             new_layer = to_yaml(old_layer)
-            expected_layer = Path(f'./tests/data/save_text/expected_layers/{layer_name}.yml').read_text(encoding='utf-8')
+            expected_layer = Path(
+                f"./tests/data/save_text/expected_layers/{layer_name}.yml"
+            ).read_text(encoding="utf-8")
             assert new_layer == expected_layer
 
+
 def test_update_index():
-    pecha_opf_path = Path('./tests/data/save_text/old_opf/')
+    pecha_opf_path = Path("./tests/data/save_text/old_opf/")
     pecha_id = "P000002"
-    text_id = "D1116"
     text_obj = Text(
         id="259260e8e3544fc1a9a27d7dffc72df6",
         pages=[
@@ -185,39 +199,43 @@ def test_update_index():
     pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf/index.yml"))
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, pecha_idx)
     new_pecha_idx = to_yaml(new_pecha_idx)
-    expected_idx = Path('./tests/data/save_text/expected_index.yml').read_text(encoding='utf-8')
+    expected_idx = Path("./tests/data/save_text/expected_index.yml").read_text(
+        encoding="utf-8"
+    )
     assert new_pecha_idx == expected_idx
 
 
 def test_save_pedurma_text():
-    os.system('cp -r ./tests/data/save_text/P0003 ./tests/data/save_text/P0003_namsel')
-    os.system('cp -r ./tests/data/save_text/P0003 ./tests/data/save_text/P0003_google')
+    os.system("cp -r ./tests/data/save_text/P0003 ./tests/data/save_text/P0003_namsel")
+    os.system("cp -r ./tests/data/save_text/P0003 ./tests/data/save_text/P0003_google")
     text_id = "D1118"
     pecha_id = "P0003"
-    namsel_pecha_path = './tests/data/save_text/P0003_namsel'
-    google_pecha_path = './tests/data/save_text/P0003_google'
+    namsel_pecha_path = "./tests/data/save_text/P0003_namsel"
+    google_pecha_path = "./tests/data/save_text/P0003_google"
     namsel_text_obj = get_text_obj(pecha_id, text_id, namsel_pecha_path)
-    namsel_text_obj.pages[0].content = "༄ཚོ། །རྒྱ་གར་སྐད་དུ།\nསྟ་བ་ནཱ་མ། བོད་སྐད་དུ།\nཔར་འོས་པ་བསྔགས་"
+    namsel_text_obj.pages[
+        0
+    ].content = "༄ཚོ། །རྒྱ་གར་སྐད་དུ།\nསྟ་བ་ནཱ་མ། བོད་སྐད་དུ།\nཔར་འོས་པ་བསྔགས་"
     google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path)
-    google_text_obj.pages[-1].content = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་llལ་སོགས།\n"
+    google_text_obj.pages[
+        -1
+    ].content = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་llལ་སོགས།\n"
     pedurma_text_mapping = {
-        'namsel': {
-            'pecha_id': pecha_id,
-            'text_obj': namsel_text_obj,
-            'pecha_path': namsel_pecha_path
+        "namsel": {
+            "pecha_id": pecha_id,
+            "text_obj": namsel_text_obj,
+            "pecha_path": namsel_pecha_path,
         },
-        'google': {
-            'pecha_id': pecha_id,
-            'text_obj': google_text_obj,
-            'pecha_path': google_pecha_path
-        }
+        "google": {
+            "pecha_id": pecha_id,
+            "text_obj": google_text_obj,
+            "pecha_path": google_pecha_path,
+        },
     }
     save_pedurma_text(pedurma_text_obj=None, pedurma_text_mapping=pedurma_text_mapping)
     new_namsel_text_obj = get_text_obj(pecha_id, text_id, namsel_pecha_path)
     new_google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path)
     assert new_google_text_obj == google_text_obj
     assert new_namsel_text_obj == namsel_text_obj
-    os.system('rm -r ./tests/data/save_text/P0003_namsel')
-    os.system('rm -r ./tests/data/save_text/P0003_google')
-
-
+    os.system("rm -r ./tests/data/save_text/P0003_namsel")
+    os.system("rm -r ./tests/data/save_text/P0003_google")

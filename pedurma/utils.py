@@ -1,31 +1,31 @@
 import io
 import json
 import platform
-import pylibyaml
 import stat
 import subprocess
 import tempfile
-import yaml
 import zipfile
 from pathlib import Path
 from uuid import uuid4
 
 import requests
+import yaml
 
 PLATFORM_TYPE = platform.system()
 BASE_DIR = Path.home() / ".antx"
 
 
-
-
 def get_unique_id():
     return uuid4().hex
+
 
 def from_yaml(yml_path):
     return yaml.load(yml_path.read_text(encoding="utf-8"), Loader=yaml.CLoader)
 
+
 def to_yaml(dict_):
     return yaml.dump(dict_, sort_keys=False, allow_unicode=True, Dumper=yaml.CDumper)
+
 
 def get_bin_metadata():
     """Return platfrom_type and binary_name."""
