@@ -837,7 +837,7 @@ def merge_footnotes_per_page(page, foot_notes):
     markers = re.findall("<.+?>", page)
     for marker_walker, (marker, foot_note) in enumerate(zip_longest(markers, foot_notes, fillvalue=""),1):
         if re.search("<p.+>", marker):
-            repl2 = f'\n|{marker[2:-1]}|'
+            repl2 = f'\n༺{marker[2:-1]}༻'
         else:
             footnotes_parts = foot_note.split(">")
             try:
@@ -848,7 +848,7 @@ def merge_footnotes_per_page(page, foot_notes):
             repl2 = f"({marker_walker}) <{note}>"
             
         preview_page = preview_page.replace(marker, repl2, 1)
-    preview_page = re.sub(f'<p(.+?)>', r'\n|\g<1>|', preview_page)
+    preview_page = re.sub(f'<p(.+?)>', r'\n༺\g<1>༻', preview_page)
     return preview_page
 
 
