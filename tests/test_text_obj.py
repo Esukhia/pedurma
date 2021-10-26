@@ -13,7 +13,7 @@ def test_text_obj_serializer_corssvol():
             Page(
                 id="1a26fd08bf2b4ebb9e2d7369347e478b",
                 page_no=1,
-                content="ཉ༄ཚོ། །རྒྱ་གར་སྐད་དུ།\nསྟ་བ་ནཱ་མ། བོད་སྐད་དུ།\nཔར་འོས་པ་བསྔགས་\n",
+                content="ཉ༄ཚོ། །རྒྱ་གར་སྐད་དུ།\nསྟ་བ་ནཱ་མ། བོད་སྐད་དུ།\nཔར་འོས་པ་བསྔགས་",
                 name="Page 1",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460001.jpg/full/max/0/default.jpg",
@@ -22,7 +22,7 @@ def test_text_obj_serializer_corssvol():
             Page(
                 id="e8e314a7457b40348b5dd7a744004900",
                 page_no=2,
-                content="གཏམ་འདི་ཙམ\nའདི་ཉིད་སྨྲ་བར་\nདང་-། །ཁྱོད་མ\n",
+                content="གཏམ་འདི་ཙམ\nའདི་ཉིད་སྨྲ་བར་\nདང་-། །ཁྱོད་མ",
                 name="Page 2",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460002.jpg/full/max/0/default.jpg",
@@ -31,7 +31,7 @@ def test_text_obj_serializer_corssvol():
             Page(
                 id="29c64dc1fa624b42b08814ca4f3a78b4",
                 page_no=3,
-                content="འདོད་གང་དག་\nསྐྱབས་འགྲོ་བ།\nསྟོང་གིས་ཀྱང་།\n",
+                content="འདོད་གང་དག་\nསྐྱབས་འགྲོ་བ།\nསྟོང་གིས་ཀྱང་།",
                 name="Page 3",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460003.jpg/full/max/0/default.jpg",
@@ -40,7 +40,7 @@ def test_text_obj_serializer_corssvol():
             Page(
                 id="c11d8db649854c5d89ca3df22047d07b",
                 page_no=1,
-                content="་་༄ལོ། །རྒྱ་གར་སྐད་དུ།\nདབྱིངས་སུ་བསྟོད་པ།\nའཚལ་ལོ། །གང་ཞིག་\n",
+                content="་་༄ལོ། །རྒྱ་གར་སྐད་དུ།\nདབྱིངས་སུ་བསྟོད་པ།\nའཚལ་ལོ། །གང་ཞིག་",
                 name="Page 1",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470001.jpg/full/max/0/default.jpg",
@@ -49,7 +49,7 @@ def test_text_obj_serializer_corssvol():
             Page(
                 id="21671cb910d9486c8ba4793305c00d58",
                 page_no=2,
-                content="མཐོང་ངོ་། །ཕྱོགས་\nདེ་དང་དེ་ཡི་ཕྱོགས་\nཏིང་འཛིན་རྡོ་རྗེ་ཡིས\n",
+                content="མཐོང་ངོ་། །ཕྱོགས་\nདེ་དང་དེ་ཡི་ཕྱོགས་\nཏིང་འཛིན་རྡོ་རྗེ་ཡིས",
                 name="Page 2",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470002.jpg/full/max/0/default.jpg",
@@ -58,7 +58,7 @@ def test_text_obj_serializer_corssvol():
             Page(
                 id="671dc26715434318b3d641521d4e9292",
                 page_no=3,
-                content="རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་ལ་སོགས།\n",
+                content="རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་ལ་སོགས།",
                 name="Page 3",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470003.jpg/full/max/0/default.jpg",
@@ -77,7 +77,7 @@ def test_text_obj_serializer_corssvol():
             NotesPage(
                 id="05d117045b0c4ea5aee3aeba558e94bd",
                 page_no=4,
-                content="འབྱོར་ཆེན་པོ་དེར་\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་\n",
+                content="འབྱོར་ཆེན་པོ་དེར་\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་",
                 name="Page 4",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
@@ -98,7 +98,7 @@ def test_text_obj_serializer():
             Page(
                 id="3373e79434004aaeb8b2e69649243d2a",
                 page_no=5,
-                content="ངོས་ལྗོན་ཤིང་\nལེན་པ་པོ་ཕུན་སུམ་ཚོགས་པའོ།\nའདི་དག་གིས་ནི་སྦྱིན་པར་\n",
+                content="ངོས་ལྗོན་ཤིང་\nལེན་པ་པོ་ཕུན་སུམ་ཚོགས་པའོ།\nའདི་དག་གིས་ནི་སྦྱིན་པར་",
                 name="Page 5",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
@@ -107,7 +107,7 @@ def test_text_obj_serializer():
             Page(
                 id="71dff610d4c841c58e9c815582bf8508",
                 page_no=6,
-                content="མངའ་དབང་མཛད་པ་\nའདི་དག་གིས་ནི་དེའི་\nགིས་ནི་སྐྱེ་བ་ལ་\n",
+                content="མངའ་དབང་མཛད་པ་\nའདི་དག་གིས་ནི་དེའི་\nགིས་ནི་སྐྱེ་བ་ལ་",
                 name="Page 6",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
@@ -139,7 +139,7 @@ def test_pedurma_text_obj():
             Page(
                 id="3373e79434004aaeb8b2e69649243d2a",
                 page_no=5,
-                content="ངོས་ལྗོན་ཤིང་\nལེན་པ་པོ་ཕུན་སུམ་ཚོགས་པའོ།\nའདི་དག་གིས་ནི་སྦྱིན་པར་\n",
+                content="ངོས་ལྗོན་ཤིང་\nལེན་པ་པོ་ཕུན་སུམ་ཚོགས་པའོ།\nའདི་དག་གིས་ནི་སྦྱིན་པར་",
                 name="Page 5",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
@@ -148,7 +148,7 @@ def test_pedurma_text_obj():
             Page(
                 id="71dff610d4c841c58e9c815582bf8508",
                 page_no=6,
-                content="མངའ་དབང་མཛད་པ་\nའདི་དག་གིས་ནི་དེའི་\nགིས་ནི་སྐྱེ་བ་ལ་\n",
+                content="མངའ་དབང་མཛད་པ་\nའདི་དག་གིས་ནི་དེའི་\nགིས་ནི་སྐྱེ་བ་ལ་",
                 name="Page 6",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",

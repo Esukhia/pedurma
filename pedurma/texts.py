@@ -62,12 +62,13 @@ def add_first_page_ann(text):
 
 
 def get_body_text(text_with_durchen):
-    try:
-        durchen_starting = re.search("<[𰵀-󴉱]?d", text_with_durchen).start()
-        text_content = text_with_durchen[:durchen_starting]
-    except Exception:
-        text_content = text_with_durchen
-    return text_content
+    body_text = ""
+    pages = get_pages(text_with_durchen)
+    for page in pages:
+        if re.search("<[𰵀-󴉱]?d", page):
+            return body_text
+        body_text += page
+    return body_text
 
 
 def get_durchen(text_with_durchen):
@@ -139,7 +140,7 @@ def get_clean_page(page):
     base_page = page
     for ann, ann_pat in pat_list.items():
         base_page = re.sub(ann_pat, "", base_page)
-    base_page = base_page.lstrip()
+    base_page = base_page.strip()
     return base_page
 
 
@@ -206,7 +207,7 @@ def construct_text_obj(hfmls, pecha_meta, opf_path):
             Path(f"{opf_path}/{pecha_meta['id']}.opf/layers/{vol_num}/Pagination.yml")
         )
         durchen = get_durchen(hfml_text)
-        body_text = hfml_text.replace(durchen, "")
+        body_text = get_body_text(hfml_text)
 
         pages += get_page_obj_list(body_text, vol_meta, pagination_layer, tag="text")
         if durchen:
@@ -228,12 +229,9 @@ def serialize_text_obj(text):
     pages = text.pages
     notes = text.notes
     for page in pages:
-        if page.page_no != 1:
-            text_hfml[f"v{int(page.vol):03}"] += f"\n{page.content}"
-        else:
-            text_hfml[f"v{int(page.vol):03}"] += f"{page.content}"
+        text_hfml[f"v{int(page.vol):03}"] += f'{page.content}\n\n'
     for note in notes:
-        text_hfml[f"v{int(note.vol):03}"] += f"\n{note.content}"
+        text_hfml[f"v{int(note.vol):03}"] += f'{note.content}\n\n'
     return text_hfml
 
 
@@ -284,14 +282,3 @@ def get_pedurma_text_obj(text_id, pecha_paths=None):
     )
     return pedurma_text
 
-
-# if __name__ == "__main__":
-#     text_id = 'D1118'
-#     pecha_id = 'P000792'
-#     opf_path = f'./test/{pecha_id}.opf'
-#     index = load_yaml(Path(f"./test/{pecha_id}.opf/index.yml"))
-#     meta_data = load_yaml(Path(f"./test/{pecha_id}.opf/meta.yml"))
-#     text_uuid, text_info = get_text_info(text_id, index)
-#     text_meta = get_meta_data(pecha_id, text_uuid, meta_data)
-#     hfmls = get_hfml_text(text_id, opf_path)
-#     text_obj = get_text_obj(hfmls, text_meta, opf_path)

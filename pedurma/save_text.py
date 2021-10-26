@@ -3,7 +3,7 @@ from pathlib import Path
 
 from openpecha.blupdate import Blupdate, update_ann_layer
 from openpecha.cli import download_pecha
-from openpecha.utils import dump_yaml
+from openpecha.utils import dump_yaml, load_yaml
 
 from pedurma.texts import get_pecha_paths, serialize_text_obj
 from pedurma.utils import from_yaml
@@ -142,14 +142,12 @@ def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
         updater (obj): updater object
     """
     for layer_name, old_layer in old_layers.items():
-        update_ann_layer(old_layer, updater)
-        new_layer_path = Path(
-            f"{pecha_opf_path}/{pecha_id}.opf/layers/{vol_id}/{layer_name}.yml"
-        )
-        dump_yaml(old_layer, new_layer_path)
-        print(f"INFO: {vol_id} {layer_name} has been updated...")
-
-
+        if layer_name is not "Pagination":
+            update_ann_layer(old_layer, updater)
+            new_layer_path = Path(f"{pecha_opf_path}/{pecha_id}.opf/layers/{vol_id}/{layer_name}.yml")
+            dump_yaml(old_layer, new_layer_path)
+            print(f'INFO: {vol_id} {layer_name} has been updated...')
+    
 def update_old_layers(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
     """Update all the layers related to text object
 
@@ -227,6 +225,42 @@ def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
                 )
     return old_pecha_idx
 
+def update_page_span(page, prev_page_end, old_page_ann):
+    new_page_len = len(page.content)
+    new_page_end = prev_page_end + new_page_len
+    old_page_ann["span"]["start"] = prev_page_end
+    old_page_ann["span"]["end"] = new_page_end
+    return old_page_ann, new_page_end+2
+
+def update_note_span(pagination_layer, text, prev_page_end):
+    for note in text.notes:
+        old_page_ann = pagination_layer["annotations"].get(note.id, {})
+        if old_page_ann:
+            pagination_layer["annotations"][note.id], prev_page_end = update_page_span(note, prev_page_end, old_page_ann)
+
+def get_pagination_layer(pecha_opf_path, pecha_id, vol_num):
+    pagination_path = Path(pecha_opf_path) / f"{pecha_id}.opf" / "layers" / f"v{int(vol_num):03}" / "Pagination.yml"
+    pagination_layer = load_yaml(pagination_path)
+    return pagination_layer, pagination_path
+
+def update_page_layer(text, pecha_id, pecha_opf_path):
+    vol_num = text.pages[0].vol
+    pagination_layer, pagination_path = get_pagination_layer(pecha_opf_path, pecha_id, vol_num)
+    pagination_annotations = pagination_layer.get("annotations", {})
+    prev_page_end = 0
+    for page in text.pages:
+        if vol_num != page.vol:
+            update_note_span(pagination_layer, text, prev_page_end)
+            prev_page_end = 0
+            vol_num = page.vol
+            dump_yaml(pagination_layer, pagination_path)
+            pagination_layer, pagination_path = get_pagination_layer(pecha_opf_path, pecha_id, vol_num)
+            pagination_annotations = pagination_layer.get("annotations", {})
+        old_page_ann = pagination_annotations[page.id]
+        pagination_layer["annotations"][page.id], prev_page_end = update_page_span(page, prev_page_end, old_page_ann)
+    update_note_span(pagination_layer, text, prev_page_end)
+    dump_yaml(pagination_layer, pagination_path)
+
 
 def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
     """Update pecha opf according to text object content
@@ -246,7 +280,8 @@ def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
     update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
-    new_pecha_idx_path = Path(f"{pecha_opf_path}/{pecha_id}.opf/index.yml")
+    update_page_layer(text_obj, pecha_id, pecha_opf_path)
+    new_pecha_idx_path = Path(f'{pecha_opf_path}/{pecha_id}.opf/index.yml')
     dump_yaml(new_pecha_idx, new_pecha_idx_path)
     return pecha_opf_path
 

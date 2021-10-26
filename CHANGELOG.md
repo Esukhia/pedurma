@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.39 (2021-10-26)
+### Fix
+* **page-update:** Page update has been changed ([`8e0e9bb`](https://github.com/Esukhia/pedurma/commit/8e0e9bb2122813b6d83ec512ee7d4ae26169ed61))
+
+## v0.1.38 (2021-10-20)
+### Fix
+* **setup:** Openpecha version updated ([`1d995cc`](https://github.com/Esukhia/pedurma/commit/1d995cc47d64ebd03cd12278ab1adafa4254a396))
+
 ## v0.1.37 (2021-10-18)
 ### Fix
 * **reconstruction:** Left diff and right diff default value set ([`5316c0b`](https://github.com/Esukhia/pedurma/commit/5316c0bba75ca186b177661238ca5d3297881bc4))
