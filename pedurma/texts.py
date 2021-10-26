@@ -62,12 +62,13 @@ def add_first_page_ann(text):
 
 
 def get_body_text(text_with_durchen):
-    try:
-        durchen_starting = re.search("<[𰵀-󴉱]?d", text_with_durchen).start()
-        text_content = text_with_durchen[:durchen_starting]
-    except Exception:
-        text_content = text_with_durchen
-    return text_content
+    body_text = ""
+    pages = get_pages(text_with_durchen)
+    for page in pages:
+        if re.search("<[𰵀-󴉱]?d", page):
+            return body_text
+        body_text += page
+    return body_text
 
 
 def get_durchen(text_with_durchen):
@@ -142,7 +143,7 @@ def get_clean_page(page):
     base_page = page
     for ann, ann_pat in pat_list.items():
         base_page = re.sub(ann_pat, "", base_page)
-    base_page = base_page.lstrip()
+    base_page = base_page.strip()
     return base_page
 
 
@@ -192,7 +193,6 @@ def get_page_obj_list(text, text_meta, pagination_layer, tag="text"):
 def construct_text_obj(hfmls, text_meta, opf_path):
     pages = []
     notes = []
-    vol_span = []
     for vol_num, hfml_text in hfmls.items():
         text_meta["vol"] = int(vol_num[1:])
         pagination_layer = from_yaml(
@@ -201,7 +201,7 @@ def construct_text_obj(hfmls, text_meta, opf_path):
             )
         )
         durchen = get_durchen(hfml_text)
-        body_text = hfml_text.replace(durchen, '')
+        body_text = get_body_text(hfml_text)
         
         pages += get_page_obj_list(body_text, text_meta, pagination_layer, tag="text")
         if durchen:
@@ -223,12 +223,12 @@ def serialize_text_obj(text):
     pages = text.pages
     notes = text.notes
     for page in pages:
-        if page.page_no != 1:
-            text_hfml[f"v{int(page.vol):03}"] += f'\n{page.content}'
-        else:
-            text_hfml[f"v{int(page.vol):03}"] += f'{page.content}'
+        # if page.page_no != 1:
+        #     text_hfml[f"v{int(page.vol):03}"] += f'\n{page.content}'
+        # else:
+        text_hfml[f"v{int(page.vol):03}"] += f'{page.content}\n\n'
     for note in notes:
-        text_hfml[f"v{int(note.vol):03}"] += f'\n{note.content}'
+        text_hfml[f"v{int(note.vol):03}"] += f'{note.content}\n\n'
     return text_hfml
 
 def get_durchen_page_obj(page, notes):
