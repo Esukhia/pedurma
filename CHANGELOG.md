@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.40 (2021-10-28)
+### Fix
+* **merge:** Conflict resolved ([`d702928`](https://github.com/Esukhia/pedurma/commit/d702928ce68da4228c1214d8bc90ce9961e8cc87))
+* **text:** Image link getting from meta data ([`dd7c80e`](https://github.com/Esukhia/pedurma/commit/dd7c80ec94bcb215325c922064b85e49899e7c74))
+
 ## v0.1.39 (2021-10-26)
 ### Fix
 * **page-update:** Page update has been changed ([`8e0e9bb`](https://github.com/Esukhia/pedurma/commit/8e0e9bb2122813b6d83ec512ee7d4ae26169ed61))
