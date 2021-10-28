@@ -2,11 +2,10 @@ import re
 from pathlib import Path
 
 from openpecha.cli import download_pecha
-from openpecha.serializers import HFMLSerializer
 
 from pedurma.pecha import PedurmaNoteEdit
-from pedurma.texts import get_durchen, get_hfml_text, get_link
 from pedurma.preprocess import preprocess_namsel_notes
+from pedurma.texts import get_durchen, get_hfml_text, get_link, get_vol_meta
 from pedurma.utils import from_yaml
 
 
@@ -21,6 +20,7 @@ def get_meta_data(text_uuid, meta_data):
     except Exception:
         meta = {}
     return meta
+
 
 def get_durchen_pages(vol_text):
     durchen_pages = {}
@@ -48,6 +48,7 @@ def rm_annotations(text, annotations):
     for ann in annotations:
         clean_text = re.sub(ann, "", clean_text)
     return clean_text
+
 
 def get_num(line):
     tib_num = re.sub(r"\W", "", line)
@@ -81,9 +82,9 @@ def get_page_refs(page_content):
         return ("0", "0")
 
 
-def process_page(page_ann, page_content, text_meta):
+def process_page(page_ann, page_content, vol_meta):
     durchen_image_num = get_page_num(page_ann)
-    pg_link = get_link(durchen_image_num, text_meta)
+    pg_link = get_link(durchen_image_num, vol_meta)
     unwanted_annotations = [
         r"\[([𰵀-󴉱])?[0-9]+[a-z]{1}\]",
         r"\[\w+\.\d+\]",
@@ -100,32 +101,25 @@ def process_page(page_ann, page_content, text_meta):
         page_no=durchen_pg_num,
         ref_start_page_no=pg_ref_first,
         ref_end_page_no=pg_ref_last,
-        vol=text_meta["vol"],
+        vol=vol_meta["volume_number"],
     )
     return page_obj
 
 
-def get_pages_to_edit(durchen_pages, text_meta):
+def get_pages_to_edit(durchen_pages, vol_meta):
     pages_to_edit = []
     for page_ann, page_content in durchen_pages.items():
-        pages_to_edit.append(process_page(page_ann, page_content, text_meta))
+        pages_to_edit.append(process_page(page_ann, page_content, vol_meta))
     return pages_to_edit
-
-
-def get_hfml_text(opf_path, pecha_id):
-    serializer = HFMLSerializer(f"{opf_path}/{pecha_id}.opf",)
-    serializer.apply_layers()
-    hfml_text = serializer.get_result()
-    return hfml_text
 
 
 def get_pedurma_edit_notes(hfml_text, text_meta):
     pedurma_edit_notes = []
     for vol, text_content in hfml_text.items():
-        text_meta["vol"] = int(vol[1:])
+        vol_meta = get_vol_meta(vol, text_meta)
         durchen = get_durchen(text_content)
         durchen_pages = get_durchen_pages(durchen)
-        pedurma_edit_notes += get_pages_to_edit(durchen_pages, text_meta)
+        pedurma_edit_notes += get_pages_to_edit(durchen_pages, vol_meta)
     return pedurma_edit_notes
 
 

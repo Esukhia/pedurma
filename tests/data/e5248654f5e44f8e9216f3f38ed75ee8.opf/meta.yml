@@ -1,8 +1,21 @@
-id: opecha:P000792
+id: e5248654f5e44f8e9216f3f38ed75ee8
 source_metadata:
-  work_id: W1PD95844
-  img_grp_offset: 845
-  pref: I1PD95
+  id: bdr:W1PD95844
+  title: བསྟན་འགྱུར། ༼དཔེ་བསྡུར་མ༽
+  author: ''
+  volumes:
+    dbf9e8e4682d45d08efdfe3955b19314:
+      image_group_id: I1PD95846
+      title: ''
+      volume_number: 1
+      total_pages: 1539
+      base_file: v001.txt
+    ddd6f555295d40b08b29c194e2971d56:
+      image_group_id: I1PD95847
+      title: ''
+      volume_number: 2
+      total_pages: 1541
+      base_file: v002.txt
 vol2fn:
   v001: v001.txt
   v002: v002.txt

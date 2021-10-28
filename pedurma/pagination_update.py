@@ -81,12 +81,13 @@ def add_note_pg_ref(page_to_edit, pagination_layer):
     pagination_layer["annotations"] = paginations
     return pagination_layer
 
+
 def is_valid_page_to_edit(prev_pg_to_edit, pg_to_edit):
     try:
         prev_pg_ref_end = int(prev_pg_to_edit.ref_end_page_no)
         cur_pg_ref_start = int(pg_to_edit.ref_start_page_no)
         cur_pg_ref_end = int(pg_to_edit.ref_end_page_no)
-    except:
+    except Exception:
         return False
     if prev_pg_to_edit == pg_to_edit:
         if cur_pg_ref_end >= cur_pg_ref_start:
@@ -99,6 +100,7 @@ def is_valid_page_to_edit(prev_pg_to_edit, pg_to_edit):
         return True
     else:
         return False
+
 
 def update_pg_ref(vol, pages_to_edit, pagination_layer):
     prev_pg_edit = pages_to_edit[0]
@@ -129,5 +131,5 @@ def update_text_pagination(pecha_id, text_id, pedurma_edit_notes):
     ):
         new_pagination_yml = to_yaml(new_pagination)
         Path(
-            f"{pecha_path}/P000792.opf/layers/v{int(vol):03}/Pagination.yml"
+            f"{pecha_path}/{pecha_id}.opf/layers/v{int(vol):03}/Pagination.yml"
         ).write_text(new_pagination_yml, encoding="utf-8")

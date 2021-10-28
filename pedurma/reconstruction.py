@@ -11,25 +11,21 @@ text B.
 """
 
 import re
-from pydantic.main import validate_custom_root_type
-import pyewts
-
-from antx import transfer
 from collections import defaultdict
-from docx import Document
 from itertools import zip_longest
 from pathlib import Path
 
+import pyewts
+from antx import transfer
+from docx import Document
+
 from pedurma.exceptions import PageNumMissing
-from pedurma.preprocess import (
-    preprocess_google_notes,
-    preprocess_namsel_notes,
-)
-from pedurma.pecha import PedurmaText
+from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
 from pedurma.texts import get_durchen_page_obj, get_pedurma_text_obj
 from pedurma.utils import optimized_diff_match_patch
 
 EWTSCONV = pyewts.pyewts()
+
 
 def rm_google_ocr_header(text):
     """Remove header of google ocr.
@@ -220,7 +216,7 @@ def double_mid_syl_marker(result):
         Boolean: True if double consecutive marker detected in case of mid syl esle false
     """
     i = -1
-    while abs(i)<len(result) and not is_punct(result[i][1]):
+    while abs(i) < len(result) and not is_punct(result[i][1]):
         if result[i][2] == "marker":
             return False
         else:
@@ -378,6 +374,7 @@ def translate_tib_number(footnotes_marker):
                 value += number[0]
     return value
 
+
 def get_tib_num(eng_num):
     tib_num = {
         "0": "༠",
@@ -391,12 +388,13 @@ def get_tib_num(eng_num):
         "8": "༨",
         "9": "༩",
     }
-    value = ''
+    value = ""
     if eng_num:
         for num in str(eng_num):
             if re.search(r"[0-9]", num):
                 value += tib_num.get(num)
     return value
+
 
 def get_value(footnotes_marker):
     """Compute the equivalent numbers in footnotes marker payload and return it.
@@ -605,8 +603,8 @@ def filter_diffs(diffs_list, type, vol_num):
             ):  # checking diff text is page or not
                 result.append([1, diff_text, "pedurma-page"])
             else:
-                left_diff = [0, '']
-                right_diff = [0, '']
+                left_diff = [0, ""]
+                right_diff = [0, ""]
                 if i > 0:  # extracting left context of current diff
                     left_diff = diffs[i - 1]
                 left_diff_type, left_diff_text = left_diff
@@ -835,7 +833,9 @@ def merge_footnotes_per_page(page, foot_notes):
     """
     preview_page = page
     markers = re.findall("<.+?>", page)
-    for marker_walker, (marker, foot_note) in enumerate(zip_longest(markers, foot_notes, fillvalue=""),1):
+    for marker_walker, (marker, foot_note) in enumerate(
+        zip_longest(markers, foot_notes, fillvalue=""), 1
+    ):
         if re.search("<p.+>", marker):
             repl2 = f'\n༺{marker[2:-1]}༻'
         else:
@@ -846,7 +846,7 @@ def merge_footnotes_per_page(page, foot_notes):
                 note = ""
             marker_walker = get_tib_num(marker_walker)
             repl2 = f"({marker_walker}) <{note}>"
-            
+
         preview_page = preview_page.replace(marker, repl2, 1)
     preview_page = re.sub(f'<p(.+?)>', r'\n༺\g<1>༻', preview_page)
     return preview_page
@@ -919,6 +919,7 @@ def get_page_num(body_text, vol_num):
         pg_num = 0
     return pg_num
 
+
 def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
     preview_page = ""
     g_body_page_content = g_body_page.content
@@ -943,7 +944,8 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
     if cur_pg_footnotes:
         preview_page = merge_footnotes_per_page(body_result, cur_pg_footnotes)
     return preview_page
-  
+
+
 def get_preview_text(text_id, pecha_paths=None):
     pedurmatext = get_pedurma_text_obj(text_id, pecha_paths)
     derge_google_text_obj = pedurmatext.google
@@ -957,17 +959,21 @@ def get_preview_text(text_id, pecha_paths=None):
         vol_num = dg_page.vol
         dg_durchen = get_durchen_page_obj(dg_page, dg_notes)
         namsel_durchen = get_durchen_page_obj(namsel_page, namsel_notes)
-        if dg_durchen == None or namsel_durchen == None:
-            print('Either of durchen is unable to locate')
+        if dg_durchen is None or namsel_durchen is None:
+            print("Either of durchen is unable to locate")
             continue
-        preview_text[f'v{int(vol_num):03}'] += get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen) + '\n'
+        preview_text[f"v{int(vol_num):03}"] += (
+            get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen) + "\n"
+        )
     return preview_text
+
 
 def split_text(content):
 
     chunks = re.split(r"(\d+ <.*?>)", content)
 
     return chunks
+
 
 def create_docx(text_id, chunks, path):
     document = Document()
@@ -986,16 +992,17 @@ def create_docx(text_id, chunks, path):
     document.save(str(output_path))
     return output_path
 
+
 def get_docx_text(text_id, output_path=None):
     if not output_path:
-        (Path.home() / '.collation_docx').mkdir(parents=True, exist_ok=True)
-        output_path = (Path.home() / '.collation_docx')
-    collation_text = ''
+        (Path.home() / ".collation_docx").mkdir(parents=True, exist_ok=True)
+        output_path = Path.home() / ".collation_docx"
+    collation_text = ""
     preview_text = get_preview_text(text_id)
     for vol_id, text in preview_text.items():
         collation_text += f"{text}\n\n"
-    collation_text = collation_text.replace('\n', '')
-    collation_text = re.sub(r'(\|.+?\|)', r'\n\g<1>\n', collation_text)
+    collation_text = collation_text.replace("\n", "")
+    collation_text = re.sub(r"(\|.+?\|)", r"\n\g<1>\n", collation_text)
     chunks = split_text(collation_text)
     docx_path = create_docx(text_id, chunks, output_path)
     return docx_path

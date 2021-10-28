@@ -1,10 +1,7 @@
 from pathlib import Path
 
-import pytest
-import yaml
-
-from pedurma.pecha import PedurmaNoteEdit
 from pedurma.pagination_update import update_pagination
+from pedurma.pecha import PedurmaNoteEdit
 from pedurma.utils import from_yaml
 
 
@@ -47,8 +44,8 @@ def test_pagination_update_crossvol():
             vol=2,
         ),
     ]
-    for vol, new_pagination_layer in update_pagination(pecha_id,
-        text_id, pages_to_edit, index, pecha_path
+    for vol, new_pagination_layer in update_pagination(
+        pecha_id, text_id, pages_to_edit, index, pecha_path
     ):
         layer_path = f"./tests/data/paginations/{text_id}/v{int(vol):03}.yml"
         expected_layer = from_yaml(Path(layer_path))
@@ -84,6 +81,7 @@ def test_pagination_update():
         layer_path = f"./tests/data/paginations/{text_id}/v{int(vol):03}.yml"
         expected_layer = from_yaml(Path(layer_path))
         assert new_pagination_layer == expected_layer
+
 
 def test_invalid_pg_ref():
     pecha_id = "e5248654f5e44f8e9216f3f38ed75ee8"

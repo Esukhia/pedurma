@@ -1,4 +1,4 @@
-from typing import Collection, List, Optional
+from typing import List, Optional
 
 from pydantic import AnyHttpUrl, BaseModel
 
@@ -20,6 +20,7 @@ class Page(PageBase):
 class NotesPage(PageBase):
     pass
 
+
 class PageWithNote(BaseModel):
     text_id: str
     page_id: str
@@ -28,10 +29,12 @@ class PageWithNote(BaseModel):
     note: str
     note_image_link: AnyHttpUrl
 
+
 class Text(BaseModel):
     id: str
     pages: List[Page]
     notes: Optional[List[NotesPage]]
+
 
 class PedurmaText(BaseModel):
     text_id: str

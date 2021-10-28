@@ -1,8 +1,6 @@
-from pathlib import Path
-
-from pedurma.pecha import *
+from pedurma.pecha import NotesPage, Page, Text
 from pedurma.texts import get_pedurma_text_obj, get_text_obj
-from pedurma.utils import from_yaml
+
 
 def test_text_obj_serializer_corssvol():
     text_id = "D1115"
@@ -131,13 +129,10 @@ def test_text_obj_serializer():
 
 
 def test_pedurma_text_obj():
-    dg_pecha_path = './tests/data/P000002'
-    namsel_pecha_path = './tests/data/P000002'
+    dg_pecha_path = "./tests/data/P000002"
+    namsel_pecha_path = "./tests/data/P000002"
     text_id = "D1116"
-    pecha_paths = {
-        'namsel': namsel_pecha_path,
-        'google': dg_pecha_path
-    }
+    pecha_paths = {"namsel": namsel_pecha_path, "google": dg_pecha_path}
     expected_namsel_text_obj = Text(
         id="cf52cbae1a7640b688b24135fe566920",
         pages=[
