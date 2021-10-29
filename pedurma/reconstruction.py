@@ -279,7 +279,7 @@ def tseg_shifter(result, diffs, left_diff_text, i, right_diff_text):
         i (int): current index if diff in diffs
         right_diff (list): contains right diff type and text
     """
-    if right_diff_text[0] == "་" and not is_punct(left_diff_text):
+    if right_diff_text and right_diff_text[0] == "་" and not is_punct(left_diff_text):
         result[-1][1] += "་"
         diffs[i + 1][1] = diffs[i + 1][1][1:]
 
