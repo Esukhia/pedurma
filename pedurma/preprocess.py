@@ -2,23 +2,10 @@
 import re
 
 from antx import transfer
-from openpecha.cli import download_pecha
+from openpecha.utils import download_pecha
 
 from pedurma.texts import get_hfml_text
-
-
-def get_pages(vol_text):
-    result = []
-    pg_text = ""
-    pages = re.split(r"(\[[𰵀-󴉱]?[0-9]+[a-z]{1}\])", vol_text)
-    for i, page in enumerate(pages[1:]):
-        if i % 2 == 0:
-            pg_text += page
-        else:
-            pg_text += page
-            result.append(pg_text)
-            pg_text = ""
-    return result
+from pedurma.utils import get_pages
 
 
 def rm_ann(text, anns):

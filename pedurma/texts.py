@@ -4,12 +4,13 @@ from collections import defaultdict
 from pathlib import Path
 
 import requests
-from openpecha.cli import download_pecha
+from openpecha.utils import download_pecha
 from openpecha.serializers import HFMLSerializer
 from openpecha.utils import load_yaml
 
 from pedurma.exceptions import TextMappingNotFound
 from pedurma.pecha import NotesPage, Page, PedurmaText, Text
+from pedurma.utils import get_pages
 
 
 def get_text_info(text_id, index):
@@ -42,25 +43,6 @@ def get_hfml_text(opf_path, text_id, index=None):
     hfml_text = serializer.get_result()
     return hfml_text
 
-
-def get_prev_pg_ann(pg_num, pg_face):
-    prev_pg_ann = "["
-    if pg_face == "a":
-        prev_pg_ann += f"{pg_num-1}b]"
-    else:
-        prev_pg_ann += f"{pg_num}b]"
-    return prev_pg_ann
-
-
-def add_first_page_ann(text):
-    pg_pat = re.search(r"\[[𰵀-󴉱]?([0-9]+)([a-z]{1})\]", text)
-    pg_num = int(pg_pat.group(1))
-    pg_face = pg_pat.group(2)
-    prev_pg_ann = get_prev_pg_ann(pg_num, pg_face)
-    new_text = f"{prev_pg_ann}\n{text}"
-    return new_text
-
-
 def get_body_text(text_with_durchen):
     body_text = ""
     pages = get_pages(text_with_durchen)
@@ -85,40 +67,16 @@ def get_durchen(text_with_durchen):
         print("INFO: durchen not found..")
     return durchen
 
-
-def get_pages(vol_text):
-    result = []
-    pg_text = ""
-    pages = re.split(r"(\[[𰵀-󴉱]?[0-9]+[a-z]{1}\])", vol_text)
-    for i, page in enumerate(pages[1:]):
-        if i % 2 == 0:
-            pg_text += page
-        else:
-            pg_text += page
-            result.append(pg_text)
-            pg_text = ""
-    return result
-
-
-def get_page_id(page_idx, pagination_layer):
+def get_page_id(img_num, pagination_layer):
     paginations = pagination_layer["annotations"]
     for uuid, pagination in paginations.items():
-        if pagination["page_index"] == page_idx:
+        if pagination["imgnum"] == img_num:
             return (uuid, pagination)
     return ("", "")
 
-
-def get_page_num(page_ann):
-    pg_num = int(page_ann[:-1]) * 2
-    pg_face = page_ann[-1]
-    if pg_face == "a":
-        pg_num -= 1
-    return pg_num
-
-
-def get_link(pg_num, vol_meta):
+def get_link(img_num, vol_meta):
     image_grp_id = vol_meta["image_group_id"]
-    link = f"https://iiif.bdrc.io/bdr:{image_grp_id}::{image_grp_id}{int(pg_num):04}.jpg/full/max/0/default.jpg"
+    link = f"https://iiif.bdrc.io/bdr:{image_grp_id}::{image_grp_id}{int(img_num):04}.jpg/full/max/0/default.jpg"
     return link
 
 
@@ -131,7 +89,7 @@ def get_note_ref(pagination):
 
 def get_clean_page(page):
     pat_list = {
-        "page_pattern": r"\[([𰵀-󴉱])?[0-9]+[a-z]{1}\]",
+        "page_pattern": r"〔[𰵀-󴉱]?\d+〕",
         "topic_pattern": r"\{([𰵀-󴉱])?\w+\}",
         "start_durchen_pattern": r"\<([𰵀-󴉱])?d",
         "end_durchen_pattern": r"d\>",
@@ -145,11 +103,10 @@ def get_clean_page(page):
 
 
 def get_page_obj(page, vol_meta, tag, pagination_layer):
-    page_idx = re.search(r"\[([𰵀-󴉱])?([0-9]+[a-z]{1})\]", page).group(2)
-    page_id, pagination = get_page_id(page_idx, pagination_layer)
+    img_num = int(re.search(r"〔[𰵀-󴉱]?(\d+)〕", page).group(1))
+    page_id, pagination = get_page_id(img_num, pagination_layer)
     page_content = get_clean_page(page)
-    pg_num = get_page_num(page_idx)
-    page_link = get_link(pg_num, vol_meta)
+    page_link = get_link(img_num, vol_meta)
     note_ref = get_note_ref(pagination)
     if page_content == "":
         page_obj = None
@@ -157,18 +114,18 @@ def get_page_obj(page, vol_meta, tag, pagination_layer):
         if tag == "note":
             page_obj = NotesPage(
                 id=page_id,
-                page_no=pg_num,
+                page_no=img_num,
                 content=page_content,
-                name=f"Page {pg_num}",
+                name=f"Page {img_num}",
                 vol=vol_meta["volume_number"],
                 image_link=page_link,
             )
         else:
             page_obj = Page(
                 id=page_id,
-                page_no=pg_num,
+                page_no=img_num,
                 content=page_content,
-                name=f"Page {pg_num}",
+                name=f"Page {img_num}",
                 vol=vol_meta["volume_number"],
                 image_link=page_link,
                 note_ref=note_ref,

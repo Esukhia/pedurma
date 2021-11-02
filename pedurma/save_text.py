@@ -2,7 +2,7 @@ import copy
 from pathlib import Path
 
 from openpecha.blupdate import Blupdate, update_ann_layer
-from openpecha.cli import download_pecha
+from openpecha.utils import download_pecha
 from openpecha.utils import dump_yaml, load_yaml
 
 from pedurma.texts import get_pecha_paths, serialize_text_obj
@@ -43,7 +43,7 @@ def get_old_text_base(old_pecha_idx, old_vol_base, text_id, text_vol_num):
     text_span = old_pecha_idx["annotations"][text_id]["span"]
     for vol_span in text_span:
         if vol_span["vol"] == text_vol_num:
-            return old_vol_base[vol_span["start"] : vol_span["end"]]
+            return old_vol_base[vol_span["start"] : vol_span["end"]+1]
     return ""
 
 

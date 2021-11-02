@@ -1,31 +1,16 @@
 from pathlib import Path
 
-from openpecha.cli import download_pecha
+from openpecha.utils import download_pecha
 
 from pedurma.utils import from_yaml, to_yaml
-
-
-def get_text_info(text_id, index):
-    texts = index["annotations"]
-    for uuid, text in texts.items():
-        if text["work_id"] == text_id:
-            return (uuid, text)
-    return ("", "")
-
-
-def get_page_num(page_ann):
-    pg_num = int(page_ann[:-1]) * 2
-    pg_face = page_ann[-1]
-    if pg_face == "a":
-        pg_num -= 1
-    return pg_num
+from pedurma.texts import get_text_info
 
 
 def get_start_page(pagination, start):
     pages = pagination["annotations"]
     for uuid, page in pages.items():
         if page["span"]["end"] > start:
-            return get_page_num(page["page_index"])
+            return page['imgnum']
     return ""
 
 
@@ -45,18 +30,17 @@ def get_pg_offset(first_pg_ref, span, pagination_layer):
     return start_page - first_pg_ref
 
 
-def update_pagination_annotation(durchen_pg_ref_uuid, pg_idx, paginations):
+def update_pagination_annotation(durchen_pg_ref_uuid, pg_num, paginations):
     for uuid, pagination in paginations.items():
-        if pagination["page_index"] == pg_idx:
+        if pagination["imgnum"] == pg_num:
             paginations[uuid]["note_ref"] = durchen_pg_ref_uuid
             return paginations
     return paginations
 
 
 def get_page_uuid(pg_num, paginations):
-    pg_idx = get_pg_index(pg_num)
     for uuid, pagination in paginations.items():
-        if pagination["page_index"] == pg_idx:
+        if pagination["imgnum"] == pg_num:
             return uuid
     return ""
 
@@ -74,9 +58,8 @@ def add_note_pg_ref(page_to_edit, pagination_layer):
     if start_pg != 0 and end_pg != 0:
         for pg in range(start_pg, end_pg + 1):
             pg_num = pg + offset
-            pg_idx = get_pg_index(pg_num)
             paginations = update_pagination_annotation(
-                durchen_pg_ref_uuid, pg_idx, paginations
+                durchen_pg_ref_uuid, pg_num, paginations
             )
     pagination_layer["annotations"] = paginations
     return pagination_layer
