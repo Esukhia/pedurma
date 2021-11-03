@@ -2,26 +2,16 @@ from pathlib import Path
 
 from openpecha.utils import download_pecha
 
-from pedurma.utils import from_yaml, to_yaml
 from pedurma.texts import get_text_info
+from pedurma.utils import from_yaml, to_yaml
 
 
 def get_start_page(pagination, start):
     pages = pagination["annotations"]
     for uuid, page in pages.items():
         if page["span"]["end"] > start:
-            return page['imgnum']
+            return page["imgnum"]
     return ""
-
-
-def get_pg_index(pg_num):
-    pg_idx = ""
-    base_pg_num = int(pg_num / 2)
-    if pg_num % 2 == 0:
-        pg_idx = f"{base_pg_num}b"
-    else:
-        pg_idx = f"{base_pg_num+1}a"
-    return pg_idx
 
 
 def get_pg_offset(first_pg_ref, span, pagination_layer):
@@ -39,6 +29,15 @@ def update_pagination_annotation(durchen_pg_ref_uuid, pg_num, paginations):
 
 
 def get_page_uuid(pg_num, paginations):
+    """Get page annotation uuid
+
+    Args:
+        pg_num (int): img num
+        paginations (dict): pagination layer
+
+    Returns:
+        uuid: uuid of page annotation of pg num
+    """
     for uuid, pagination in paginations.items():
         if pagination["imgnum"] == pg_num:
             return uuid
@@ -46,6 +45,15 @@ def get_page_uuid(pg_num, paginations):
 
 
 def add_note_pg_ref(page_to_edit, pagination_layer):
+    """Add note page reference to body pages
+
+    Args:
+        page_to_edit (obj): page to edit object
+        pagination_layer (dict): pagination layer
+
+    Returns:
+        dict: new pagination layer
+    """
     try:
         start_pg = int(page_to_edit.ref_start_page_no)
         end_pg = int(page_to_edit.ref_end_page_no)
@@ -66,6 +74,15 @@ def add_note_pg_ref(page_to_edit, pagination_layer):
 
 
 def is_valid_page_to_edit(prev_pg_to_edit, pg_to_edit):
+    """Check if the page is valid to edit or not
+
+    Args:
+        prev_pg_to_edit (obj): page to edit object of previous page
+        pg_to_edit (obj): page to edit object of current page
+
+    Returns:
+        boolean: true if valid else false
+    """
     try:
         prev_pg_ref_end = int(prev_pg_to_edit.ref_end_page_no)
         cur_pg_ref_start = int(pg_to_edit.ref_start_page_no)
@@ -86,6 +103,16 @@ def is_valid_page_to_edit(prev_pg_to_edit, pg_to_edit):
 
 
 def update_pg_ref(vol, pages_to_edit, pagination_layer):
+    """Add page ref to page annotations
+
+    Args:
+        vol (int): volume number
+        pages_to_edit (obj): pages to edit object
+        pagination_layer (dict): old pagination layer
+
+    Returns:
+        dict: updated pagination layer
+    """
     prev_pg_edit = pages_to_edit[0]
     for page_to_edit in pages_to_edit:
         if vol == page_to_edit.vol:
@@ -96,6 +123,18 @@ def update_pg_ref(vol, pages_to_edit, pagination_layer):
 
 
 def update_pagination(pecha_id, text_id, pedurma_edit_notes, index, pecha_path):
+    """Update pagination layer volume by volume
+
+    Args:
+        pecha_id (str): pecha uuid
+        text_id (str): text id
+        pedurma_edit_notes (obj): pedurma edit notes obj
+        index (dict): indexing of text in pecha
+        pecha_path (path): pecha path 
+
+    Yields:
+        [int, dict]: volume number and updated pagination
+    """
     text_uuid, text_info = get_text_info(text_id, index)
     for span in text_info["span"]:
         vol = span["vol"]
@@ -107,6 +146,13 @@ def update_pagination(pecha_id, text_id, pedurma_edit_notes, index, pecha_path):
 
 
 def update_text_pagination(pecha_id, text_id, pedurma_edit_notes):
+    """Update pagination of pecha with note ref
+
+    Args:
+        pecha_id (str): pecha uuid
+        text_id (str): text id
+        pedurma_edit_notes (obj): pedurma edit notes obj
+    """
     pecha_path = download_pecha(pecha_id, needs_update=False)
     index = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/index.yml"))
     for vol, new_pagination in update_pagination(

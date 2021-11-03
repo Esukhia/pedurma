@@ -837,7 +837,7 @@ def merge_footnotes_per_page(page, foot_notes):
         zip_longest(markers, foot_notes, fillvalue=""), 1
     ):
         if re.search("<p.+>", marker):
-            repl2 = f'\n༺{marker[2:-1]}༻'
+            repl2 = f"\n༺{marker[2:-1]}༻"
         else:
             footnotes_parts = foot_note.split(">")
             try:
@@ -848,7 +848,7 @@ def merge_footnotes_per_page(page, foot_notes):
             repl2 = f"({marker_walker}) <{note}>"
 
         preview_page = preview_page.replace(marker, repl2, 1)
-    preview_page = re.sub(f'<p(.+?)>', r'\n༺\g<1>༻', preview_page)
+    preview_page = re.sub("<p(.+?)>", r"\n༺\g<1>༻", preview_page)
     return preview_page
 
 
@@ -891,23 +891,6 @@ def reconstruct_footnote(namsel_footnote, google_footnote, vol_num):
     reformatted_footnotes = reformat_footnotes(new_text)
     formatted_footnotes = postprocess_footnotes(reformatted_footnotes, vol_num)
     return formatted_footnotes
-
-
-def get_whole(pagewise_text_durchen, type):
-    result = ""
-    pagewise = pagewise_text_durchen[type]
-    for pg_ann, pg_content in pagewise.items():
-        result += f"[{pg_ann}]\n{pg_content['pg_content']}"
-    return result
-
-
-def get_page_index(pg_num):
-    pg_index = ""
-    if pg_num % 2 == 0:
-        pg_index = f"{pg_num/2}b"
-    else:
-        pg_index = f"{pg_num/2+1}a"
-    return pg_index
 
 
 def get_page_num(body_text, vol_num):
