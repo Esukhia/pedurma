@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.41 (2021-11-03)
+### Fix
+* **save_text:** Test updated ([`8e9ba6c`](https://github.com/Esukhia/pedurma/commit/8e9ba6cb9b29af5863cb1889598fa8e8a338acd7))
+* **note-ref:** Note ref insertion code update ([`398346b`](https://github.com/Esukhia/pedurma/commit/398346b8dbd27090c92154fe7dc00462b524aa5c))
+* **reconstruction:** Right diff empty exception covered ([`0616eb6`](https://github.com/Esukhia/pedurma/commit/0616eb6076c3c0fe812e9e59a0a35d31e3e7bca7))
+
 ## v0.1.40 (2021-10-28)
 ### Fix
 * **merge:** Conflict resolved ([`d702928`](https://github.com/Esukhia/pedurma/commit/d702928ce68da4228c1214d8bc90ce9961e8cc87))
