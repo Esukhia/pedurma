@@ -3,7 +3,7 @@ annotation_type: Pagination
 revision: '00001'
 annotations:
   67ccdb5974e04cc6abd96655d7b1da6e:
-    page_index: 76a
+    imgnum: 151
     page_info: ''
     reference: null
     span:
@@ -11,7 +11,7 @@ annotations:
       end: 679
     note_ref: f270ac4332d54b8ba63995cf9793dca2
   cebc00e988bd4a9b80ed110d8177e43b:
-    page_index: 76b
+    imgnum: 152
     page_info: ''
     reference: null
     span:
@@ -19,7 +19,7 @@ annotations:
       end: 1998
     note_ref: f270ac4332d54b8ba63995cf9793dca2
   4360fb4051c2435b9e66cff5815104d4:
-    page_index: 77a
+    imgnum: 153
     page_info: ''
     reference: null
     span:
@@ -27,7 +27,7 @@ annotations:
       end: 2693
     note_ref: f270ac4332d54b8ba63995cf9793dca2
   f270ac4332d54b8ba63995cf9793dca2:
-    page_index: 77b
+    imgnum: 154
     page_info: ''
     reference: null
     span:

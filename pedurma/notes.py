@@ -4,22 +4,8 @@ from pathlib import Path
 from openpecha.utils import download_pecha
 
 from pedurma.pecha import PedurmaNoteEdit
-from pedurma.preprocess import preprocess_namsel_notes
 from pedurma.texts import get_durchen, get_hfml_text, get_link, get_vol_meta
 from pedurma.utils import from_yaml
-
-
-def get_meta_data(text_uuid, meta_data):
-    try:
-        meta = {
-            "work_id": meta_data["work_id"],
-            "img_grp_offset": meta_data["img_grp_offset"],
-            "pref": meta_data["pref"],
-            "text_uuid": text_uuid,
-        }
-    except Exception:
-        meta = {}
-    return meta
 
 
 def get_durchen_pages(vol_text):
@@ -85,12 +71,7 @@ def get_page_refs(page_content):
 def process_page(page_ann, page_content, vol_meta):
     durchen_image_num = get_page_num(page_ann)
     pg_link = get_link(durchen_image_num, vol_meta)
-    unwanted_annotations = [
-        r"〔[𰵀-󴉱]?\d+〕",
-        r"\[\w+\.\d+\]",
-        r"<d",
-        r"d>",
-    ]
+    unwanted_annotations = [r"〔[𰵀-󴉱]?\d+〕", r"\[\w+\.\d+\]", r"<d", r"d>"]
     page_content = rm_annotations(page_content, unwanted_annotations)
     durchen_pg_num = get_durchen_pg_num(page_content)
     pg_ref_first, pg_ref_last = get_page_refs(page_content)
