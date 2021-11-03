@@ -1,30 +1,16 @@
 import re
 from pathlib import Path
 
-from openpecha.cli import download_pecha
+from openpecha.utils import download_pecha
 
 from pedurma.pecha import PedurmaNoteEdit
-from pedurma.preprocess import preprocess_namsel_notes
 from pedurma.texts import get_durchen, get_hfml_text, get_link, get_vol_meta
 from pedurma.utils import from_yaml
 
 
-def get_meta_data(text_uuid, meta_data):
-    try:
-        meta = {
-            "work_id": meta_data["work_id"],
-            "img_grp_offset": meta_data["img_grp_offset"],
-            "pref": meta_data["pref"],
-            "text_uuid": text_uuid,
-        }
-    except Exception:
-        meta = {}
-    return meta
-
-
 def get_durchen_pages(vol_text):
     durchen_pages = {}
-    pages = re.split(r"(\[[𰵀-󴉱]?[0-9]+[a-z]{1}\])", vol_text)
+    pages = re.split(r"(〔[𰵀-󴉱]?\d+〕)", vol_text)
     pg_ann = ""
     for i, page in enumerate(pages[1:]):
         if i % 2 == 0:
@@ -35,11 +21,11 @@ def get_durchen_pages(vol_text):
 
 
 def get_page_num(page_ann):
-    pg_pat = re.search(r"(\d+[a-z]{1})", page_ann)
-    pg_num = int(pg_pat.group(1)[:-1]) * 2
-    pg_face = pg_pat.group(1)[-1]
-    if pg_face == "a":
-        pg_num -= 1
+    pg_pat = re.search(r"(\d+)", page_ann)
+    if pg_pat:
+        pg_num = pg_pat.group(1)
+    else:
+        pg_num = None
     return pg_num
 
 
@@ -85,16 +71,10 @@ def get_page_refs(page_content):
 def process_page(page_ann, page_content, vol_meta):
     durchen_image_num = get_page_num(page_ann)
     pg_link = get_link(durchen_image_num, vol_meta)
-    unwanted_annotations = [
-        r"\[([𰵀-󴉱])?[0-9]+[a-z]{1}\]",
-        r"\[\w+\.\d+\]",
-        r"<d",
-        r"d>",
-    ]
+    unwanted_annotations = [r"〔[𰵀-󴉱]?\d+〕", r"\[\w+\.\d+\]", r"<d", r"d>"]
     page_content = rm_annotations(page_content, unwanted_annotations)
-    clean_page = preprocess_namsel_notes(page_content)
-    durchen_pg_num = get_durchen_pg_num(clean_page)
-    pg_ref_first, pg_ref_last = get_page_refs(clean_page)
+    durchen_pg_num = get_durchen_pg_num(page_content)
+    pg_ref_first, pg_ref_last = get_page_refs(page_content)
     page_obj = PedurmaNoteEdit(
         image_link=pg_link,
         image_no=durchen_image_num,

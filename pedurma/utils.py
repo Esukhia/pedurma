@@ -1,15 +1,17 @@
 import io
 import json
 import platform
+import re
+import requests
 import stat
 import subprocess
 import tempfile
+import yaml
 import zipfile
 from pathlib import Path
 from uuid import uuid4
 
-import requests
-import yaml
+
 
 PLATFORM_TYPE = platform.system()
 BASE_DIR = Path.home() / ".antx"
@@ -18,6 +20,18 @@ BASE_DIR = Path.home() / ".antx"
 def get_unique_id():
     return uuid4().hex
 
+def get_pages(vol_text):
+    result = []
+    pg_text = ""
+    pages = re.split(r"(〔[𰵀-󴉱]?\d+〕)", vol_text)
+    for i, page in enumerate(pages[1:]):
+        if i % 2 == 0:
+            pg_text += page
+        else:
+            pg_text += page
+            result.append(pg_text)
+            pg_text = ""
+    return result
 
 def from_yaml(yml_path):
     return yaml.load(yml_path.read_text(encoding="utf-8"), Loader=yaml.CLoader)
