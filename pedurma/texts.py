@@ -4,10 +4,10 @@ from collections import defaultdict
 from pathlib import Path
 
 import requests
-from openpecha.utils import download_pecha
 from openpecha.serializers import HFMLSerializer
-from openpecha.utils import load_yaml
+from openpecha.utils import download_pecha, load_yaml
 
+from pedurma.config import *
 from pedurma.exceptions import TextMappingNotFound
 from pedurma.pecha import NotesPage, Page, PedurmaText, Text
 from pedurma.utils import get_pages
@@ -43,6 +43,7 @@ def get_hfml_text(opf_path, text_id, index=None):
     hfml_text = serializer.get_result()
     return hfml_text
 
+
 def get_body_text(text_with_durchen):
     body_text = ""
     pages = get_pages(text_with_durchen)
@@ -67,12 +68,14 @@ def get_durchen(text_with_durchen):
         print("INFO: durchen not found..")
     return durchen
 
+
 def get_page_id(img_num, pagination_layer):
     paginations = pagination_layer["annotations"]
     for uuid, pagination in paginations.items():
         if pagination["imgnum"] == img_num:
             return (uuid, pagination)
     return ("", "")
+
 
 def get_link(img_num, vol_meta):
     image_grp_id = vol_meta["image_group_id"]
@@ -186,9 +189,9 @@ def serialize_text_obj(text):
     pages = text.pages
     notes = text.notes
     for page in pages:
-        text_hfml[f"v{int(page.vol):03}"] += f'{page.content}\n\n'
+        text_hfml[f"v{int(page.vol):03}"] += f"{page.content}\n\n"
     for note in notes:
-        text_hfml[f"v{int(note.vol):03}"] += f'{note.content}\n\n'
+        text_hfml[f"v{int(note.vol):03}"] += f"{note.content}\n\n"
     return text_hfml
 
 
@@ -202,9 +205,7 @@ def get_durchen_page_obj(page, notes):
 def get_pecha_paths(text_id, text_mapping=None):
     pecha_paths = {"namsel": None, "google": None}
     if not text_mapping:
-        text_mapping = requests.get(
-            "https://raw.githubusercontent.com/OpenPecha-dev/editable-text/main/t_text_list.json"
-        )
+        text_mapping = requests.get(TEXT_LIST_URL)
         text_mapping = json.loads(text_mapping.text)
     text_info = text_mapping.get(text_id, {})
     if text_info:
@@ -238,4 +239,3 @@ def get_pedurma_text_obj(text_id, pecha_paths=None):
         text_id=text_id, namsel=text["namsel"], google=text["google"]
     )
     return pedurma_text
-
