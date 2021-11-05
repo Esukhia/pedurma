@@ -3,9 +3,10 @@ from pathlib import Path
 
 from openpecha.utils import download_pecha
 
+from pedurma import config
 from pedurma.pecha import PedurmaNoteEdit
 from pedurma.texts import get_durchen, get_hfml_text, get_link, get_vol_meta
-from pedurma.utils import from_yaml
+from pedurma.utils import from_yaml, get_pecha_id
 
 
 def get_durchen_pages(vol_text):
@@ -103,9 +104,10 @@ def get_pedurma_edit_notes(hfml_text, text_meta):
     return pedurma_edit_notes
 
 
-def get_pedurma_text_edit_notes(pecha_id):
+def get_pedurma_text_edit_notes(text_id):
+    pecha_id = get_pecha_id(text_id)
     pecha_path = download_pecha(pecha_id, needs_update=False)
     meta_data = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/meta.yml"))
-    hfmls = get_hfml_text(pecha_path, pecha_id)
+    hfmls = get_hfml_text(pecha_path, text_id)
     pedurma_edit_notes = get_pedurma_edit_notes(hfmls, meta_data)
     return pedurma_edit_notes

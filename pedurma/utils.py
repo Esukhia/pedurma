@@ -2,16 +2,17 @@ import io
 import json
 import platform
 import re
-import requests
 import stat
 import subprocess
 import tempfile
-import yaml
 import zipfile
 from pathlib import Path
 from uuid import uuid4
 
+import requests
+import yaml
 
+from pedurma import config
 
 PLATFORM_TYPE = platform.system()
 BASE_DIR = Path.home() / ".antx"
@@ -19,6 +20,7 @@ BASE_DIR = Path.home() / ".antx"
 
 def get_unique_id():
     return uuid4().hex
+
 
 def get_pages(vol_text):
     result = []
@@ -33,12 +35,21 @@ def get_pages(vol_text):
             pg_text = ""
     return result
 
+
 def from_yaml(yml_path):
     return yaml.load(yml_path.read_text(encoding="utf-8"), Loader=yaml.CLoader)
 
 
 def to_yaml(dict_):
     return yaml.dump(dict_, sort_keys=False, allow_unicode=True, Dumper=yaml.CDumper)
+
+
+def get_pecha_id(text_id):
+    if text_id.startswith("T"):
+        return config.KANGYUR_ARCHIVE_ID
+    elif text_id.startswith():
+        return config.TENGYUR_ARCHIVE_ID
+    return ""
 
 
 def get_bin_metadata():

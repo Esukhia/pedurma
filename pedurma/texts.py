@@ -7,7 +7,7 @@ import requests
 from openpecha.serializers import HFMLSerializer
 from openpecha.utils import download_pecha, load_yaml
 
-from pedurma.config import *
+from pedurma import config
 from pedurma.exceptions import TextMappingNotFound
 from pedurma.pecha import NotesPage, Page, PedurmaText, Text
 from pedurma.utils import get_pages
@@ -205,7 +205,7 @@ def get_durchen_page_obj(page, notes):
 def get_pecha_paths(text_id, text_mapping=None):
     pecha_paths = {"namsel": None, "google": None}
     if not text_mapping:
-        text_mapping = requests.get(TEXT_LIST_URL)
+        text_mapping = requests.get(config.TEXT_LIST_URL)
         text_mapping = json.loads(text_mapping.text)
     text_info = text_mapping.get(text_id, {})
     if text_info:
