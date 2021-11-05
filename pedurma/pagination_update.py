@@ -3,7 +3,7 @@ from pathlib import Path
 from openpecha.utils import download_pecha
 
 from pedurma.texts import get_text_info
-from pedurma.utils import from_yaml, to_yaml
+from pedurma.utils import from_yaml, get_pecha_id, to_yaml
 
 
 def get_start_page(pagination, start):
@@ -145,7 +145,7 @@ def update_pagination(pecha_id, text_id, pedurma_edit_notes, index, pecha_path):
         yield vol, pagination_layer
 
 
-def update_text_pagination(pecha_id, text_id, pedurma_edit_notes):
+def update_text_pagination(text_id, pedurma_edit_notes):
     """Update pagination of pecha with note ref
 
     Args:
@@ -153,6 +153,7 @@ def update_text_pagination(pecha_id, text_id, pedurma_edit_notes):
         text_id (str): text id
         pedurma_edit_notes (obj): pedurma edit notes obj
     """
+    pecha_id = get_pecha_id(text_id)
     pecha_path = download_pecha(pecha_id, needs_update=False)
     index = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/index.yml"))
     for vol, new_pagination in update_pagination(
