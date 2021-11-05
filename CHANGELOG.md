@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.42 (2021-11-05)
+### Fix
+* **note:** Note ref update pecha wise ([`a2b384c`](https://github.com/Esukhia/pedurma/commit/a2b384cdbbea0fa5701b5f37aa51fbed7bc3251c))
+
 ## v0.1.41 (2021-11-03)
 ### Fix
 * **save_text:** Test updated ([`8e9ba6c`](https://github.com/Esukhia/pedurma/commit/8e9ba6cb9b29af5863cb1889598fa8e8a338acd7))
