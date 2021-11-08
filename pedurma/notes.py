@@ -107,7 +107,8 @@ def get_pedurma_edit_notes(hfml_text, text_meta):
 def get_pedurma_text_edit_notes(text_id):
     pecha_id = get_pecha_id(text_id)
     pecha_path = download_pecha(pecha_id, needs_update=False)
-    meta_data = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/meta.yml"))
+    pecha_path = Path(pecha_path) / f"{pecha_id}.opf"
+    meta_data = from_yaml((pecha_path / "meta.yml"))
     hfmls = get_hfml_text(pecha_path, text_id)
     pedurma_edit_notes = get_pedurma_edit_notes(hfmls, meta_data)
     return pedurma_edit_notes
