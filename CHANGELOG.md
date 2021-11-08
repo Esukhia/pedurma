@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.43 (2021-11-08)
+### Fix
+* **note:** Pecha path bug fixed ([`3a6ba1e`](https://github.com/Esukhia/pedurma/commit/3a6ba1e4c103f6d9055197025f6c95a9858a9f37))
+
 ## v0.1.42 (2021-11-05)
 ### Fix
 * **note:** Note ref update pecha wise ([`a2b384c`](https://github.com/Esukhia/pedurma/commit/a2b384cdbbea0fa5701b5f37aa51fbed7bc3251c))
