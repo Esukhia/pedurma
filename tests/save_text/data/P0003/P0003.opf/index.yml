@@ -12,10 +12,3 @@ annotations:
       start: 0
       end: 217
     work_id: D1118
-  dc20d61c4ad449d8aaa24095a0b242c8:
-    parts: {}
-    span:
-    - vol: 2
-      start: 218
-      end: 383
-    work_id: D1119

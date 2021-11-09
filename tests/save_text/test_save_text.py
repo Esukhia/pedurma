@@ -1,123 +1,24 @@
 import os
 from pathlib import Path
 
+from openpecha.utils import dump_yaml
+
 from pedurma.pecha import NotesPage, Page, Text
 from pedurma.save_text import (
-    Blupdate,
     get_new_vol,
-    get_old_layers,
     get_old_vol,
     get_text_vol_span,
     save_pedurma_text,
-    update_ann_layer,
+    update_durchen_layer,
     update_index,
+    update_page_layer,
 )
 from pedurma.texts import get_text_obj
 from pedurma.utils import from_yaml, to_yaml
 
 
-def test_update_base():
-    pecha_opf_path = (Path(__file__).parent / "data" / "old_opf")
-    pecha_id = "P000002"
-    text_obj = Text(
-        id="cf52cbae1a7640b688b24135fe566920",
-        pages=[
-            Page(
-                id="3373e79434004aaeb8b2e69649243d2a",
-                page_no=5,
-                content="ངོས་ལྗོན་ཤིང་\nལེན་པ་པོ་ཕུན་སུམ་ཚོགས་པའོ།\nའདི་དག་གིས་ནི་སྦྱིན་པར་",
-                name="Page 5",
-                vol="2",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
-                note_ref="9efa117a2b9444ac8cb09c198d21cdd8",
-            ),
-            Page(
-                id="71dff610d4c841c58e9c815582bf8508",
-                page_no=6,
-                content="མངའ་དབང་མཛད་པ་\nའདི་དག་གིས་ནི་དེའི་\nགིས་ནི་སྐྱེ་kkབ་ལ་",
-                name="Page 6",
-                vol="2",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
-                note_ref="9efa117a2b9444ac8cb09c198d21cdd8",
-            ),
-        ],
-        notes=[
-            NotesPage(
-                id="9efa117a2b9444ac8cb09c198d21cdd8",
-                page_no=7,
-                content="དེ་ལ་ནམ་མཁའི་\nབ་ཡང་དག་པར་\nགིས་ནི་ཆོས་སྟོན་པའི་",
-                name="Page 7",
-                vol="2",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
-            )
-        ],
-    )
-    pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf" / "index.yml"))
-    text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
-    new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
-    expected_vol = (Path(__file__).parent / "data" / "expected_v002.txt").read_text(
-        encoding="utf-8"
-    )
-    assert new_vols["v002"] == expected_vol
-
-
-def test_update_layers():
-    pecha_opf_path = (Path(__file__).parent / "data" / "old_opf")
-    pecha_id = "P000002"
-    text_obj = Text(
-        id="cf52cbae1a7640b688b24135fe566920",
-        pages=[
-            Page(
-                id="3373e79434004aaeb8b2e69649243d2a",
-                page_no=5,
-                content="ངོས་ལྗོན་ཤིང་\nལེན་པ་པོ་ཕུན་སུམ་ཚོགས་པའོ།\nའདི་དག་གིས་ནི་སྦྱིན་པར་",
-                name="Page 5",
-                vol="2",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
-                note_ref="9efa117a2b9444ac8cb09c198d21cdd8",
-            ),
-            Page(
-                id="71dff610d4c841c58e9c815582bf8508",
-                page_no=6,
-                content="མངའ་དབང་མཛད་པ་\nའདི་དག་གིས་ནི་དེའི་\nགིས་ནི་སྐྱེ་kkབ་ལ་",
-                name="Page 6",
-                vol="2",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
-                note_ref="9efa117a2b9444ac8cb09c198d21cdd8",
-            ),
-        ],
-        notes=[
-            NotesPage(
-                id="9efa117a2b9444ac8cb09c198d21cdd8",
-                page_no=7,
-                content="དེ་ལ་ནམ་མཁའི་\nབ་ཡང་དག་པར་\nགིས་ནི་ཆོས་སྟོན་པའི་",
-                name="Page 7",
-                vol="2",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
-            )
-        ],
-    )
-    pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf" / "index.yml"))
-    text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
-    new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
-    for (vol_id, old_vol_base), (_, new_vol_base) in zip(
-        old_vols.items(), new_vols.items()
-    ):
-        updater = Blupdate(old_vol_base, new_vol_base)
-        old_layers = get_old_layers(pecha_opf_path, pecha_id, vol_id)
-        for layer_name, old_layer in old_layers.items():
-            update_ann_layer(old_layer, updater)
-            new_layer = to_yaml(old_layer)
-            expected_layer = (Path(__file__).parent / "data" / "expected_layers" / f"{layer_name}.yml").read_text(encoding="utf-8")
-            assert new_layer == expected_layer
-
-
-def test_update_index():
-    pecha_opf_path = (Path(__file__).parent / "data" / "old_opf")
-    pecha_id = "P000002"
-    text_obj = Text(
+def get_dummy_text():
+    return Text(
         id="259260e8e3544fc1a9a27d7dffc72df6",
         pages=[
             Page(
@@ -194,6 +95,60 @@ def test_update_index():
             ),
         ],
     )
+
+
+def test_update_base():
+    pecha_opf_path = Path(__file__).parent / "data" / "old_opf"
+    pecha_id = "P000002"
+    text_obj = get_dummy_text()
+    pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf" / "index.yml"))
+    text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
+    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
+    new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
+    expected_vol = (Path(__file__).parent / "data" / "expected_v002.txt").read_text(
+        encoding="utf-8"
+    )
+    assert new_vols["v002"] == expected_vol
+
+
+def test_update_durchen_layer():
+    pecha_opf_path = Path(__file__).parent / "data" / "old_opf"
+    pecha_id = "P000002"
+    text_obj = get_dummy_text()
+    durchen_path = (
+        pecha_opf_path / f"{pecha_id}.opf" / "layers" / "v002" / "Durchen.yml"
+    )
+    old_durchen_layer = from_yaml(durchen_path)
+    update_durchen_layer(text_obj, pecha_id, pecha_opf_path)
+    new_durchen_layer = from_yaml(durchen_path)
+    expected_durchen_layer = from_yaml(
+        (Path(__file__).parent / "data" / "expected_layers" / "Durchen.yml")
+    )
+    assert expected_durchen_layer == new_durchen_layer
+    dump_yaml(old_durchen_layer, durchen_path)
+
+
+def test_update_pagination_layer():
+    pecha_opf_path = Path(__file__).parent / "data" / "old_opf"
+    pecha_id = "P000002"
+    text_obj = get_dummy_text()
+    pagination_path = (
+        pecha_opf_path / f"{pecha_id}.opf" / "layers" / "v002" / "Pagination.yml"
+    )
+    old_pagination_layer = from_yaml(pagination_path)
+    update_page_layer(text_obj, pecha_id, pecha_opf_path)
+    new_pagination_layer = from_yaml(pagination_path)
+    expected_pagination_layer = from_yaml(
+        (Path(__file__).parent / "data" / "expected_layers" / "Pagination.yml")
+    )
+    assert expected_pagination_layer == new_pagination_layer
+    dump_yaml(old_pagination_layer, pagination_path)
+
+
+def test_update_index():
+    pecha_opf_path = Path(__file__).parent / "data" / "old_opf"
+    pecha_id = "P000002"
+    text_obj = get_dummy_text()
     pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf" / "index.yml"))
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, pecha_idx)
     new_pecha_idx = to_yaml(new_pecha_idx)
@@ -215,7 +170,9 @@ def test_save_pedurma_text():
         0
     ].content = "༄ཚོ། །རྒྱ་གར་སྐད་དུ།\nསྟ་བ་ནཱ་མ། བོད་སྐད་དུ།\nཔར་འོས་པ་བསྔགས་"
     google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path)
-    google_text_obj.pages[-1].content = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་llལ་སོགས།"
+    google_text_obj.pages[
+        -1
+    ].content = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་llལ་སོགས།"
     pedurma_text_mapping = {
         "namsel": {
             "pecha_id": pecha_id,
