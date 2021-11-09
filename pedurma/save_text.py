@@ -141,7 +141,7 @@ def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
         updater (obj): updater object
     """
     for layer_name, old_layer in old_layers.items():
-        if layer_name != "Pagination":
+        if layer_name not in ["Pagination", "Durchen"]:
             update_ann_layer(old_layer, updater)
             new_layer_path = Path(
                 f"{pecha_opf_path}/{pecha_id}.opf/layers/{vol_id}/{layer_name}.yml"
@@ -228,16 +228,37 @@ def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
     return old_pecha_idx
 
 
-def update_durchen(pecha_opf_path, pecha_id, vol_num, text):
-    durchen_path = (
-        Path(pecha_opf_path)
-        / f"{pecha_id}.opf"
-        / "layers"
-        / f"v{int(vol_num):03}"
-        / "Durchen.yml"
-    )
-    durchen_layer = load_yaml(durchen_path)
+def update_durchen_span(durchen_layer, text, vol_num, char_walker):
+    durchen_start = char_walker
+    for note in text.notes:
+        if note.vol == vol_num:
+            char_walker += len(note.content) + 2
+    durchen_end = char_walker - 3
+    for id, ann in durchen_layer["annotations"].items():
+        durchen_layer["annotations"][id]["span"]["start"] = durchen_start
+        durchen_layer["annotations"][id]["span"]["end"] = durchen_end
+        break
     return durchen_layer
+
+
+def update_durchen_layer(text, pecha_id, pecha_opf_path):
+    vol_num = text.pages[0].vol
+    durchen_layer, durchen_path = get_layer(
+        pecha_opf_path, pecha_id, vol_num, "Durchen"
+    )
+    char_walker = 0
+    for page in text.pages:
+        if vol_num != page.vol:
+            update_durchen_span(durchen_layer, text, vol_num, char_walker)
+            char_walker = 0
+            vol_num = page.vol
+            dump_yaml(durchen_layer, durchen_path)
+            durchen_layer, durchen_path = get_layer(
+                pecha_opf_path, pecha_id, vol_num, "Durchen"
+            )
+        char_walker += len(page.content) + 2
+    update_durchen_span(durchen_layer, text, vol_num, char_walker)
+    dump_yaml(durchen_layer, durchen_path)
 
 
 def update_page_span(page, prev_page_end, old_page_ann):
@@ -257,22 +278,22 @@ def update_note_span(pagination_layer, text, prev_page_end):
             )
 
 
-def get_pagination_layer(pecha_opf_path, pecha_id, vol_num):
-    pagination_path = (
+def get_layer(pecha_opf_path, pecha_id, vol_num, layer_name):
+    layer_path = (
         Path(pecha_opf_path)
         / f"{pecha_id}.opf"
         / "layers"
         / f"v{int(vol_num):03}"
-        / "Pagination.yml"
+        / f"{layer_name}.yml"
     )
-    pagination_layer = load_yaml(pagination_path)
-    return pagination_layer, pagination_path
+    layer = load_yaml(layer_path)
+    return layer, layer_path
 
 
 def update_page_layer(text, pecha_id, pecha_opf_path):
     vol_num = text.pages[0].vol
-    pagination_layer, pagination_path = get_pagination_layer(
-        pecha_opf_path, pecha_id, vol_num
+    pagination_layer, pagination_path = get_layer(
+        pecha_opf_path, pecha_id, vol_num, "Pagination"
     )
     pagination_annotations = pagination_layer.get("annotations", {})
     prev_page_end = 0
@@ -282,8 +303,8 @@ def update_page_layer(text, pecha_id, pecha_opf_path):
             prev_page_end = 0
             vol_num = page.vol
             dump_yaml(pagination_layer, pagination_path)
-            pagination_layer, pagination_path = get_pagination_layer(
-                pecha_opf_path, pecha_id, vol_num
+            pagination_layer, pagination_path = get_layer(
+                pecha_opf_path, pecha_id, vol_num, "Pagination"
             )
             pagination_annotations = pagination_layer.get("annotations", {})
         old_page_ann = pagination_annotations[page.id]
@@ -313,6 +334,7 @@ def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
     update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_page_layer(text_obj, pecha_id, pecha_opf_path)
+    update_durchen_layer(text_obj, pecha_id, pecha_opf_path)
     new_pecha_idx_path = Path(f"{pecha_opf_path}/{pecha_id}.opf/index.yml")
     dump_yaml(new_pecha_idx, new_pecha_idx_path)
     return pecha_opf_path

@@ -8,7 +8,7 @@ annotations:
     reference: null
     span:
       start: 0
-      end: 59
+      end: 60
     note_ref: 46d97ed3d9ca4ddabc3c413f306df03a
   e8e314a7457b40348b5dd7a744004900:
     imgnum: 2
@@ -16,7 +16,7 @@ annotations:
     reference: null
     span:
       start: 62
-      end: 101
+      end: 102
     note_ref: 46d97ed3d9ca4ddabc3c413f306df03a
   29c64dc1fa624b42b08814ca4f3a78b4:
     imgnum: 3
@@ -24,7 +24,7 @@ annotations:
     reference: null
     span:
       start: 104
-      end: 143
+      end: 144
     note_ref: 46d97ed3d9ca4ddabc3c413f306df03a
   46d97ed3d9ca4ddabc3c413f306df03a:
     imgnum: 4
@@ -32,7 +32,7 @@ annotations:
     reference: null
     span:
       start: 146
-      end: 178
+      end: 179
 local_ids:
   1a26fd08bf2b4ebb9e2d7369347e478b: 200000
   e8e314a7457b40348b5dd7a744004900: 200001
