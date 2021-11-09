@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.44 (2021-11-09)
+### Fix
+* **save_text:** Durchen update seperately ([`75932d8`](https://github.com/Esukhia/pedurma/commit/75932d83df722fc5a1fb2e337586c8fd5647e655))
+
 ## v0.1.43 (2021-11-08)
 ### Fix
 * **note:** Pecha path bug fixed ([`3a6ba1e`](https://github.com/Esukhia/pedurma/commit/3a6ba1e4c103f6d9055197025f6c95a9858a9f37))
