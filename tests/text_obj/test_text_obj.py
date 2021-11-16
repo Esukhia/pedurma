@@ -43,7 +43,19 @@ def test_text_obj_serializer_corssvol():
                 name="Page 3",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460003.jpg/full/max/0/default.jpg",
-                note_ref=["46d97ed3d9ca4ddabc3c413f306df03a", ""],
+                note_ref=[
+                    "46d97ed3d9ca4ddabc3c413f306df03a",
+                    "46d97ed3d9ca4ddabc3c413f306df03a",
+                ],
+            ),
+            Page(
+                id="46d97ed3d9ca4ddabc3c413f306df03a",
+                page_no=4,
+                content="རྒྱ་གར་གྱི་\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
+                name="Page 4",
+                vol="1",
+                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
+                note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
             Page(
                 id="c11d8db649854c5d89ca3df22047d07b",
@@ -76,7 +88,19 @@ def test_text_obj_serializer_corssvol():
                 name="Page 3",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470003.jpg/full/max/0/default.jpg",
-                note_ref=["05d117045b0c4ea5aee3aeba558e94bd", ""],
+                note_ref=[
+                    "05d117045b0c4ea5aee3aeba558e94bd",
+                    "05d117045b0c4ea5aee3aeba558e94bd",
+                ],
+            ),
+            Page(
+                id="05d117045b0c4ea5aee3aeba558e94bd",
+                page_no=4,
+                content="འབྱོར་ཆེན་པོ་དེར་\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་",
+                name="Page 4",
+                vol="2",
+                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
+                note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
         ],
         notes=[
@@ -128,7 +152,19 @@ def test_text_obj_serializer():
                 name="Page 6",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
-                note_ref=["9efa117a2b9444ac8cb09c198d21cdd8", ""],
+                note_ref=[
+                    "9efa117a2b9444ac8cb09c198d21cdd8",
+                    "9efa117a2b9444ac8cb09c198d21cdd8",
+                ],
+            ),
+            Page(
+                id="9efa117a2b9444ac8cb09c198d21cdd8",
+                page_no=7,
+                content="དེ་ལ་ནམ་མཁའི་\nབ་ཡང་དག་པར་\nགིས་ནི་ཆོས་སྟོན་པའི་",
+                name="Page 7",
+                vol="2",
+                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
+                note_ref=["9efa117a2b9444ac8cb09c198d21cdd8"],
             ),
         ],
         notes=[
@@ -173,7 +209,19 @@ def test_pedurma_text_obj():
                 name="Page 6",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
-                note_ref=["9efa117a2b9444ac8cb09c198d21cdd8", ""],
+                note_ref=[
+                    "9efa117a2b9444ac8cb09c198d21cdd8",
+                    "9efa117a2b9444ac8cb09c198d21cdd8",
+                ],
+            ),
+            Page(
+                id="9efa117a2b9444ac8cb09c198d21cdd8",
+                page_no=7,
+                content="དེ་ལ་ནམ་མཁའི་\nབ་ཡང་དག་པར་\nགིས་ནི་ཆོས་སྟོན་པའི་",
+                name="Page 7",
+                vol="2",
+                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
+                note_ref=["9efa117a2b9444ac8cb09c198d21cdd8"],
             ),
         ],
         notes=[

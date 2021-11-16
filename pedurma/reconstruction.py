@@ -21,7 +21,7 @@ from docx import Document
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
-from pedurma.texts import get_durchen_page_objs, get_pedurma_text_obj
+from pedurma.texts import get_body_text_from_last_page, get_pedurma_text_obj
 from pedurma.utils import optimized_diff_match_patch
 
 EWTSCONV = pyewts.pyewts()
@@ -912,7 +912,7 @@ def get_durchen_pgs_content(durchen_pages):
 
 
 def get_preview_page(g_body_page, n_body_page, g_durchen_pages, n_durchen_pages):
-    preview_page = ""
+    preview_page = g_body_page.content
     g_body_page_content = g_body_page.content
     n_body_page_content = n_body_page.content
     g_durchen_page_content = get_durchen_pgs_content(g_durchen_pages)
@@ -937,6 +937,49 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_pages, n_durchen_pages)
     return preview_page
 
 
+def get_vol_note_text(notes, vol_num):
+    note_text = ""
+    for note in notes:
+        if note.vol == vol_num:
+            note_text += note.content + "\n\n"
+    return note_text
+
+
+def get_body_pages(body_result, vol):
+    result = []
+    pg_text = ""
+    pages = re.split(fr"(<p{vol}-\d+>)", body_result)
+    for i, page in enumerate(pages):
+        if i % 2 == 0:
+            pg_text += page
+        else:
+            pg_text += page
+            result.append(pg_text)
+            pg_text = ""
+    return result
+
+
+def get_vol_preview(dg_body, namsel_body, dg_note_text, namsel_note_text, vol_num):
+    preview_text = ""
+    namsel_body = transfer(dg_body, [["pedurma", "(#)"]], namsel_body, output="txt")
+    dg_body = dg_body.replace("#", "")
+    body_result = reconstruct_body(namsel_body, dg_body, vol_num)
+    footnotes = reconstruct_footnote(namsel_note_text, dg_note_text, vol_num)
+    body_pages = get_body_pages(body_result, vol_num)
+    for body_page in body_pages:
+        pg_num = get_page_num(body_page, vol_num)
+        if pg_num not in footnotes:
+            cur_pg_footnotes = []
+            raise PageNumMissing
+        else:
+            cur_pg_footnotes = footnotes[pg_num]
+        if cur_pg_footnotes:
+            preview_text += (
+                merge_footnotes_per_page(body_page, cur_pg_footnotes) + "\n\n"
+            )
+    return preview_text
+
+
 def get_preview_text(text_id, pecha_paths=None):
     pedurmatext = get_pedurma_text_obj(text_id, pecha_paths)
     derge_google_text_obj = pedurmatext.google
@@ -946,16 +989,24 @@ def get_preview_text(text_id, pecha_paths=None):
     dg_notes = derge_google_text_obj.notes
     namsel_pages = namsel_text_obj.pages
     namsel_notes = namsel_text_obj.notes
+    dg_body = ""
+    namsel_body = ""
     for dg_page, namsel_page in zip(dg_pages, namsel_pages):
         vol_num = dg_page.vol
-        dg_durchens = get_durchen_page_objs(dg_page, dg_notes)
-        namsel_durchens = get_durchen_page_objs(namsel_page, namsel_notes)
-        if dg_durchens is [] or namsel_durchens is []:
-            print("Either of durchen is unable to locate")
+        if len(dg_page.note_ref) == 1:
+            dg_body += get_body_text_from_last_page(dg_page)
+            namsel_body += get_body_text_from_last_page(namsel_page)
+            dg_note_text = get_vol_note_text(dg_notes, vol_num)
+            namsel_note_text = get_vol_note_text(namsel_notes, vol_num)
+            preview_text[f"v{int(vol_num):03}"] = get_vol_preview(
+                dg_body, namsel_body, dg_note_text, namsel_note_text, vol_num
+            )
+            dg_body = ""
+            namsel_body = ""
             continue
-        preview_text[f"v{int(vol_num):03}"] += (
-            get_preview_page(dg_page, namsel_page, dg_durchens, namsel_durchens) + "\n"
-        )
+        dg_body += dg_page.content + "\n\n"
+        namsel_body += namsel_page.content + "\n\n"
+
     return preview_text
 
 

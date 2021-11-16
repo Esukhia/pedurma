@@ -4,7 +4,7 @@ from pathlib import Path
 from openpecha.blupdate import Blupdate, update_ann_layer
 from openpecha.utils import download_pecha, dump_yaml, load_yaml
 
-from pedurma.texts import get_pecha_paths, serialize_text_obj
+from pedurma.texts import get_pecha_paths, remove_last_pages, serialize_text_obj
 from pedurma.utils import from_yaml
 
 
@@ -58,6 +58,7 @@ def get_new_vol(old_vols, old_pecha_idx, text_obj):
         dict: new basetext and its id
     """
     new_vols = {}
+    text_obj = remove_last_pages(text_obj)
     new_text = serialize_text_obj(text_obj)
     for vol_id, new_text_base in new_text.items():
         vol_num = int(vol_id[1:])
@@ -248,6 +249,8 @@ def update_durchen_layer(text, pecha_id, pecha_opf_path):
     )
     char_walker = 0
     for page in text.pages:
+        if len(page.note_ref) == 1:
+            continue
         if vol_num != page.vol:
             update_durchen_span(durchen_layer, text, vol_num, char_walker)
             char_walker = 0
@@ -298,6 +301,8 @@ def update_page_layer(text, pecha_id, pecha_opf_path):
     pagination_annotations = pagination_layer.get("annotations", {})
     prev_page_end = 0
     for page in text.pages:
+        if len(page.note_ref) == 1:
+            continue
         if vol_num != page.vol:
             update_note_span(pagination_layer, text, prev_page_end)
             prev_page_end = 0
@@ -330,6 +335,7 @@ def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
         pecha_opf_path = download_pecha(pecha_id, **kwargs)
     old_pecha_idx = from_yaml(Path(f"{pecha_opf_path}/{pecha_id}.opf/index.yml"))
     prev_pecha_idx = copy.deepcopy(old_pecha_idx)
+    text_obj = remove_last_pages(text_obj)
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
     update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)

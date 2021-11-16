@@ -170,6 +170,30 @@ def get_vol_meta(vol_num, pecha_meta):
     return vol_meta
 
 
+def get_first_note_pg(notes, vol_meta):
+    for note in notes:
+        if int(note.vol) == vol_meta["volume_number"]:
+            return note
+    return None
+
+
+def get_last_page(pages, notes, vol_meta):
+    pages[-1].note_ref[1] = notes[-1].id
+    first_note_pg = get_first_note_pg(notes, vol_meta)
+    pg_content = re.sub(r"<p(\d+-\d+)>", r"\g<1>", first_note_pg.content)
+    last_page = Page(
+        id=first_note_pg.id,
+        page_no=first_note_pg.page_no,
+        content=pg_content,
+        name=f"Page {first_note_pg.page_no}",
+        vol=first_note_pg.vol,
+        image_link=first_note_pg.image_link,
+        note_ref=[notes[-1].id],
+    )
+    pages.append(last_page)
+    return pages
+
+
 def construct_text_obj(hfmls, pecha_meta, opf_path):
     pages = []
     notes = []
@@ -184,8 +208,56 @@ def construct_text_obj(hfmls, pecha_meta, opf_path):
         pages += get_page_obj_list(body_text, vol_meta, pagination_layer, tag="text")
         if durchen:
             notes += get_page_obj_list(durchen, vol_meta, pagination_layer, tag="note")
+        if notes:
+            pages = get_last_page(pages, notes, vol_meta)
     text_obj = Text(id=pecha_meta["text_uuid"], pages=pages, notes=notes)
     return text_obj
+
+
+def get_body_text_from_last_page(page):
+    body_part = ""
+    last_page = page.content
+    if re.search("བསྡུར་མཆན", last_page):
+        durchen_start_pat = re.search("བསྡུར་མཆན", last_page)
+        body_part = last_page[: durchen_start_pat.start()]
+    return body_part
+
+
+def get_note_text_from_first_note_page(note):
+    first_page = note.content
+    note_part = first_page
+    if re.search("བསྡུར་མཆན", first_page):
+        durchen_start_pat = re.search("བསྡུར་མཆན", first_page)
+        note_part = first_page[durchen_start_pat.start() :]
+    return note_part
+
+
+def get_first_note_content(page, note):
+    first_note_content = ""
+    body_part = get_body_text_from_last_page(page)
+    note_part = get_note_text_from_first_note_page(note)
+    first_note_content = body_part + note_part
+    return first_note_content
+
+
+def merge_last_pg_with_note_pg(text, page):
+    first_note = None
+    for pg_walker, note in enumerate(text.notes):
+        if note.vol == page.vol:
+            first_note = note
+            break
+    text.notes[pg_walker].content = get_first_note_content(page, first_note)
+
+
+def remove_last_pages(text):
+    new_pages = []
+    for pg_walker, page in enumerate(text.pages):
+        if len(page.note_ref) == 1:
+            merge_last_pg_with_note_pg(text, page)
+            continue
+        new_pages.append(page)
+    new_text = Text(id=text.id, pages=new_pages, notes=text.notes)
+    return new_text
 
 
 def serialize_text_obj(text):
