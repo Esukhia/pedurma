@@ -21,7 +21,7 @@ from docx import Document
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
-from pedurma.texts import get_durchen_page_obj, get_pedurma_text_obj
+from pedurma.texts import get_durchen_page_objs, get_pedurma_text_obj
 from pedurma.utils import optimized_diff_match_patch
 
 EWTSCONV = pyewts.pyewts()
@@ -903,12 +903,20 @@ def get_page_num(body_text, vol_num):
     return pg_num
 
 
-def get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page):
+def get_durchen_pgs_content(durchen_pages):
+    durchen_pgs_content = ""
+    for durchen_page in durchen_pages:
+        if durchen_page:
+            durchen_pgs_content += durchen_page.content + "\n\n"
+    return durchen_pgs_content
+
+
+def get_preview_page(g_body_page, n_body_page, g_durchen_pages, n_durchen_pages):
     preview_page = ""
     g_body_page_content = g_body_page.content
     n_body_page_content = n_body_page.content
-    g_durchen_page_content = g_durchen_page.content
-    n_durchen_page_content = n_durchen_page.content
+    g_durchen_page_content = get_durchen_pgs_content(g_durchen_pages)
+    n_durchen_page_content = get_durchen_pgs_content(n_durchen_pages)
     vol_num = g_body_page.vol
     n_body_page_content = transfer(
         g_body_page_content, [["pedurma", "(#)"]], n_body_page_content, output="txt"
@@ -940,13 +948,13 @@ def get_preview_text(text_id, pecha_paths=None):
     namsel_notes = namsel_text_obj.notes
     for dg_page, namsel_page in zip(dg_pages, namsel_pages):
         vol_num = dg_page.vol
-        dg_durchen = get_durchen_page_obj(dg_page, dg_notes)
-        namsel_durchen = get_durchen_page_obj(namsel_page, namsel_notes)
-        if dg_durchen is None or namsel_durchen is None:
+        dg_durchens = get_durchen_page_objs(dg_page, dg_notes)
+        namsel_durchens = get_durchen_page_objs(namsel_page, namsel_notes)
+        if dg_durchens is [] or namsel_durchens is []:
             print("Either of durchen is unable to locate")
             continue
         preview_text[f"v{int(vol_num):03}"] += (
-            get_preview_page(dg_page, namsel_page, dg_durchen, namsel_durchen) + "\n"
+            get_preview_page(dg_page, namsel_page, dg_durchens, namsel_durchens) + "\n"
         )
     return preview_text
 

@@ -73,8 +73,8 @@ def get_page_id(img_num, pagination_layer):
     paginations = pagination_layer["annotations"]
     for uuid, pagination in paginations.items():
         if pagination["imgnum"] == img_num:
-            return (uuid, pagination)
-    return ("", "")
+            return uuid
+    return ""
 
 
 def get_link(img_num, vol_meta):
@@ -83,11 +83,23 @@ def get_link(img_num, vol_meta):
     return link
 
 
-def get_note_ref(pagination):
-    try:
-        return pagination["note_ref"]
-    except Exception:
-        return ""
+def get_note_ref(img_num, pagination_layer):
+    paginations = pagination_layer["annotations"]
+    for uuid, pagination in paginations.items():
+        if pagination["imgnum"] == img_num:
+            try:
+                return pagination["note_ref"]
+            except Exception:
+                return ""
+    return ""
+
+
+def get_note_refs(img_num, pagination_layer):
+    note_refs = []
+    cur_pg_note_ref = get_note_ref(img_num, pagination_layer)
+    next_pg_note_ref = get_note_ref(img_num + 1, pagination_layer)
+    note_refs = [cur_pg_note_ref, next_pg_note_ref]
+    return note_refs
 
 
 def get_clean_page(page):
@@ -107,10 +119,10 @@ def get_clean_page(page):
 
 def get_page_obj(page, vol_meta, tag, pagination_layer):
     img_num = int(re.search(r"〔[𰵀-󴉱]?(\d+)〕", page).group(1))
-    page_id, pagination = get_page_id(img_num, pagination_layer)
+    page_id = get_page_id(img_num, pagination_layer)
     page_content = get_clean_page(page)
     page_link = get_link(img_num, vol_meta)
-    note_ref = get_note_ref(pagination)
+    note_ref = get_note_refs(img_num, pagination_layer)
     if page_content == "":
         page_obj = None
     else:
@@ -195,11 +207,12 @@ def serialize_text_obj(text):
     return text_hfml
 
 
-def get_durchen_page_obj(page, notes):
+def get_durchen_page_objs(page, notes):
+    note_objs = []
     for note in notes:
-        if note.id == page.note_ref:
-            return note
-    return None
+        if note.id in page.note_ref:
+            note_objs.append(note)
+    return note_objs
 
 
 def get_pecha_paths(text_id, text_mapping=None):
