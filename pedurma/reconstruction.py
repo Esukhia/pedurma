@@ -21,7 +21,11 @@ from docx import Document
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
-from pedurma.texts import get_body_text_from_last_page, get_pedurma_text_obj
+from pedurma.texts import (
+    get_body_text_from_last_page,
+    get_last_pg_ann,
+    get_pedurma_text_obj,
+)
 from pedurma.utils import optimized_diff_match_patch
 
 EWTSCONV = pyewts.pyewts()
@@ -974,9 +978,7 @@ def get_vol_preview(dg_body, namsel_body, dg_note_text, namsel_note_text, vol_nu
         else:
             cur_pg_footnotes = footnotes[pg_num]
         if cur_pg_footnotes:
-            preview_text += (
-                merge_footnotes_per_page(body_page, cur_pg_footnotes) + "\n\n"
-            )
+            preview_text += merge_footnotes_per_page(body_page, cur_pg_footnotes) + "\n"
     return preview_text
 
 
@@ -994,8 +996,10 @@ def get_preview_text(text_id, pecha_paths=None):
     for dg_page, namsel_page in zip(dg_pages, namsel_pages):
         vol_num = dg_page.vol
         if len(dg_page.note_ref) == 1:
-            dg_body += get_body_text_from_last_page(dg_page)
-            namsel_body += get_body_text_from_last_page(namsel_page)
+            dg_body += (
+                f"{get_body_text_from_last_page(dg_page)}\n{get_last_pg_ann(dg_page)}"
+            )
+            namsel_body += f"{get_body_text_from_last_page(namsel_page)}\n{get_last_pg_ann(namsel_page)}"
             dg_note_text = get_vol_note_text(dg_notes, vol_num)
             namsel_note_text = get_vol_note_text(namsel_notes, vol_num)
             preview_text[f"v{int(vol_num):03}"] = get_vol_preview(
@@ -1004,15 +1008,14 @@ def get_preview_text(text_id, pecha_paths=None):
             dg_body = ""
             namsel_body = ""
             continue
-        dg_body += dg_page.content + "\n\n"
-        namsel_body += namsel_page.content + "\n\n"
-
+        dg_body += dg_page.content
+        namsel_body += namsel_page.content
     return preview_text
 
 
 def split_text(content):
 
-    chunks = re.split(r"(\d+ <.*?>)", content)
+    chunks = re.split(r"(\(\d+\) <.*?>)", content)
 
     return chunks
 
@@ -1035,16 +1038,16 @@ def create_docx(text_id, chunks, path):
     return output_path
 
 
-def get_docx_text(text_id, output_path=None):
+def get_docx_text(text_id, pecha_paths=None, output_path=None):
     if not output_path:
         (Path.home() / ".collation_docx").mkdir(parents=True, exist_ok=True)
         output_path = Path.home() / ".collation_docx"
     collation_text = ""
-    preview_text = get_preview_text(text_id)
+    preview_text = get_preview_text(text_id, pecha_paths)
     for vol_id, text in preview_text.items():
         collation_text += f"{text}\n\n"
     collation_text = collation_text.replace("\n", "")
-    collation_text = re.sub(r"(\|.+?\|)", r"\n\g<1>\n", collation_text)
+    collation_text = re.sub(r"(༺.+?༻)", r"\n\g<1>\n", collation_text)
     chunks = split_text(collation_text)
     docx_path = create_docx(text_id, chunks, output_path)
     return docx_path

@@ -58,7 +58,6 @@ def get_new_vol(old_vols, old_pecha_idx, text_obj):
         dict: new basetext and its id
     """
     new_vols = {}
-    text_obj = remove_last_pages(text_obj)
     new_text = serialize_text_obj(text_obj)
     for vol_id, new_text_base in new_text.items():
         vol_num = int(vol_id[1:])
@@ -249,8 +248,6 @@ def update_durchen_layer(text, pecha_id, pecha_opf_path):
     )
     char_walker = 0
     for page in text.pages:
-        if len(page.note_ref) == 1:
-            continue
         if vol_num != page.vol:
             update_durchen_span(durchen_layer, text, vol_num, char_walker)
             char_walker = 0
@@ -301,8 +298,6 @@ def update_page_layer(text, pecha_id, pecha_opf_path):
     pagination_annotations = pagination_layer.get("annotations", {})
     prev_page_end = 0
     for page in text.pages:
-        if len(page.note_ref) == 1:
-            continue
         if vol_num != page.vol:
             update_note_span(pagination_layer, text, prev_page_end)
             prev_page_end = 0

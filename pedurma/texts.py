@@ -214,6 +214,15 @@ def construct_text_obj(hfmls, pecha_meta, opf_path):
     return text_obj
 
 
+def get_last_pg_ann(page):
+    pg_ann = ""
+    page_content = page.content
+    vol = page.vol
+    if re.search(fr"{vol}-\d+", page_content):
+        pg_ann = re.search(fr"{vol}-\d+", page_content)[0]
+    return pg_ann
+
+
 def get_body_text_from_last_page(page):
     body_part = ""
     last_page = page.content

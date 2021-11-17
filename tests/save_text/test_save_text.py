@@ -13,7 +13,7 @@ from pedurma.save_text import (
     update_index,
     update_page_layer,
 )
-from pedurma.texts import get_text_obj
+from pedurma.texts import get_text_obj, remove_last_pages
 from pedurma.utils import from_yaml, to_yaml
 
 
@@ -60,7 +60,7 @@ def get_dummy_text():
             Page(
                 id="46d97ed3d9ca4ddabc3c413f306df03a",
                 page_no=4,
-                content="རྒྱ་གར་གྱི་\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
+                content="རྒྱ་གར་1གྱི་\nབསྡུར་མཆན།\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
                 name="Page 4",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
@@ -105,7 +105,7 @@ def get_dummy_text():
             Page(
                 id="05d117045b0c4ea5aee3aeba558e94bd",
                 page_no=4,
-                content="འབྱོར་ཆེན་པོ་དེར་\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་",
+                content="འབྱོར་ཆེན་པོ་3དེར་\nབསྡུར་མཆན།\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་",
                 name="Page 4",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
@@ -116,7 +116,7 @@ def get_dummy_text():
             NotesPage(
                 id="46d97ed3d9ca4ddabc3c413f306df03a",
                 page_no=4,
-                content="རྒྱ་གར་གྱི་\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
+                content="རྒྱ་གར་གྱི་\nབསྡུར་མཆན།\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
                 name="Page 4",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
@@ -124,7 +124,7 @@ def get_dummy_text():
             NotesPage(
                 id="05d117045b0c4ea5aee3aeba558e94bd",
                 page_no=4,
-                content="འབྱོར་ཆེན་པོ་དེར་\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་",
+                content="འབྱོར་ཆེན་པོ་དེར་\nབསྡུར་མཆན།\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་",
                 name="Page 4",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
@@ -137,6 +137,7 @@ def test_update_base():
     pecha_opf_path = Path(__file__).parent / "data" / "old_opf"
     pecha_id = "P000002"
     text_obj = get_dummy_text()
+    text_obj = remove_last_pages(text_obj)
     pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf" / "index.yml"))
     text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
@@ -151,6 +152,7 @@ def test_update_durchen_layer():
     pecha_opf_path = Path(__file__).parent / "data" / "old_opf"
     pecha_id = "P000002"
     text_obj = get_dummy_text()
+    text_obj = remove_last_pages(text_obj)
     durchen_path = (
         pecha_opf_path / f"{pecha_id}.opf" / "layers" / "v002" / "Durchen.yml"
     )
@@ -168,6 +170,7 @@ def test_update_pagination_layer():
     pecha_opf_path = Path(__file__).parent / "data" / "old_opf"
     pecha_id = "P000002"
     text_obj = get_dummy_text()
+    text_obj = remove_last_pages(text_obj)
     pagination_path = (
         pecha_opf_path / f"{pecha_id}.opf" / "layers" / "v002" / "Pagination.yml"
     )
@@ -185,6 +188,7 @@ def test_update_index():
     pecha_opf_path = Path(__file__).parent / "data" / "old_opf"
     pecha_id = "P000002"
     text_obj = get_dummy_text()
+    text_obj = remove_last_pages(text_obj)
     pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf" / "index.yml"))
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, pecha_idx)
     new_pecha_idx = to_yaml(new_pecha_idx)

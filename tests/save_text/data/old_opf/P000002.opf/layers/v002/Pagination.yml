@@ -24,15 +24,15 @@ annotations:
     reference: null
     span:
       start: 119
-      end: 168
+      end: 167
     note_ref: 05d117045b0c4ea5aee3aeba558e94bd
   05d117045b0c4ea5aee3aeba558e94bd:
     imgnum: 4
     page_info: ''
     reference: null
     span:
-      start: 219
-      end: 266
+      start: 169
+      end: 227
 local_ids:
   c11d8db649854c5d89ca3df22047d07b: 200000
   21671cb910d9486c8ba4793305c00d58: 200001

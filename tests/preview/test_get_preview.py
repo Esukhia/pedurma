@@ -5,19 +5,14 @@ import pytest
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.pecha import NotesPage, Page
-from pedurma.reconstruction import (
-    create_docx,
-    get_preview_page,
-    get_preview_text,
-    split_text,
-)
+from pedurma.reconstruction import get_docx_text, get_preview_page, get_preview_text
 from pedurma.utils import from_yaml
 
 
 def get_dummy_preview():
-    dg_pecha_path = str(Path(__file__).parent / "data" / "P791")
-    namsel_pecha_path = str(Path(__file__).parent / "data" / "P792")
-    text_id = "D1111"
+    dg_pecha_path = str(Path(__file__).parent / "data" / "P972")
+    namsel_pecha_path = str(Path(__file__).parent / "data" / "P973")
+    text_id = "D1119"
     pecha_paths = {"namsel": namsel_pecha_path, "google": dg_pecha_path}
     preview_text = get_preview_text(text_id, pecha_paths)
     return preview_text
@@ -136,23 +131,19 @@ def test_page_num_missing():
 
 def test_get_preview_text():
     preview_text = get_dummy_preview()
-    expected_preview = (Path(__file__).parent / "data" / "D1111_preview.txt").read_text(
+    expected_preview = (Path(__file__).parent / "data" / "D1119_preview.txt").read_text(
         encoding="utf-8"
     )
     assert preview_text["v001"] == expected_preview
 
 
 def test_get_docx_text():
-    collation_text = ""
-    text_id = "D1111"
+    text_id = "D1119"
     output_path = Path.home()
-    preview_text = get_dummy_preview()
-    for vol_id, text in preview_text.items():
-        collation_text += f"{text}\n\n"
-    collation_text = collation_text.replace("\n", "")
-    collation_text = re.sub(r"(\|.+?\|)", r"\n\g<1>\n", collation_text)
-    chunks = split_text(collation_text)
-    docx_path = create_docx(text_id, chunks, output_path)
-    expected_path = Path.home() / "D1111.docx"
+    dg_pecha_path = str(Path(__file__).parent / "data" / "P972")
+    namsel_pecha_path = str(Path(__file__).parent / "data" / "P973")
+    pecha_paths = {"namsel": namsel_pecha_path, "google": dg_pecha_path}
+    docx_path = get_docx_text(text_id, pecha_paths, output_path)
+    expected_path = Path.home() / "D1119.docx"
     assert docx_path == expected_path
     expected_path.unlink()
