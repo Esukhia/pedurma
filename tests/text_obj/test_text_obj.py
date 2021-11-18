@@ -37,7 +37,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 3",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460003.jpg/full/max/0/default.jpg",
-                note_ref=["46d97ed3d9ca4ddabc3c413f306df03a", ""],
+                note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
             Page(
                 id="46d97ed3d9ca4ddabc3c413f306df03a",
@@ -73,7 +73,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 3",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470003.jpg/full/max/0/default.jpg",
-                note_ref=["05d117045b0c4ea5aee3aeba558e94bd", ""],
+                note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
             Page(
                 id="05d117045b0c4ea5aee3aeba558e94bd",
@@ -131,7 +131,7 @@ def test_text_obj_serializer():
                 name="Page 6",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
-                note_ref=["9efa117a2b9444ac8cb09c198d21cdd8", ""],
+                note_ref=["9efa117a2b9444ac8cb09c198d21cdd8"],
             ),
             Page(
                 id="9efa117a2b9444ac8cb09c198d21cdd8",
@@ -182,7 +182,7 @@ def test_pedurma_text_obj():
                 name="Page 6",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
-                note_ref=["9efa117a2b9444ac8cb09c198d21cdd8", ""],
+                note_ref=["9efa117a2b9444ac8cb09c198d21cdd8"],
             ),
             Page(
                 id="9efa117a2b9444ac8cb09c198d21cdd8",
