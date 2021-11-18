@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.47 (2021-11-18)
+### Fix
+* **note-ref:** Empty note ref not considered ([`8db9449`](https://github.com/Esukhia/pedurma/commit/8db9449b2a058880a295954942d753c32523cf66))
+
 ## v0.1.46 (2021-11-18)
 ### Fix
 * **note-ref:** Duplicate note ref not considered ([`1934862`](https://github.com/Esukhia/pedurma/commit/193486217504d54eab22065d4415614c715e34f1))
