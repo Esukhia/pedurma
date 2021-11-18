@@ -1000,7 +1000,7 @@ def get_preview_text(text_id, pecha_paths=None):
     namsel_body = ""
     for dg_page, namsel_page in zip(dg_pages, namsel_pages):
         vol_num = dg_page.vol
-        if len(dg_page.note_ref) == 1:
+        if "--" in dg_page.note_ref:
             dg_body += (
                 f"{get_body_text_from_last_page(dg_page)}\n{get_last_pg_ann(dg_page)}"
             )

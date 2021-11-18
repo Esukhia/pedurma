@@ -9,6 +9,7 @@ annotations:
     span:
       start: 0
       end: 57
+    note_ref : c51a4329d20240cbb0f24d068bdb63d5
   0b069d5b3c424a128b77a9cc8190316e:
     imgnum: 2
     page_info: ''
@@ -16,6 +17,7 @@ annotations:
     span:
       start: 60
       end: 116
+    note_ref : c51a4329d20240cbb0f24d068bdb63d5
   288058099d4e47c793bcb972ecc4c989:
     imgnum: 3
     page_info: ''
@@ -23,6 +25,7 @@ annotations:
     span:
       start: 119
       end: 166
+    note_ref : c51a4329d20240cbb0f24d068bdb63d5
   c51a4329d20240cbb0f24d068bdb63d5:
     imgnum: 4
     page_info: ''
