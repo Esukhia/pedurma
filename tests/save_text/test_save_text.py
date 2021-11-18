@@ -46,7 +46,7 @@ def get_dummy_text():
                 name="Page 3",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460003.jpg/full/max/0/default.jpg",
-                note_ref=["46d97ed3d9ca4ddabc3c413f306df03a", ""],
+                note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
             Page(
                 id="46d97ed3d9ca4ddabc3c413f306df03a",
@@ -82,7 +82,7 @@ def get_dummy_text():
                 name="Page 3",
                 vol="2",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470003.jpg/full/max/0/default.jpg",
-                note_ref=["05d117045b0c4ea5aee3aeba558e94bd", ""],
+                note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
             Page(
                 id="05d117045b0c4ea5aee3aeba558e94bd",

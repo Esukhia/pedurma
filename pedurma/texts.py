@@ -97,11 +97,10 @@ def get_note_ref(img_num, pagination_layer):
 def get_note_refs(img_num, pagination_layer):
     note_refs = []
     cur_pg_note_ref = get_note_ref(img_num, pagination_layer)
+    note_refs.append(cur_pg_note_ref)
     next_pg_note_ref = get_note_ref(img_num + 1, pagination_layer)
-    if cur_pg_note_ref == next_pg_note_ref:
-        note_refs = [cur_pg_note_ref]
-    else:
-        note_refs = [cur_pg_note_ref, next_pg_note_ref]
+    if next_pg_note_ref and cur_pg_note_ref != next_pg_note_ref:
+        note_refs.append(next_pg_note_ref)
     return note_refs
 
 
