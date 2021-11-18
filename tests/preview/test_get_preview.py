@@ -15,6 +15,15 @@ def get_dummy_preview():
     text_id = "D1119"
     pecha_paths = {"namsel": namsel_pecha_path, "google": dg_pecha_path}
     preview_text = get_preview_text(text_id, pecha_paths)
+    (
+        Path(__file__).parent
+        / "data"
+        / "P972"
+        / "P972.opf"
+        / "layers"
+        / "v001"
+        / "PedurmaNote.yml"
+    ).unlink()
     return preview_text
 
 
@@ -149,3 +158,12 @@ def test_get_docx_text():
     expected_path = Path.home() / "D1119.docx"
     assert docx_path == expected_path
     expected_path.unlink()
+    (
+        Path(__file__).parent
+        / "data"
+        / "P972"
+        / "P972.opf"
+        / "layers"
+        / "v001"
+        / "PedurmaNote.yml"
+    ).unlink()
