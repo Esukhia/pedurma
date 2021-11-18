@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.48 (2021-11-18)
+### Fix
+* **pedurma-note:** Pedurma note formatter added ([`a9f3a7d`](https://github.com/Esukhia/pedurma/commit/a9f3a7d8bf1f761cdfac47ca2f3c1dc0a6ad4909))
+
 ## v0.1.47 (2021-11-18)
 ### Fix
 * **note-ref:** Empty note ref not considered ([`8db9449`](https://github.com/Esukhia/pedurma/commit/8db9449b2a058880a295954942d753c32523cf66))
