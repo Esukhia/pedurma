@@ -982,8 +982,13 @@ def get_vol_preview(dg_body, namsel_body, dg_note_text, namsel_note_text, vol_nu
     return preview_text
 
 
+def pecha_path_2_id(pecha_path):
+    pecha_path_obj = Path(pecha_path)
+    return pecha_path_obj.stem
+
+
 def get_preview_text(text_id, pecha_paths=None):
-    pedurmatext = get_pedurma_text_obj(text_id, pecha_paths)
+    pedurmatext, pecha_paths = get_pedurma_text_obj(text_id, pecha_paths)
     derge_google_text_obj = pedurmatext.google
     namsel_text_obj = pedurmatext.namsel
     preview_text = defaultdict(str)
@@ -1010,7 +1015,8 @@ def get_preview_text(text_id, pecha_paths=None):
             continue
         dg_body += dg_page.content
         namsel_body += namsel_page.content
-    return preview_text
+    google_pecha_id = pecha_path_2_id(pecha_paths["google"])
+    return preview_text, google_pecha_id
 
 
 def split_text(content):
@@ -1043,7 +1049,7 @@ def get_docx_text(text_id, pecha_paths=None, output_path=None):
         (Path.home() / ".collation_docx").mkdir(parents=True, exist_ok=True)
         output_path = Path.home() / ".collation_docx"
     collation_text = ""
-    preview_text = get_preview_text(text_id, pecha_paths)
+    preview_text, google_pecha_id = get_preview_text(text_id, pecha_paths)
     for vol_id, text in preview_text.items():
         collation_text += f"{text}\n\n"
     collation_text = collation_text.replace("\n", "")

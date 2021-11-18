@@ -130,11 +130,13 @@ def test_page_num_missing():
 
 
 def test_get_preview_text():
-    preview_text = get_dummy_preview()
+    preview_text, google_pecha_id = get_dummy_preview()
     expected_preview = (Path(__file__).parent / "data" / "D1119_preview.txt").read_text(
         encoding="utf-8"
     )
+    expected_google_pecha_id = "P972"
     assert preview_text["v001"] == expected_preview
+    assert google_pecha_id == expected_google_pecha_id
 
 
 def test_get_docx_text():

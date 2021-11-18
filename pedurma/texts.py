@@ -332,4 +332,4 @@ def get_pedurma_text_obj(text_id, pecha_paths=None):
     pedurma_text = PedurmaText(
         text_id=text_id, namsel=text["namsel"], google=text["google"]
     )
-    return pedurma_text
+    return pedurma_text, pecha_paths

@@ -235,5 +235,5 @@ def test_pedurma_text_obj():
             )
         ],
     )
-    pedurma_text = get_pedurma_text_obj(text_id, pecha_paths)
+    pedurma_text, pecha_paths = get_pedurma_text_obj(text_id, pecha_paths)
     assert pedurma_text.namsel == expected_namsel_text_obj
