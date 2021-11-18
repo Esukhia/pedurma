@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.46 (2021-11-18)
+### Fix
+* **note-ref:** Duplicate note ref not considered ([`1934862`](https://github.com/Esukhia/pedurma/commit/193486217504d54eab22065d4415614c715e34f1))
+* **preview:** Pecha id of the google is returned ([`2f33bb9`](https://github.com/Esukhia/pedurma/commit/2f33bb9486cd1a3adfc417131cc85807c2217d15))
+
 ## v0.1.45 (2021-11-18)
 ### Fix
 * **reconstruction:** Unrecognized notes showing up on top of page fixed ([`8d7b422`](https://github.com/Esukhia/pedurma/commit/8d7b422ff439e535f9f0cb3fbac64867e6b0031b))
