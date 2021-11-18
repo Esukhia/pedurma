@@ -98,7 +98,10 @@ def get_note_refs(img_num, pagination_layer):
     note_refs = []
     cur_pg_note_ref = get_note_ref(img_num, pagination_layer)
     next_pg_note_ref = get_note_ref(img_num + 1, pagination_layer)
-    note_refs = [cur_pg_note_ref, next_pg_note_ref]
+    if cur_pg_note_ref == next_pg_note_ref:
+        note_refs = [cur_pg_note_ref]
+    else:
+        note_refs = [cur_pg_note_ref, next_pg_note_ref]
     return note_refs
 
 
@@ -178,7 +181,8 @@ def get_first_note_pg(notes, vol_meta):
 
 
 def get_last_page(pages, notes, vol_meta):
-    pages[-1].note_ref[1] = notes[-1].id
+    if pages[-1].note_ref[0] != notes[-1].id:
+        pages[-1].note_ref.insert(1, notes[-1].id)
     first_note_pg = get_first_note_pg(notes, vol_meta)
     pg_content = re.sub(r"<p(\d+-\d+)>", r"\g<1>", first_note_pg.content)
     last_page = Page(
@@ -188,7 +192,7 @@ def get_last_page(pages, notes, vol_meta):
         name=f"Page {first_note_pg.page_no}",
         vol=first_note_pg.vol,
         image_link=first_note_pg.image_link,
-        note_ref=[notes[-1].id],
+        note_ref=[notes[-1].id, "--"],
     )
     pages.append(last_page)
     return pages
@@ -261,7 +265,7 @@ def merge_last_pg_with_note_pg(text, page):
 def remove_last_pages(text):
     new_pages = []
     for pg_walker, page in enumerate(text.pages):
-        if len(page.note_ref) == 1:
+        if "--" in page.note_ref:
             merge_last_pg_with_note_pg(text, page)
             continue
         new_pages.append(page)
@@ -332,4 +336,4 @@ def get_pedurma_text_obj(text_id, pecha_paths=None):
     pedurma_text = PedurmaText(
         text_id=text_id, namsel=text["namsel"], google=text["google"]
     )
-    return pedurma_text
+    return pedurma_text, pecha_paths
