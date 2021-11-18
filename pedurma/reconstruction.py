@@ -21,9 +21,11 @@ from docx import Document
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
+from pedurma.preview_note_layer import update_hybird_pecha_note_layer
 from pedurma.texts import (
     get_body_text_from_last_page,
     get_last_pg_ann,
+    get_pecha_paths,
     get_pedurma_text_obj,
 )
 from pedurma.utils import optimized_diff_match_patch
@@ -988,7 +990,10 @@ def pecha_path_2_id(pecha_path):
 
 
 def get_preview_text(text_id, pecha_paths=None):
-    pedurmatext, pecha_paths = get_pedurma_text_obj(text_id, pecha_paths)
+    if pecha_paths is None:
+        pecha_paths = get_pecha_paths(text_id)
+    pedurmatext = get_pedurma_text_obj(text_id, pecha_paths)
+    google_pecha_id = pecha_path_2_id(pecha_paths["google"])
     derge_google_text_obj = pedurmatext.google
     namsel_text_obj = pedurmatext.namsel
     preview_text = defaultdict(str)
@@ -998,6 +1003,7 @@ def get_preview_text(text_id, pecha_paths=None):
     namsel_notes = namsel_text_obj.notes
     dg_body = ""
     namsel_body = ""
+    cur_vol_preview = ""
     for dg_page, namsel_page in zip(dg_pages, namsel_pages):
         vol_num = dg_page.vol
         if "--" in dg_page.note_ref:
@@ -1007,15 +1013,19 @@ def get_preview_text(text_id, pecha_paths=None):
             namsel_body += f"{get_body_text_from_last_page(namsel_page)}\n{get_last_pg_ann(namsel_page)}"
             dg_note_text = get_vol_note_text(dg_notes, vol_num)
             namsel_note_text = get_vol_note_text(namsel_notes, vol_num)
-            preview_text[f"v{int(vol_num):03}"] = get_vol_preview(
+            cur_vol_preview = get_vol_preview(
                 dg_body, namsel_body, dg_note_text, namsel_note_text, vol_num
             )
+            update_hybird_pecha_note_layer(
+                cur_vol_preview, pecha_paths["google"], int(vol_num)
+            )
+            preview_text[f"v{int(vol_num):03}"] = cur_vol_preview
             dg_body = ""
             namsel_body = ""
+            cur_vol_preview = ""
             continue
         dg_body += dg_page.content
         namsel_body += namsel_page.content
-    google_pecha_id = pecha_path_2_id(pecha_paths["google"])
     return preview_text, google_pecha_id
 
 

@@ -141,7 +141,7 @@ def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
         updater (obj): updater object
     """
     for layer_name, old_layer in old_layers.items():
-        if layer_name not in ["Pagination", "Durchen"]:
+        if layer_name not in ["Pagination", "Durchen", "PedurmaNote"]:
             update_ann_layer(old_layer, updater)
             new_layer_path = Path(
                 f"{pecha_opf_path}/{pecha_id}.opf/layers/{vol_id}/{layer_name}.yml"
