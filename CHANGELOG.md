@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.45 (2021-11-18)
+### Fix
+* **reconstruction:** Unrecognized notes showing up on top of page fixed ([`8d7b422`](https://github.com/Esukhia/pedurma/commit/8d7b422ff439e535f9f0cb3fbac64867e6b0031b))
+* **test:** Test updated for last page bug fix ([`bbbc302`](https://github.com/Esukhia/pedurma/commit/bbbc302c1bc268fdb9dfb90bdc4bbc6b4dcf8884))
+* **reconstruction:** Last page bug fixed ([`49f9054`](https://github.com/Esukhia/pedurma/commit/49f9054690d088057e94dbf2b7aa7a202730e9af))
+* **note-ref:** Note ref list passed and two page note is processed to reconstruct ([`059fc31`](https://github.com/Esukhia/pedurma/commit/059fc319dfa441ec5e7d4507da60c9aa0b5cc97b))
+
 ## v0.1.44 (2021-11-09)
 ### Fix
 * **save_text:** Durchen update seperately ([`75932d8`](https://github.com/Esukhia/pedurma/commit/75932d83df722fc5a1fb2e337586c8fd5647e655))
