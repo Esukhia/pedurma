@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.49 (2021-11-19)
+### Fix
+* **note-ref:** The last page note ref bug fixed ([`42994cf`](https://github.com/Esukhia/pedurma/commit/42994cff49e4632f570c8b2ed32a3a53e3a4625b))
+
 ## v0.1.48 (2021-11-18)
 ### Fix
 * **pedurma-note:** Pedurma note formatter added ([`a9f3a7d`](https://github.com/Esukhia/pedurma/commit/a9f3a7d8bf1f761cdfac47ca2f3c1dc0a6ad4909))
