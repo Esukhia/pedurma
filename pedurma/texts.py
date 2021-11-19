@@ -179,11 +179,32 @@ def get_first_note_pg(notes, vol_meta):
     return None
 
 
+def get_cur_vol_notes(notes, vol_meta):
+    cur_vol_notes = []
+    for note in notes:
+        if int(note.vol) == vol_meta["volume_number"]:
+            cur_vol_notes.append(note)
+    return cur_vol_notes
+
+
+def get_last_page_note_ref(notes, vol_meta):
+    cur_vol_notes = get_cur_vol_notes(notes, vol_meta)
+    last_page_note_refs = []
+    if len(cur_vol_notes) >= 2:
+        last_page_note_refs = [cur_vol_notes[-2].id, cur_vol_notes[-1].id, "--"]
+    elif len(cur_vol_notes) == 1:
+        last_page_note_refs = [cur_vol_notes[-1].id, "--"]
+    else:
+        last_page_note_refs = ["--"]
+    return last_page_note_refs
+
+
 def get_last_page(pages, notes, vol_meta):
     if pages[-1].note_ref[0] != notes[-1].id:
         pages[-1].note_ref.insert(1, notes[-1].id)
     first_note_pg = get_first_note_pg(notes, vol_meta)
     pg_content = re.sub(r"<p(\d+-\d+)>", r"\g<1>", first_note_pg.content)
+    note_refs = get_last_page_note_ref(notes, vol_meta)
     last_page = Page(
         id=first_note_pg.id,
         page_no=first_note_pg.page_no,
@@ -191,7 +212,7 @@ def get_last_page(pages, notes, vol_meta):
         name=f"Page {first_note_pg.page_no}",
         vol=first_note_pg.vol,
         image_link=first_note_pg.image_link,
-        note_ref=[notes[-1].id, "--"],
+        note_ref=note_refs,
     )
     pages.append(last_page)
     return pages
