@@ -2,6 +2,7 @@ import copy
 from pathlib import Path
 
 from openpecha.blupdate import Blupdate, update_ann_layer
+from openpecha.github_utils import commit
 from openpecha.utils import download_pecha, dump_yaml, load_yaml
 
 from pedurma.texts import get_pecha_paths, remove_last_pages, serialize_text_obj
@@ -290,7 +291,19 @@ def get_layer(pecha_opf_path, pecha_id, vol_num, layer_name):
     return layer, layer_path
 
 
+def get_updated_page_number(old_span, new_pg_ann, updated_pg_number):
+    if (
+        updated_pg_number != 0
+        and old_span["start"] != new_pg_ann["span"]["start"]
+        or old_span["end"] != new_pg_ann["span"]["end"]
+    ):
+        return new_pg_ann["imgnum"]
+    else:
+        return updated_pg_number
+
+
 def update_page_layer(text, pecha_id, pecha_opf_path):
+    updated_page_number = 0
     vol_num = text.pages[0].vol
     pagination_layer, pagination_path = get_layer(
         pecha_opf_path, pecha_id, vol_num, "Pagination"
@@ -308,14 +321,19 @@ def update_page_layer(text, pecha_id, pecha_opf_path):
             )
             pagination_annotations = pagination_layer.get("annotations", {})
         old_page_ann = pagination_annotations[page.id]
+        old_span = copy.deepcopy(old_page_ann["span"])
         pagination_layer["annotations"][page.id], prev_page_end = update_page_span(
             page, prev_page_end, old_page_ann
         )
+        updated_page_number = get_updated_page_number(
+            old_span, pagination_layer["annotations"][page.id], updated_page_number
+        )
     update_note_span(pagination_layer, text, prev_page_end)
     dump_yaml(pagination_layer, pagination_path)
+    return updated_page_number
 
 
-def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
+def save_text(pecha_id, text_obj, pecha_opf_path=None, commit_flag=True, **kwargs):
     """Update pecha opf according to text object content
 
     Args:
@@ -326,6 +344,7 @@ def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
     Returns:
         path: pecha opf path
     """
+    updated_page_number = 0
     if not pecha_opf_path:
         pecha_opf_path = download_pecha(pecha_id, **kwargs)
     old_pecha_idx = from_yaml(Path(f"{pecha_opf_path}/{pecha_id}.opf/index.yml"))
@@ -334,10 +353,12 @@ def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
     new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
     update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
-    update_page_layer(text_obj, pecha_id, pecha_opf_path)
+    updated_page_number = update_page_layer(text_obj, pecha_id, pecha_opf_path)
     update_durchen_layer(text_obj, pecha_id, pecha_opf_path)
     new_pecha_idx_path = Path(f"{pecha_opf_path}/{pecha_id}.opf/index.yml")
     dump_yaml(new_pecha_idx, new_pecha_idx_path)
+    if commit_flag:
+        commit(pecha_opf_path, f"Page no {updated_page_number} is updated")
     return pecha_opf_path
 
 
@@ -365,7 +386,7 @@ def get_pedurma_text_mapping(pedurma_text_obj):
     return pedurma_text_mapping
 
 
-def save_pedurma_text(pedurma_text_obj, pedurma_text_mapping=None):
+def save_pedurma_text(pedurma_text_obj, pedurma_text_mapping=None, commit_flag=True):
     """Save changes to respective pedurma opfs according to pedurma text object content
 
     Args:
@@ -379,4 +400,5 @@ def save_pedurma_text(pedurma_text_obj, pedurma_text_mapping=None):
             pedurma_text["pecha_id"],
             pedurma_text["text_obj"],
             pedurma_text["pecha_path"],
+            commit_flag=commit_flag,
         )
