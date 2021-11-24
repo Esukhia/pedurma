@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.51 (2021-11-24)
+### Fix
+* **text:** Removed page ref annotation from body text part of last extra page content ([`a55af9b`](https://github.com/Esukhia/pedurma/commit/a55af9b66619e276322cb719e282e409a91735dd))
+
 ## v0.1.50 (2021-11-24)
 ### Fix
 * **text:** Last extra page content is clipped from durchen ([`c5d7d3c`](https://github.com/Esukhia/pedurma/commit/c5d7d3c526d1f8781d80a5c52313101a3baca574))
