@@ -151,18 +151,20 @@ def test_update_durchen_layer():
 def test_update_pagination_layer():
     pecha_opf_path = Path(__file__).parent / "data" / "old_opf"
     pecha_id = "P000002"
+    expected_pg_number = 3
     text_obj = get_dummy_text()
     text_obj = remove_last_pages(text_obj)
     pagination_path = (
         pecha_opf_path / f"{pecha_id}.opf" / "layers" / "v002" / "Pagination.yml"
     )
     old_pagination_layer = from_yaml(pagination_path)
-    update_page_layer(text_obj, pecha_id, pecha_opf_path)
+    updated_pg_number = update_page_layer(text_obj, pecha_id, pecha_opf_path)
     new_pagination_layer = from_yaml(pagination_path)
     expected_pagination_layer = from_yaml(
         (Path(__file__).parent / "data" / "expected_layers" / "Pagination.yml")
     )
     assert expected_pagination_layer == new_pagination_layer
+    assert expected_pg_number == updated_pg_number
     dump_yaml(old_pagination_layer, pagination_path)
 
 
@@ -207,7 +209,11 @@ def test_save_pedurma_text():
             "pecha_path": google_pecha_path,
         },
     }
-    save_pedurma_text(pedurma_text_obj=None, pedurma_text_mapping=pedurma_text_mapping)
+    save_pedurma_text(
+        pedurma_text_obj=None,
+        pedurma_text_mapping=pedurma_text_mapping,
+        commit_flag=False,
+    )
     new_namsel_text_obj = get_text_obj(pecha_id, text_id, namsel_pecha_path)
     new_google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path)
     assert new_google_text_obj == google_text_obj
