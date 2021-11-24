@@ -8,4 +8,4 @@ from .save_text import *
 from .texts import *
 from .utils import *
 
-__version__ = "0.1.48"
+__version__ = "0.1.50"
