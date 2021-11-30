@@ -373,6 +373,28 @@ def get_last_page(pages, notes, vol_meta):
     return pages
 
 
+def from_chenyig_to_editor(note):
+    note_line = re.sub(pattern=r"\(", repl="⦇", string=note)
+    note_line = re.sub(pattern=r"\)", repl="⦈", string=note_line)
+    note_line = re.sub(pattern=r"\[", repl="⟦", string=note_line)
+    note_line = re.sub(pattern=r"\]", repl="⟧", string=note_line)
+
+    note_line = re.sub(
+        pattern=r"(\n+)(\d+)", repl=r"\g<1>      (\g<2>)", string=note_line
+    )
+    note_line = re.sub(
+        pattern=r"<s(.+)>\n      ", repl=r"\g<1>\n      ", string=note_line
+    )
+    note_line = re.sub(pattern=r"<p([^>]+)>", repl=r"[\g<1>]", string=note_line)
+    return note_line
+
+
+def reformat_notes(notes):
+    for note in notes:
+        note.content = from_chenyig_to_editor(note.content)
+    return notes
+
+
 def construct_text_obj(hfmls, pecha_meta, opf_path):
     """Generate text obj from text hfmls
 
@@ -399,6 +421,7 @@ def construct_text_obj(hfmls, pecha_meta, opf_path):
             notes += get_page_obj_list(durchen, vol_meta, pagination_layer, tag="note")
         if notes:
             pages = get_last_page(pages, notes, vol_meta)
+    notes = reformat_notes(notes)
     text_obj = Text(id=pecha_meta["text_uuid"], pages=pages, notes=notes)
     return text_obj
 
