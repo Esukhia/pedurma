@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.52 (2021-11-30)
+### Fix
+* **save_text:** Commit feat rollbacked ([`76e705c`](https://github.com/Esukhia/pedurma/commit/76e705c6e38837e276cf0b89f439589989088261))
+
 ## v0.1.51 (2021-11-24)
 ### Fix
 * **text:** Removed page ref annotation from body text part of last extra page content ([`a55af9b`](https://github.com/Esukhia/pedurma/commit/a55af9b66619e276322cb719e282e409a91735dd))
