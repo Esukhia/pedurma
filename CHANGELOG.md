@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.53 (2021-12-01)
+### Fix
+* **note:** The conversion of note to improved readble and back to its original state included ([`3d3dd70`](https://github.com/Esukhia/pedurma/commit/3d3dd7024394c34a1f5be267853a2d77a9d99188))
+
 ## v0.1.52 (2021-11-30)
 ### Fix
 * **save_text:** Commit feat rollbacked ([`76e705c`](https://github.com/Esukhia/pedurma/commit/76e705c6e38837e276cf0b89f439589989088261))
