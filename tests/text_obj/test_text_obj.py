@@ -2,6 +2,7 @@ from pathlib import Path
 
 from pedurma.pecha import NotesPage, Page, Text
 from pedurma.texts import get_pedurma_text_obj, get_text_obj
+from pedurma.utils import from_editor, notes_to_editor_view, to_editor
 
 
 def test_text_obj_serializer_corssvol():
@@ -89,7 +90,7 @@ def test_text_obj_serializer_corssvol():
             NotesPage(
                 id="46d97ed3d9ca4ddabc3c413f306df03a",
                 page_no=4,
-                content="རྒྱ་གར་གྱི་\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
+                content="རྒྱ་གར་གྱི་\n      (༢༦༤) ༧པེ་〉〉་\nབཞུགས་གོ།",
                 name="Page 4",
                 vol="1",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
@@ -207,3 +208,18 @@ def test_pedurma_text_obj():
     )
     pedurma_text = get_pedurma_text_obj(text_id, pecha_paths)
     assert pedurma_text.namsel == expected_namsel_text_obj
+
+
+def test_note_to_editor_view():
+    namsel_note = (Path(__file__).parent / "data" / "namsel_note.txt").read_text(
+        encoding="utf-8"
+    )
+    google_note = (Path(__file__).parent / "data" / "google_note.txt").read_text(
+        encoding="utf-8"
+    )
+    namsel_editor_view = to_editor(namsel_note)
+    google_editor_view = to_editor(google_note)
+    original_namsel_note = from_editor(namsel_editor_view, "namsel")
+    original_google_note = from_editor(google_editor_view, "google")
+    assert namsel_note == original_namsel_note
+    assert google_note == original_google_note
