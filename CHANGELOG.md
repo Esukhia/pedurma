@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.54 (2021-12-01)
+### Fix
+* **reconstruction:** Coner case punction included ([`e8527a6`](https://github.com/Esukhia/pedurma/commit/e8527a6ce446bccba5563d402f3b16c9ff135369))
+
 ## v0.1.53 (2021-12-01)
 ### Fix
 * **note:** The conversion of note to improved readble and back to its original state included ([`3d3dd70`](https://github.com/Esukhia/pedurma/commit/3d3dd7024394c34a1f5be267853a2d77a9d99188))
