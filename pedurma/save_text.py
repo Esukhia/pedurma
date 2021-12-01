@@ -6,7 +6,7 @@ from openpecha.github_utils import commit
 from openpecha.utils import download_pecha, dump_yaml, load_yaml
 
 from pedurma.texts import get_pecha_paths, remove_last_pages, serialize_text_obj
-from pedurma.utils import from_yaml
+from pedurma.utils import from_yaml, notes_to_original_view
 
 
 def get_old_vol(pecha_opf_path, pecha_id, text_vol_span):
@@ -390,8 +390,6 @@ def save_pedurma_text(pedurma_text_obj, pedurma_text_mapping=None):
     if not pedurma_text_mapping:
         pedurma_text_mapping = get_pedurma_text_mapping(pedurma_text_obj)
     for ocr_engine, pedurma_text in pedurma_text_mapping.items():
-        save_text(
-            pedurma_text["pecha_id"],
-            pedurma_text["text_obj"],
-            pedurma_text["pecha_path"],
-        )
+        text_obj = pedurma_text["text_obj"]
+        text_obj.notes = notes_to_original_view(text_obj.notes, ocr_engine)
+        save_text(pedurma_text["pecha_id"], text_obj, pedurma_text["pecha_path"])

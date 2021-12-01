@@ -20,6 +20,7 @@ from antx import transfer
 from docx import Document
 
 from pedurma.exceptions import PageNumMissing
+from pedurma.pecha import NotesPage
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
 from pedurma.preview_note_layer import update_hybird_pecha_note_layer
 from pedurma.texts import (
@@ -28,7 +29,11 @@ from pedurma.texts import (
     get_pecha_paths,
     get_pedurma_text_obj,
 )
-from pedurma.utils import optimized_diff_match_patch
+from pedurma.utils import (
+    from_editor,
+    notes_to_original_view,
+    optimized_diff_match_patch,
+)
 
 EWTSCONV = pyewts.pyewts()
 
@@ -909,11 +914,11 @@ def get_page_num(body_text, vol_num):
     return pg_num
 
 
-def get_durchen_pgs_content(durchen_pages):
+def get_durchen_pgs_content(durchen_pages, type_):
     durchen_pgs_content = ""
     for durchen_page in durchen_pages:
         if durchen_page:
-            durchen_pgs_content += durchen_page.content + "\n\n"
+            durchen_pgs_content += from_editor(durchen_page.content, type_) + "\n\n"
     return durchen_pgs_content
 
 
@@ -921,8 +926,8 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_pages, n_durchen_pages)
     preview_page = g_body_page.content
     g_body_page_content = g_body_page.content
     n_body_page_content = n_body_page.content
-    g_durchen_page_content = get_durchen_pgs_content(g_durchen_pages)
-    n_durchen_page_content = get_durchen_pgs_content(n_durchen_pages)
+    g_durchen_page_content = get_durchen_pgs_content(g_durchen_pages, type_="google")
+    n_durchen_page_content = get_durchen_pgs_content(n_durchen_pages, type_="namsel")
     vol_num = g_body_page.vol
     n_body_page_content = transfer(
         g_body_page_content, [["pedurma", "(#)"]], n_body_page_content, output="txt"
@@ -943,11 +948,11 @@ def get_preview_page(g_body_page, n_body_page, g_durchen_pages, n_durchen_pages)
     return preview_page
 
 
-def get_vol_note_text(notes, vol_num):
+def get_vol_note_text(notes, vol_num, type_):
     note_text = ""
     for note in notes:
         if note.vol == vol_num:
-            note_text += note.content + "\n\n"
+            note_text += from_editor(note.content, type_) + "\n\n"
     return note_text
 
 
@@ -1011,8 +1016,8 @@ def get_preview_text(text_id, pecha_paths=None):
                 f"{get_body_text_from_last_page(dg_page)}\n{get_last_pg_ann(dg_page)}"
             )
             namsel_body += f"{get_body_text_from_last_page(namsel_page)}\n{get_last_pg_ann(namsel_page)}"
-            dg_note_text = get_vol_note_text(dg_notes, vol_num)
-            namsel_note_text = get_vol_note_text(namsel_notes, vol_num)
+            dg_note_text = get_vol_note_text(dg_notes, vol_num, type_="google")
+            namsel_note_text = get_vol_note_text(namsel_notes, vol_num, type_="namsel")
             cur_vol_preview = get_vol_preview(
                 dg_body, namsel_body, dg_note_text, namsel_note_text, vol_num
             )

@@ -52,6 +52,70 @@ def get_pecha_id(text_id):
     return ""
 
 
+def to_editor(note):
+    """Convert note page content to more readable view
+
+    Args:
+        note (str): note page content
+
+    Returns:
+        str: reformated note page content
+    """
+    repl_list = config.CHENYIK2EDITOR
+    if "<r" in note:
+        repl_list = config.CHENDRANG2EDITOR
+    for old, new in repl_list:
+        note = re.sub(old, new, note)
+    return note
+
+
+def notes_to_editor_view(notes):
+    """Convert notes object content to more readble view
+
+    Args:
+        notes (list): list of note object
+
+    Returns:
+        list: list of note object
+    """
+    for note in notes:
+        note.content = to_editor(note.content)
+    return notes
+
+
+def from_editor(note, type_):
+    """Convert editor view note to its original format
+
+    Args:
+        note (str): editor view of note page content
+        type_ (str): type of orc engine
+
+    Returns:
+        str: original note page content
+    """
+    repl_list = config.EDITOR2CHENYIK
+    if type_ == "namsel":
+        repl_list = config.EDITOR2CHENDRANG
+    for old, new in repl_list:
+        note = re.sub(old, new, note)
+    return note
+
+
+def notes_to_original_view(notes, type_):
+    """Convert notes of editor view to original view
+
+    Args:
+        notes (list): list of note object
+        type_ (str): orc engine type
+
+    Returns:
+        list: list of note object
+    """
+    for note in notes:
+        note.content = from_editor(note.content, type_)
+    return notes
+
+
 def get_bin_metadata():
     """Return platfrom_type and binary_name."""
     if "Windows" in PLATFORM_TYPE:
