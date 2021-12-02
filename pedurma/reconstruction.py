@@ -125,7 +125,7 @@ def get_pg_ann(diff, vol_num):
         pg_num = pg_pat.group(1)
     except Exception:
         pg_num = 0
-    return f"<p{vol_num}-{pg_num}>"
+    return re.sub(pg_no_pattern, f"<p{vol_num}-{pg_num}>", diff)
 
 
 def get_abs_marker(diff):
@@ -848,7 +848,7 @@ def merge_footnotes_per_page(page, foot_notes):
         zip_longest(markers, foot_notes, fillvalue=""), 1
     ):
         if re.search("<p.+>", marker):
-            repl2 = f"\n༺{marker[2:-1]}༻"
+            repl2 = f"\n{marker[2:-1]}"
         else:
             footnotes_parts = foot_note.split(">")
             try:
@@ -859,7 +859,7 @@ def merge_footnotes_per_page(page, foot_notes):
             repl2 = f"({marker_walker}) <{note}>"
         if marker:
             preview_page = preview_page.replace(marker, repl2, 1)
-    preview_page = re.sub("<p(.+?)>", r"\n༺\g<1>༻", preview_page)
+    preview_page = re.sub("<p(.+?)>", r"\n\g<1>", preview_page)
     return preview_page
 
 

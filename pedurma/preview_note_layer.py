@@ -18,7 +18,7 @@ def get_note_layer(note_annotation):
 def get_pages(vol_text):
     result = []
     pg_text = ""
-    pages = re.split(r"(༺[0-9]+\-[0-9]+༻)", vol_text)
+    pages = re.split(r"([0-9]+\-[0-9]+)", vol_text)
     for i, page in enumerate(pages[0:]):
         if i % 2 == 0:
             pg_text += page
@@ -122,7 +122,7 @@ def build_note_layer(text):
     note_annotation = {}
     pages = get_pages(text)
     for page in pages:
-        page = re.sub(r"(༺[0-9]+\-[0-9]+༻)", "\n", page)
+        page = re.sub(r"([0-9]+\-[0-9]+)", "\n", page)
         note_annotation, new_page = parse_page(page, note_annotation, char_walker)
         char_walker += len(new_page) - 1
     note_layer = get_note_layer(note_annotation)
