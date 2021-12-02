@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.56 (2021-12-02)
+### Fix
+* **reconstruction:** Editor vie converter updated ([`2ca05cf`](https://github.com/Esukhia/pedurma/commit/2ca05cf599d5cb864a3b2b569f4e5e5c7358a2e1))
+
 ## v0.1.55 (2021-12-02)
 ### Fix
 * **reconstruction:** Text along with pg annotation included ([`fd58f77`](https://github.com/Esukhia/pedurma/commit/fd58f770e07b517a5a162d358611701262aabc52))
