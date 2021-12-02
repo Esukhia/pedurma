@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.55 (2021-12-02)
+### Fix
+* **reconstruction:** Text along with pg annotation included ([`fd58f77`](https://github.com/Esukhia/pedurma/commit/fd58f770e07b517a5a162d358611701262aabc52))
+
 ## v0.1.54 (2021-12-01)
 ### Fix
 * **reconstruction:** Coner case punction included ([`e8527a6`](https://github.com/Esukhia/pedurma/commit/e8527a6ce446bccba5563d402f3b16c9ff135369))
