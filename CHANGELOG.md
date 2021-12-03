@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.57 (2021-12-03)
+### Fix
+* **footnotes:** Page ref incremental bug fixed ([`97d6697`](https://github.com/Esukhia/pedurma/commit/97d669798dd92a46679290dfece92a682e1a1f8b))
+
 ## v0.1.56 (2021-12-02)
 ### Fix
 * **reconstruction:** Editor vie converter updated ([`2ca05cf`](https://github.com/Esukhia/pedurma/commit/2ca05cf599d5cb864a3b2b569f4e5e5c7358a2e1))
