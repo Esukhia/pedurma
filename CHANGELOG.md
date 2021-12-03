@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.58 (2021-12-03)
+### Fix
+* **editor-view:** Editor view converter regex updated ([`68ec0ac`](https://github.com/Esukhia/pedurma/commit/68ec0ac61d7df49ffd8b93abfbd8ff5600676276))
+
 ## v0.1.57 (2021-12-03)
 ### Fix
 * **footnotes:** Page ref incremental bug fixed ([`97d6697`](https://github.com/Esukhia/pedurma/commit/97d669798dd92a46679290dfece92a682e1a1f8b))
