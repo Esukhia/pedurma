@@ -402,9 +402,23 @@ def get_tib_num(eng_num):
     value = ""
     if eng_num:
         for num in str(eng_num):
-            if re.search(r"[0-9]", num):
+            if re.search(r"\d", num):
                 value += tib_num.get(num)
     return value
+
+
+def get_page_ref_number(string):
+    """Extract page referance number from string
+
+    Args:
+        string (str): can be any string
+
+    Returns:
+        int: page ref number
+    """
+    table = string.maketrans("༡༢༣༤༥༦༧༨༩༠", "1234567890", "<r>")
+    tib_num = int(string.translate(table))
+    return tib_num
 
 
 def get_value(footnotes_marker):
@@ -772,19 +786,10 @@ def postprocess_footnotes(footnotes, vol_num):
     footnote_result = {}
     page_refs = re.findall("<r.+?>", footnotes)
     pages = re.split("<r.+?>", footnotes)[1:]
-
-    try:
-        first_ref = page_refs[0]
-    except Exception:
-        return footnote_result
-    table = first_ref.maketrans("༡༢༣༤༥༦༧༨༩༠", "1234567890", "<r>")
-    start = int(first_ref.translate(table))
     print(
         f"number of page ref found -{len(page_refs)} number of page found-{len(pages)}"
     )
-    for walker, (page, page_ref) in enumerate(
-        zip_longest(pages, page_refs, fillvalue=""), start
-    ):
+    for (page, page_ref) in zip_longest(pages, page_refs, fillvalue=""):
         markers = re.finditer("<.+?>", page)
         marker_l = []
         for i, marker in enumerate(markers, 1):
@@ -799,7 +804,8 @@ def postprocess_footnotes(footnotes, vol_num):
                 else:
                     if "<" not in marker:
                         marker_l.append(marker)
-        footnote_result[walker] = marker_l
+        body_pg_num = get_page_ref_number(page_ref)
+        footnote_result[body_pg_num] = marker_l
     return footnote_result
 
 
