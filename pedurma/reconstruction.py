@@ -580,6 +580,28 @@ def reformat_footnotes(text):
     return result
 
 
+def parse_pedurma_page_diff(pedurma_page_diff, vol_num, result):
+    """extracting possible marker from pedurma page annotation diff
+
+    Args:
+        pedurma_page_diff (str): pedurma page ann diff text
+        vol_num (int): volume number 
+        result (list): filter diff list
+
+    Returns:
+        list: filter diff list
+    """
+    diff_parts = re.split(fr"(\n?{vol_num}་?\D་?\d+)", pedurma_page_diff)
+    for diff_part in diff_parts:
+        if re.search(fr"{vol_num}་?\D་?\d+", diff_part):
+            result.append([1, diff_part, "pedurma-page"])
+        elif get_marker(diff_part):
+            result.append([1, diff_part, "marker"])
+        else:
+            result.append([1, diff_part, ""])
+    return result
+
+
 def filter_diffs(diffs_list, type, vol_num):
     """Filter diff of text A and text B.
 
@@ -612,7 +634,7 @@ def filter_diffs(diffs_list, type, vol_num):
             if re.search(
                 fr"{vol_num}་?\D་?\d+", diff_text
             ):  # checking diff text is page or not
-                result.append([1, diff_text, "pedurma-page"])
+                result = parse_pedurma_page_diff(diff_text, vol_num, result)
             else:
                 left_diff = [0, ""]
                 right_diff = [0, ""]
@@ -979,11 +1001,7 @@ def get_vol_preview(dg_body, namsel_body, dg_note_text, namsel_note_text, vol_nu
     body_pages = get_body_pages(body_result, vol_num)
     for body_page in body_pages:
         pg_num = get_page_num(body_page, vol_num)
-        if pg_num not in footnotes:
-            cur_pg_footnotes = []
-            raise PageNumMissing
-        else:
-            cur_pg_footnotes = footnotes[pg_num]
+        cur_pg_footnotes = footnotes.get(pg_num, [])
         if cur_pg_footnotes:
             preview_text += merge_footnotes_per_page(body_page, cur_pg_footnotes) + "\n"
     return preview_text
