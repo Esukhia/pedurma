@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.59 (2021-12-06)
+### Fix
+* **reconstruction:** Possible marker extracted from pedurma page diff ([`9e32757`](https://github.com/Esukhia/pedurma/commit/9e32757dde81a230f37418b3cb2904d89e885005))
+
 ## v0.1.58 (2021-12-03)
 ### Fix
 * **editor-view:** Editor view converter regex updated ([`68ec0ac`](https://github.com/Esukhia/pedurma/commit/68ec0ac61d7df49ffd8b93abfbd8ff5600676276))
