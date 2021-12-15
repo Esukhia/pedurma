@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.60 (2021-12-15)
+### Fix
+* **reconstruction:** Space has been included as punctution ([`7ffbcbc`](https://github.com/Esukhia/pedurma/commit/7ffbcbc60af977c00520451b7c684497ace8d308))
+
 ## v0.1.59 (2021-12-06)
 ### Fix
 * **reconstruction:** Possible marker extracted from pedurma page diff ([`9e32757`](https://github.com/Esukhia/pedurma/commit/9e32757dde81a230f37418b3cb2904d89e885005))
