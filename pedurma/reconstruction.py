@@ -25,7 +25,7 @@ from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
 from pedurma.preview_note_layer import update_hybird_pecha_note_layer
 from pedurma.texts import (
     get_body_text_from_last_page,
-    get_last_pg_ann,
+    get_page_ann,
     get_pecha_paths,
     get_pedurma_text_obj,
 )
@@ -109,7 +109,7 @@ def rm_markers_ann(text):
     return result
 
 
-def get_pg_ann(diff, vol_num):
+def reformat_pg_ann(diff, vol_num):
     """Extract pedurma page and put page annotation.
 
     Args:
@@ -180,7 +180,7 @@ def is_punct(char):
         return False
 
 
-def isvowel(char):
+def is_vowel(char):
     """Check whether char is tibetan vowel or not.
 
     Args:
@@ -259,14 +259,14 @@ def handle_mid_syl(
             diffs[i + 1][1] = lasttwo + diffs[i + 1][1]
         elif right_diff_text[0] == " ":
             result.append([1, diff_, f"{marker_type}"])
-        elif isvowel(left_diff[1][-1]):
+        elif is_vowel(left_diff[1][-1]):
             syls = re.split("(་|།)", right_diff_text)
             first_syl = syls[0]
             result[-1][1] += first_syl
             diffs[i + 1][1] = diffs[i + 1][1][len(first_syl) :]
             result.append([1, diff_, f"{marker_type}"])
         else:
-            if isvowel(right_diff_text[0]):
+            if is_vowel(right_diff_text[0]):
                 syls = re.split("(་|།)", right_diff_text)
                 first_syl = syls[0]
                 result[-1][1] += first_syl
@@ -425,6 +425,21 @@ def get_value(footnotes_marker):
     return value
 
 
+def split_circle_marker(marker_text, type_):
+    """Split multiple circle markers
+
+    Args:
+        marker_text (str): marker text which may contain circle marker
+
+    Returns:
+        list: list of circle markers
+    """
+    markers = [marker_text]
+    if re.search("[①-⓪]", marker_text) and type_ == "body":
+        markers = re.findall("[①-⓪]", marker_text)
+    return markers
+
+
 def format_diff(filter_diffs, vol_num, type_=None):
     """Format list of diff on target text.
 
@@ -442,12 +457,14 @@ def format_diff(filter_diffs, vol_num, type_=None):
         if diff_type == 1 or diff_type == 0:
             if diff_tag:
                 if diff_tag == "pedurma-page":
-                    result += get_pg_ann(diff_text, vol_num)
+                    result += reformat_pg_ann(diff_text, vol_num)
                 if diff_tag == "marker":
                     if get_abs_marker(diff_text):
-                        marker = get_abs_marker(diff_text)
-                        value = get_value(marker)
-                        result += f"<{value},{marker}>"
+                        marker_text = get_abs_marker(diff_text)
+                        markers = split_circle_marker(marker_text, type_)
+                        for marker in markers:
+                            value = get_value(marker)
+                            result += f"<{value},{marker}>"
                     elif get_excep_marker(diff_text):
                         marker = get_excep_marker(diff_text)
                         result += f"<{marker}>"
@@ -1031,9 +1048,9 @@ def get_preview_text(text_id, pecha_paths=None):
         vol_num = dg_page.vol
         if "--" in dg_page.note_ref:
             dg_body += (
-                f"{get_body_text_from_last_page(dg_page)}\n{get_last_pg_ann(dg_page)}"
+                f"{get_body_text_from_last_page(dg_page)}\n{get_page_ann(dg_page)}"
             )
-            namsel_body += f"{get_body_text_from_last_page(namsel_page)}\n{get_last_pg_ann(namsel_page)}"
+            namsel_body += f"{get_body_text_from_last_page(namsel_page)}\n{get_page_ann(namsel_page)}"
             dg_note_text = get_vol_note_text(dg_notes, vol_num, type_="google")
             namsel_note_text = get_vol_note_text(namsel_notes, vol_num, type_="namsel")
             cur_vol_preview = get_vol_preview(

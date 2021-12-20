@@ -322,7 +322,42 @@ def get_last_page_note_ref(notes, vol_meta):
     return last_page_note_refs
 
 
-def get_last_pg_content(first_note_pg):
+def get_page_ann(page):
+    """Return page number annotation from the page content
+
+    Args:
+        page (obj): page object
+
+    Returns:
+        str: page number annotation
+    """
+    pg_ann = ""
+    page_content = page.content
+    vol = page.vol
+    if re.search(fr"{vol}-\d+", page_content):
+        pg_ann = re.search(fr"{vol}-\d+", page_content)[0]
+    return pg_ann
+
+
+def get_last_pg_ann(page):
+    """Return last page number annotation from the page content
+
+    Args:
+        page (obj): page object
+
+    Returns:
+        str: page number annotation
+    """
+    pg_ann = ""
+    page_content = page.content
+    vol = page.vol
+    if re.search(fr"{vol}-\d+", page_content):
+        pg_num = int(re.search(fr"{vol}-(\d+)", page_content).group(1)) + 1
+        pg_ann = f"{vol}-{pg_num}"
+    return pg_ann
+
+
+def get_last_pg_content(first_note_pg, pages):
     """Return last extra page content as first note page content but clipped from བསྡུར་མཆན if exist else return the whole note pg content 
 
     Args:
@@ -333,14 +368,10 @@ def get_last_pg_content(first_note_pg):
     """
     last_pg_content = first_note_pg.content
     last_pg_content = re.sub("<r.+>", "", last_pg_content)
-    pg_ann = ""
-    if re.search(r"<p(\d+-\d+)>", last_pg_content):
-        pg_ann = re.search(r"<p(\d+-\d+)>", last_pg_content).group(1)
+    pg_ann = get_last_pg_ann(pages[-1])
     if re.search("བསྡུར་མཆན", last_pg_content):
         new_pg_end = re.search("བསྡུར་མཆན", last_pg_content).end()
         last_pg_content = f"{last_pg_content[:new_pg_end]}\n{pg_ann}\n"
-    else:
-        last_pg_content = re.sub(r"<p(\d+-\d+)>", pg_ann, last_pg_content)
     return last_pg_content
 
 
@@ -358,7 +389,7 @@ def get_last_page(pages, notes, vol_meta):
     if pages[-1].note_ref[0] != notes[-1].id:
         pages[-1].note_ref.insert(1, notes[-1].id)
     first_note_pg = get_first_note_pg(notes, vol_meta)
-    pg_content = get_last_pg_content(first_note_pg)
+    pg_content = get_last_pg_content(first_note_pg, pages)
     note_refs = get_last_page_note_ref(notes, vol_meta)
     last_page = Page(
         id=first_note_pg.id,
@@ -402,23 +433,6 @@ def construct_text_obj(hfmls, pecha_meta, opf_path):
     notes = notes_to_editor_view(notes)
     text_obj = Text(id=pecha_meta["text_uuid"], pages=pages, notes=notes)
     return text_obj
-
-
-def get_last_pg_ann(page):
-    """Return page number annotation from the page content
-
-    Args:
-        page (obj): page object
-
-    Returns:
-        str: page number annotation
-    """
-    pg_ann = ""
-    page_content = page.content
-    vol = page.vol
-    if re.search(fr"{vol}-\d+", page_content):
-        pg_ann = re.search(fr"{vol}-\d+", page_content)[0]
-    return pg_ann
 
 
 def get_body_text_from_last_page(page):
