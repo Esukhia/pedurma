@@ -624,6 +624,7 @@ def parse_pedurma_page_diff(pedurma_page_diff, vol_num, result):
     """
     diff_parts = re.split(fr"(\n?{vol_num}་?\D་?\d+)", pedurma_page_diff)
     for diff_part in diff_parts:
+        diff_part = diff_part.replace("\n", "")
         if re.search(fr"{vol_num}་?\D་?\d+", diff_part):
             result.append([1, diff_part, "pedurma-page"])
         elif get_marker(diff_part):

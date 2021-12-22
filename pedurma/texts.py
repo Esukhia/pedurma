@@ -371,7 +371,7 @@ def get_last_pg_content(first_note_pg, pages):
     pg_ann = get_last_pg_ann(pages[-1])
     if re.search("བསྡུར་མཆན", last_pg_content):
         new_pg_end = re.search("བསྡུར་མཆན", last_pg_content).end()
-        last_pg_content = f"{last_pg_content[:new_pg_end]}\n{pg_ann}\n"
+        last_pg_content = f"{last_pg_content[:new_pg_end]}\n{pg_ann}"
     return last_pg_content
 
 
