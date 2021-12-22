@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.62 (2021-12-22)
+### Fix
+* **reconstruction:** Pedurma page diff filter updated ([`23d4e17`](https://github.com/Esukhia/pedurma/commit/23d4e17dc86faf43c0db57dd1b66e4432b2b2c52))
+
 ## v0.1.61 (2021-12-22)
 ### Fix
 * **reconstruction:** Consequtive marker exception handled ([`d3becd6`](https://github.com/Esukhia/pedurma/commit/d3becd66c4c7e9cd0b1c1b7a4bc412e51140da58))
