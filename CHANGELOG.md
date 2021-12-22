@@ -2,6 +2,34 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.60 (2021-12-15)
+### Fix
+* **reconstruction:** Space has been included as punctution ([`7ffbcbc`](https://github.com/Esukhia/pedurma/commit/7ffbcbc60af977c00520451b7c684497ace8d308))
+
+## v0.1.59 (2021-12-06)
+### Fix
+* **reconstruction:** Possible marker extracted from pedurma page diff ([`9e32757`](https://github.com/Esukhia/pedurma/commit/9e32757dde81a230f37418b3cb2904d89e885005))
+
+## v0.1.58 (2021-12-03)
+### Fix
+* **editor-view:** Editor view converter regex updated ([`68ec0ac`](https://github.com/Esukhia/pedurma/commit/68ec0ac61d7df49ffd8b93abfbd8ff5600676276))
+
+## v0.1.57 (2021-12-03)
+### Fix
+* **footnotes:** Page ref incremental bug fixed ([`97d6697`](https://github.com/Esukhia/pedurma/commit/97d669798dd92a46679290dfece92a682e1a1f8b))
+
+## v0.1.56 (2021-12-02)
+### Fix
+* **reconstruction:** Editor vie converter updated ([`2ca05cf`](https://github.com/Esukhia/pedurma/commit/2ca05cf599d5cb864a3b2b569f4e5e5c7358a2e1))
+
+## v0.1.55 (2021-12-02)
+### Fix
+* **reconstruction:** Text along with pg annotation included ([`fd58f77`](https://github.com/Esukhia/pedurma/commit/fd58f770e07b517a5a162d358611701262aabc52))
+
+## v0.1.54 (2021-12-01)
+### Fix
+* **reconstruction:** Coner case punction included ([`e8527a6`](https://github.com/Esukhia/pedurma/commit/e8527a6ce446bccba5563d402f3b16c9ff135369))
+
 ## v0.1.53 (2021-12-01)
 ### Fix
 * **note:** The conversion of note to improved readble and back to its original state included ([`3d3dd70`](https://github.com/Esukhia/pedurma/commit/3d3dd7024394c34a1f5be267853a2d77a9d99188))
