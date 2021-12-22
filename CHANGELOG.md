@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.61 (2021-12-22)
+### Fix
+* **reconstruction:** Consequtive marker exception handled ([`d3becd6`](https://github.com/Esukhia/pedurma/commit/d3becd66c4c7e9cd0b1c1b7a4bc412e51140da58))
+
 ## v0.1.60 (2021-12-15)
 ### Fix
 * **reconstruction:** Space has been included as punctution ([`7ffbcbc`](https://github.com/Esukhia/pedurma/commit/7ffbcbc60af977c00520451b7c684497ace8d308))
