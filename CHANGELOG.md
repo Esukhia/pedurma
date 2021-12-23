@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.63 (2021-12-23)
+### Fix
+* **text-report:** Get meta updated ([`88e344f`](https://github.com/Esukhia/pedurma/commit/88e344f133ab431449f4065e2b9812dc2e2e2bd8))
+* **text_report:** Text report generation added ([`869f75f`](https://github.com/Esukhia/pedurma/commit/869f75ffa1413f1b2902206e25c4c8ad110d06b7))
+
 ## v0.1.62 (2021-12-22)
 ### Fix
 * **reconstruction:** Pedurma page diff filter updated ([`23d4e17`](https://github.com/Esukhia/pedurma/commit/23d4e17dc86faf43c0db57dd1b66e4432b2b2c52))
