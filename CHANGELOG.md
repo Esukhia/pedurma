@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.64 (2021-12-23)
+### Fix
+* **preview:** Face function of preview text updated ([`455116f`](https://github.com/Esukhia/pedurma/commit/455116ff6816bcec0b2964f4768919c1e6e46073))
+
 ## v0.1.63 (2021-12-23)
 ### Fix
 * **text-report:** Get meta updated ([`88e344f`](https://github.com/Esukhia/pedurma/commit/88e344f133ab431449f4065e2b9812dc2e2e2bd8))
