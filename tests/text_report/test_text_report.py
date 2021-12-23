@@ -5,7 +5,7 @@ from pedurma.text_report import get_text_report
 
 
 def test_text_report():
-    pecha_paths = {"google": str(Path(__file__).parent / "data" / "P973" / "P973.opf")}
+    pecha_paths = {"google": str(Path(__file__).parent / "data" / "P973")}
     preview_text = {
         "v001": (Path(__file__).parent / "data" / "D1119_preview.txt").read_text(
             encoding="utf-8"

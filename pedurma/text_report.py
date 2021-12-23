@@ -1,13 +1,20 @@
 import re
 from datetime import datetime
+from pathlib import Path
 
-from openpecha.core.pecha import OpenPechaFS
+from openpecha.utils import load_yaml
+
+
+def get_metadata(pecha_path):
+    pecha_id = Path(pecha_path).stem
+    meta_path = Path(pecha_path) / f"{pecha_id}.opf" / "meta.yml"
+    metadata = load_yaml(meta_path)
+    return metadata
 
 
 def get_text_title(pecha_path):
     text_title = ""
-    opf = OpenPechaFS(pecha_path)
-    opf_meta = opf.read_meta_file()
+    opf_meta = get_metadata(pecha_path)
     text_source_metadata = opf_meta.get("source_metadata", {})
     if text_source_metadata:
         text_title = text_source_metadata.get("title", "")
