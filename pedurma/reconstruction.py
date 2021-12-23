@@ -20,9 +20,8 @@ from antx import transfer
 from docx import Document
 
 from pedurma.exceptions import PageNumMissing
-from pedurma.pecha import NotesPage
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
-from pedurma.preview_note_layer import update_hybird_pecha_note_layer
+from pedurma.text_report import get_text_report
 from pedurma.texts import (
     get_body_text_from_last_page,
     get_page_ann,
@@ -1036,7 +1035,7 @@ def pecha_path_2_id(pecha_path):
     return pecha_path_obj.stem
 
 
-def get_preview_text(text_id, pecha_paths=None):
+def get_reconstructed_text(text_id, pecha_paths=None):
     if pecha_paths is None:
         pecha_paths = get_pecha_paths(text_id)
     pedurmatext = get_pedurma_text_obj(text_id, pecha_paths)
@@ -1062,9 +1061,6 @@ def get_preview_text(text_id, pecha_paths=None):
             namsel_note_text = get_vol_note_text(namsel_notes, vol_num, type_="namsel")
             cur_vol_preview = get_vol_preview(
                 dg_body, namsel_body, dg_note_text, namsel_note_text, vol_num
-            )
-            update_hybird_pecha_note_layer(
-                cur_vol_preview, pecha_paths["google"], int(vol_num)
             )
             preview_text[f"v{int(vol_num):03}"] = cur_vol_preview
             dg_body = ""
@@ -1101,16 +1097,34 @@ def create_docx(text_id, chunks, path):
     return output_path
 
 
-def get_docx_text(text_id, pecha_paths=None, output_path=None):
+def get_docx_text(text_id, preview_text, output_path=None):
     if not output_path:
         (Path.home() / ".collation_docx").mkdir(parents=True, exist_ok=True)
         output_path = Path.home() / ".collation_docx"
     collation_text = ""
-    preview_text, google_pecha_id = get_preview_text(text_id, pecha_paths)
     for vol_id, text in preview_text.items():
         collation_text += f"{text}\n\n"
     collation_text = collation_text.replace("\n", "")
-    collation_text = re.sub(r"(༺.+?༻)", r"\n\g<1>\n", collation_text)
+    collation_text = re.sub(r"(\d+-\d+)", r"\n\g<1>\n", collation_text)
     chunks = split_text(collation_text)
     docx_path = create_docx(text_id, chunks, output_path)
     return docx_path
+
+
+def get_preview_text(text_id, docx_output_path, pecha_paths=None):
+    preview_text_info = {
+        "preview_text": None,
+        "google_pecha_id": None,
+        "docx_output_path": None,
+        "text_report": None,
+    }
+    preview_text, google_pecha_id = get_reconstructed_text(text_id, pecha_paths)
+    preview_text_info["preview_text"] = preview_text
+    preview_text_info["google_pecha_id"] = google_pecha_id
+    preview_text_info["docx_output_path"] = get_docx_text(
+        text_id, preview_text, docx_output_path
+    )
+    preview_text_info["text_report"] = get_text_report(
+        text_id, pecha_paths, preview_text
+    )
+    return preview_text_info

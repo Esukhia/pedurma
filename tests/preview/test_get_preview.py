@@ -5,7 +5,11 @@ import pytest
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.pecha import NotesPage, Page
-from pedurma.reconstruction import get_docx_text, get_preview_page, get_preview_text
+from pedurma.reconstruction import (
+    get_docx_text,
+    get_preview_page,
+    get_reconstructed_text,
+)
 from pedurma.utils import from_yaml
 
 
@@ -14,16 +18,7 @@ def get_dummy_preview():
     namsel_pecha_path = str(Path(__file__).parent / "data" / "P973")
     text_id = "D1119"
     pecha_paths = {"namsel": namsel_pecha_path, "google": dg_pecha_path}
-    preview_text = get_preview_text(text_id, pecha_paths)
-    (
-        Path(__file__).parent
-        / "data"
-        / "P972"
-        / "P972.opf"
-        / "layers"
-        / "v001"
-        / "PedurmaNote.yml"
-    ).unlink()
+    preview_text = get_reconstructed_text(text_id, pecha_paths)
     return preview_text
 
 
@@ -151,19 +146,8 @@ def test_get_preview_text():
 def test_get_docx_text():
     text_id = "D1119"
     output_path = Path.home()
-    dg_pecha_path = str(Path(__file__).parent / "data" / "P972")
-    namsel_pecha_path = str(Path(__file__).parent / "data" / "P973")
-    pecha_paths = {"namsel": namsel_pecha_path, "google": dg_pecha_path}
-    docx_path = get_docx_text(text_id, pecha_paths, output_path)
+    preview_text, google_pecha_id = get_dummy_preview()
+    docx_path = get_docx_text(text_id, preview_text, output_path)
     expected_path = Path.home() / "D1119.docx"
     assert docx_path == expected_path
     expected_path.unlink()
-    (
-        Path(__file__).parent
-        / "data"
-        / "P972"
-        / "P972.opf"
-        / "layers"
-        / "v001"
-        / "PedurmaNote.yml"
-    ).unlink()
