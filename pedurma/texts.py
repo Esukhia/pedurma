@@ -1,6 +1,7 @@
 import json
 import re
 from collections import defaultdict
+from os import stat_result
 from pathlib import Path
 
 import requests
@@ -193,7 +194,7 @@ def get_page_num(page):
     Returns:
         int: page number
     """
-    page_num = 0
+    page_num = 1
     page_ann = re.search(r"\d+-(\d+)", page)
     if page_ann:
         page_num = int(page_ann.group(1))
@@ -213,7 +214,7 @@ def get_page_obj(page, vol_meta, tag, pagination_layer):
         obj: page object
     """
     img_num = int(re.search(r"〔[𰵀-󴉱]?(\d+)〕", page).group(1))
-    page_num = get_page_num(page)
+    page_num = 0
     page_id = get_page_id(img_num, pagination_layer)
     page_content = get_clean_page(page)
     page_link = get_link(img_num, vol_meta)
@@ -244,6 +245,12 @@ def get_page_obj(page, vol_meta, tag, pagination_layer):
     return page_obj
 
 
+def add_start_page_number(pages):
+    start_page_number = get_page_num(pages[0].content)
+    pages[0].page_no = start_page_number
+    return pages, start_page_number
+
+
 def get_page_obj_list(text, vol_meta, pagination_layer, tag="text"):
     """Return page object list of the given hfml text according to tag
 
@@ -257,12 +264,15 @@ def get_page_obj_list(text, vol_meta, pagination_layer, tag="text"):
         list: list of either page obj or note obj
     """
     page_obj_list = []
+    start_page_number = 0
     pages = get_pages(text)
     for page in pages:
         pg_obj = get_page_obj(page, vol_meta, tag, pagination_layer)
         if pg_obj:
             page_obj_list.append(pg_obj)
-    return page_obj_list
+    if tag == "text":
+        page_obj_list, start_page_number = add_start_page_number(page_obj_list)
+    return page_obj_list, start_page_number
 
 
 def get_vol_meta(vol_num, pecha_meta):
@@ -318,7 +328,7 @@ def get_cur_vol_notes(notes, vol_meta):
     return cur_vol_notes
 
 
-def get_last_page_note_ref(notes, vol_meta):
+def get_last_page_note_ref(cur_vol_notes):
     """Generate list of note refs for thelast extra page object
 
     Args:
@@ -328,7 +338,6 @@ def get_last_page_note_ref(notes, vol_meta):
     Returns:
         lsit: list of note refs
     """
-    cur_vol_notes = get_cur_vol_notes(notes, vol_meta)
     last_page_note_refs = []
     if len(cur_vol_notes) >= 2:
         last_page_note_refs = [cur_vol_notes[-2].id, cur_vol_notes[-1].id, "--"]
@@ -392,7 +401,7 @@ def get_last_pg_content(first_note_pg, pages):
     return last_pg_content
 
 
-def get_last_page(pages, notes, vol_meta):
+def get_last_page(cur_vol_pages, cur_vol_notes, vol_meta, start_page_number):
     """Generate last extra page object
 
     Args:
@@ -403,22 +412,24 @@ def get_last_page(pages, notes, vol_meta):
     Returns:
         object: page object
     """
-    if pages[-1].note_ref[0] != notes[-1].id:
-        pages[-1].note_ref.insert(1, notes[-1].id)
-    first_note_pg = get_first_note_pg(notes, vol_meta)
-    pg_content = get_last_pg_content(first_note_pg, pages)
-    note_refs = get_last_page_note_ref(notes, vol_meta)
+    if cur_vol_pages[-1].note_ref[0] != cur_vol_notes[-1].id:
+        cur_vol_pages[-1].note_ref.insert(1, cur_vol_notes[-1].id)
+    first_note_pg = cur_vol_notes[0]
+    pg_content = get_last_pg_content(first_note_pg, cur_vol_pages)
+    note_refs = get_last_page_note_ref(cur_vol_notes)
+    page_num = get_page_num(pg_content)
+    if page_num == 1 or page_num - start_page_number != len(cur_vol_pages):
+        page_num = start_page_number + len(cur_vol_pages)
     last_page = Page(
         id=first_note_pg.id,
-        page_no=get_page_num(pg_content),
+        page_no=page_num,
         content=pg_content,
         name=first_note_pg.name,
         vol=first_note_pg.vol,
         image_link=first_note_pg.image_link,
         note_ref=note_refs,
     )
-    pages.append(last_page)
-    return pages
+    return [last_page]
 
 
 def construct_text_obj(hfmls, pecha_meta, opf_path):
@@ -435,6 +446,7 @@ def construct_text_obj(hfmls, pecha_meta, opf_path):
     pages = []
     notes = []
     for vol_num, hfml_text in hfmls.items():
+        start_page_number = 1
         vol_meta = get_vol_meta(vol_num, pecha_meta)
         pagination_layer = load_yaml(
             Path(f"{opf_path}/{pecha_meta['id']}.opf/layers/{vol_num}/Pagination.yml")
@@ -442,11 +454,19 @@ def construct_text_obj(hfmls, pecha_meta, opf_path):
         durchen = get_durchen(hfml_text)
         body_text = get_body_text(hfml_text)
 
-        pages += get_page_obj_list(body_text, vol_meta, pagination_layer, tag="text")
+        cur_vol_pages, start_page_number = get_page_obj_list(
+            body_text, vol_meta, pagination_layer, tag="text"
+        )
+        pages += cur_vol_pages
         if durchen:
-            notes += get_page_obj_list(durchen, vol_meta, pagination_layer, tag="note")
+            cur_vol_notes, _ = get_page_obj_list(
+                durchen, vol_meta, pagination_layer, tag="note"
+            )
+            notes += cur_vol_notes
         if notes:
-            pages = get_last_page(pages, notes, vol_meta)
+            pages += get_last_page(
+                cur_vol_pages, cur_vol_notes, vol_meta, start_page_number
+            )
     notes = notes_to_editor_view(notes)
     text_obj = Text(id=pecha_meta["text_uuid"], pages=pages, notes=notes)
     return text_obj

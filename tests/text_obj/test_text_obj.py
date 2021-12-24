@@ -24,7 +24,7 @@ def test_text_obj_serializer_corssvol():
             ),
             Page(
                 id="e8e314a7457b40348b5dd7a744004900",
-                page_no=11,
+                page_no=0,
                 content="གཏམ་འདི་ཙམ\nའདི་ཉིད་སྨྲ་བར་\nདང་-། །ཁྱོད་མ\n1-11",
                 name="Page 2",
                 vol="1",
@@ -33,7 +33,7 @@ def test_text_obj_serializer_corssvol():
             ),
             Page(
                 id="29c64dc1fa624b42b08814ca4f3a78b4",
-                page_no=12,
+                page_no=0,
                 content="འདོད་གང་དག་\nསྐྱབས་འགྲོ་བ།\nསྟོང་གིས་ཀྱང་།\n1-12",
                 name="Page 3",
                 vol="1",
@@ -42,7 +42,7 @@ def test_text_obj_serializer_corssvol():
             ),
             Page(
                 id="46d97ed3d9ca4ddabc3c413f306df03a",
-                page_no=0,
+                page_no=13,
                 content="རྒྱ་གར་གྱི་\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
                 name="Page 4",
                 vol="1",
@@ -60,7 +60,7 @@ def test_text_obj_serializer_corssvol():
             ),
             Page(
                 id="21671cb910d9486c8ba4793305c00d58",
-                page_no=11,
+                page_no=0,
                 content="མཐོང་ངོ་། །ཕྱོགས་\nདེ་དང་དེ་ཡི་ཕྱོགས་\nཏིང་འཛིན་རྡོ་རྗེ་ཡིས\n1-11",
                 name="Page 2",
                 vol="2",
@@ -69,7 +69,7 @@ def test_text_obj_serializer_corssvol():
             ),
             Page(
                 id="671dc26715434318b3d641521d4e9292",
-                page_no=12,
+                page_no=0,
                 content="རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་ལ་སོགས།\n1-12",
                 name="Page 3",
                 vol="2",
@@ -78,7 +78,7 @@ def test_text_obj_serializer_corssvol():
             ),
             Page(
                 id="05d117045b0c4ea5aee3aeba558e94bd",
-                page_no=0,
+                page_no=13,
                 content="འབྱོར་ཆེན་པོ་དེར་\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་",
                 name="Page 4",
                 vol="2",
@@ -127,7 +127,7 @@ def test_text_obj_serializer():
             ),
             Page(
                 id="71dff610d4c841c58e9c815582bf8508",
-                page_no=15,
+                page_no=0,
                 content="མངའ་དབང་མཛད་པ་\nའདི་དག་གིས་ནི་དེའི་\nགིས་ནི་སྐྱེ་བ་ལ་\n1-15",
                 name="Page 6",
                 vol="2",
@@ -136,7 +136,7 @@ def test_text_obj_serializer():
             ),
             Page(
                 id="9efa117a2b9444ac8cb09c198d21cdd8",
-                page_no=0,
+                page_no=16,
                 content="དེ་ལ་ནམ་མཁའི་\nབ་ཡང་དག་པར་\nགིས་ནི་ཆོས་སྟོན་པའི་",
                 name="Page 7",
                 vol="2",
@@ -178,7 +178,7 @@ def test_pedurma_text_obj():
             ),
             Page(
                 id="71dff610d4c841c58e9c815582bf8508",
-                page_no=15,
+                page_no=0,
                 content="མངའ་དབང་མཛད་པ་\nའདི་དག་གིས་ནི་དེའི་\nགིས་ནི་སྐྱེ་བ་ལ་\n1-15",
                 name="Page 6",
                 vol="2",
@@ -187,7 +187,7 @@ def test_pedurma_text_obj():
             ),
             Page(
                 id="9efa117a2b9444ac8cb09c198d21cdd8",
-                page_no=0,
+                page_no=16,
                 content="དེ་ལ་ནམ་མཁའི་\nབ་ཡང་དག་པར་\nགིས་ནི་ཆོས་སྟོན་པའི་",
                 name="Page 7",
                 vol="2",
