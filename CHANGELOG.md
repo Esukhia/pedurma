@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.65 (2021-12-24)
+### Fix
+* **page:** The real page number is assign to page_no attribute of page object ([`928ea6f`](https://github.com/Esukhia/pedurma/commit/928ea6f7ccbd99fed56ce445dbc6fc1cb2f4c8b5))
+
 ## v0.1.64 (2021-12-23)
 ### Fix
 * **preview:** Face function of preview text updated ([`455116f`](https://github.com/Esukhia/pedurma/commit/455116ff6816bcec0b2964f4768919c1e6e46073))
