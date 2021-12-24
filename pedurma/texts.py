@@ -184,6 +184,22 @@ def get_clean_page(page):
     return base_page
 
 
+def get_page_num(page):
+    """Extract real page number from page contentusing regex
+
+    Args:
+        page (str): page content
+
+    Returns:
+        int: page number
+    """
+    page_num = 0
+    page_ann = re.search(r"\d+-(\d+)", page)
+    if page_ann:
+        page_num = int(page_ann.group(1))
+    return page_num
+
+
 def get_page_obj(page, vol_meta, tag, pagination_layer):
     """Return page object by processing page hfml text
 
@@ -197,6 +213,7 @@ def get_page_obj(page, vol_meta, tag, pagination_layer):
         obj: page object
     """
     img_num = int(re.search(r"〔[𰵀-󴉱]?(\d+)〕", page).group(1))
+    page_num = get_page_num(page)
     page_id = get_page_id(img_num, pagination_layer)
     page_content = get_clean_page(page)
     page_link = get_link(img_num, vol_meta)
@@ -207,7 +224,7 @@ def get_page_obj(page, vol_meta, tag, pagination_layer):
         if tag == "note":
             page_obj = NotesPage(
                 id=page_id,
-                page_no=img_num,
+                page_no=page_num,
                 content=page_content,
                 name=f"Page {img_num}",
                 vol=vol_meta["volume_number"],
@@ -216,7 +233,7 @@ def get_page_obj(page, vol_meta, tag, pagination_layer):
         else:
             page_obj = Page(
                 id=page_id,
-                page_no=img_num,
+                page_no=page_num,
                 content=page_content,
                 name=f"Page {img_num}",
                 vol=vol_meta["volume_number"],
@@ -393,9 +410,9 @@ def get_last_page(pages, notes, vol_meta):
     note_refs = get_last_page_note_ref(notes, vol_meta)
     last_page = Page(
         id=first_note_pg.id,
-        page_no=first_note_pg.page_no,
+        page_no=get_page_num(pg_content),
         content=pg_content,
-        name=f"Page {first_note_pg.page_no}",
+        name=first_note_pg.name,
         vol=first_note_pg.vol,
         image_link=first_note_pg.image_link,
         note_ref=note_refs,
