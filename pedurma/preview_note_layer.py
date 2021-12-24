@@ -42,7 +42,6 @@ def get_last_syl_and_note_match(note_pattern, note):
 
 
 def parse_note(note, walker, page_content, plus_present):
-    note_ann = {}
     note_pattern = re.search(rf"(:\S+)?{note}", page_content)
     if plus_present:
         plus_note = re.sub(r"\+", r"\+", note)
@@ -60,9 +59,12 @@ def parse_note(note, walker, page_content, plus_present):
         ann_start = grp_1_loc + walker + len(last_syl)
         ann_end = ann_start
     else:
-        if note_pattern.group(1):
+        if note_pattern and note_pattern.group(1):
             ann_start = note_pattern.start() + walker
             ann_end = ann_start + len(note_pattern.group(1))
+            last_syl, note_match = get_last_syl_and_note_match(
+                    note_pattern.group(1), note
+                )
         else:
             if re.search(rf"\S+་([^#]\S+་?){note}", page_content):
                 note_pattern = re.search(rf"\S+་([^#]\S+་?){note}", page_content)
@@ -70,16 +72,23 @@ def parse_note(note, walker, page_content, plus_present):
                     note_pattern.group(1), note
                 )
                 grp_1_loc = page_content.find(note_match)
-            else:
+            elif re.search(rf"([^#]\S+་?){note}", page_content):
                 note_pattern = re.search(rf"([^#]\S+་?){note}", page_content)
                 if note_pattern:
                     grp_1_loc = note_pattern.start()
                     last_syl = note_pattern.group(1)
+            else:
+                if re.search(rf"(\s){note}", page_content):
+                    note_pattern = re.search(rf"(\s){note}", page_content)
+                    if note_pattern:
+                        grp_1_loc = note_pattern.start()
+                        last_syl = note_pattern.group(1)
             ann_start = grp_1_loc + walker
             if note_pattern.group(1):
                 ann_end = ann_start + len(last_syl)
             else:
                 ann_end = ann_start
+
     note_ann = {
         "span": {
             "start": ann_start,  # the variant unit or variant location is capture with help of this span
@@ -87,7 +96,10 @@ def parse_note(note, walker, page_content, plus_present):
         },
         "collation_note": note,
     }
-    page_content = re.sub(note, "", page_content, 1)
+    if plus_present:
+        page_content = re.sub(plus_note,"", page_content, 1)
+    else:
+        page_content = re.sub(note,"", page_content, 1)
     return note_ann, page_content
 
 
