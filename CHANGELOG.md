@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.69 (2021-12-28)
+### Fix
+* **preview:** Preview save module seperated ([`0718e01`](https://github.com/Esukhia/pedurma/commit/0718e01dae3cc230d5c42b161f19bf5ec02761c1))
+
 ## v0.1.68 (2021-12-28)
 ### Fix
 * **preview:** Preview face function updated ([`2dbeaca`](https://github.com/Esukhia/pedurma/commit/2dbeaca27abe017cb9768570ccce2c23dba18977))

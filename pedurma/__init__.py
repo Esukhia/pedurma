@@ -10,4 +10,4 @@ from .save_text import *
 from .texts import *
 from .utils import *
 
-__version__ = "0.1.68"
+__version__ = "0.1.69"
