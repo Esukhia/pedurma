@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.68 (2021-12-28)
+### Fix
+* **preview:** Preview face function updated ([`2dbeaca`](https://github.com/Esukhia/pedurma/commit/2dbeaca27abe017cb9768570ccce2c23dba18977))
+
 ## v0.1.67 (2021-12-28)
 ### Fix
 * **docx:** Docx serializer updated ([`0654844`](https://github.com/Esukhia/pedurma/commit/06548444c7edb52ac5cfd8280c85ed3a9f8a029a))
