@@ -5,7 +5,11 @@ import pytest
 
 from pedurma.exceptions import PageNumMissing
 from pedurma.pecha import NotesPage, Page
-from pedurma.reconstruction import get_preview_page, get_reconstructed_text
+from pedurma.reconstruction import (
+    get_docx_text,
+    get_preview_page,
+    get_reconstructed_text,
+)
 from pedurma.utils import from_yaml
 
 
@@ -129,7 +133,7 @@ def test_page_num_missing():
         get_preview_page(g_body_page, n_body_page, g_durchen_page, n_durchen_page)
 
 
-def test_get_reconstructed_text():
+def test_get_preview_text():
     preview_text, google_pecha_id = get_dummy_preview()
     expected_preview = (Path(__file__).parent / "data" / "D1119_preview.txt").read_text(
         encoding="utf-8"
@@ -137,3 +141,13 @@ def test_get_reconstructed_text():
     expected_google_pecha_id = "P972"
     assert preview_text["v001"] == expected_preview
     assert google_pecha_id == expected_google_pecha_id
+
+
+def test_get_docx_text():
+    text_id = "D1119"
+    output_path = Path.home()
+    preview_text, google_pecha_id = get_dummy_preview()
+    docx_path = get_docx_text(text_id, preview_text, output_path)
+    expected_path = Path.home() / "D1119.docx"
+    assert docx_path == expected_path
+    expected_path.unlink()

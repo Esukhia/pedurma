@@ -18,8 +18,10 @@ from pathlib import Path
 import pyewts
 from antx import transfer
 
+from pedurma.docx_serializer import get_docx_text
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
+from pedurma.text_report import get_text_report
 from pedurma.texts import (
     get_body_text_from_last_page,
     get_page_ann,
@@ -988,8 +990,6 @@ def get_vol_preview(dg_body, namsel_body, dg_note_text, namsel_note_text, vol_nu
         cur_pg_footnotes = footnotes.get(pg_num, [])
         if cur_pg_footnotes:
             preview_text += merge_footnotes_per_page(body_page, cur_pg_footnotes) + "\n"
-        else:
-            preview_text += body_page + "\n"
     return preview_text
 
 
@@ -1033,3 +1033,22 @@ def get_reconstructed_text(text_id, pecha_paths=None):
         dg_body += dg_page.content
         namsel_body += namsel_page.content
     return preview_text, google_pecha_id
+
+
+def get_preview_text(text_id, docx_output_path, pecha_paths=None):
+    preview_text_info = {
+        "preview_text": None,
+        "google_pecha_id": None,
+        "docx_output_path": None,
+        "text_report": None,
+    }
+    preview_text, google_pecha_id = get_reconstructed_text(text_id, pecha_paths)
+    preview_text_info["preview_text"] = preview_text
+    preview_text_info["google_pecha_id"] = google_pecha_id
+    preview_text_info["docx_output_path"] = get_docx_text(
+        text_id, preview_text, docx_output_path, type_="with_footnotes"
+    )
+    preview_text_info["text_report"] = get_text_report(
+        text_id, pecha_paths, preview_text
+    )
+    return preview_text_info
