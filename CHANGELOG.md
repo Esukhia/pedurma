@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.66 (2021-12-24)
+### Fix
+* **text:** Start and end page number added ([`6c33ada`](https://github.com/Esukhia/pedurma/commit/6c33ada2c37373ff289f0993a6e84de4e36995b6))
+
 ## v0.1.65 (2021-12-24)
 ### Fix
 * **page:** The real page number is assign to page_no attribute of page object ([`928ea6f`](https://github.com/Esukhia/pedurma/commit/928ea6f7ccbd99fed56ce445dbc6fc1cb2f4c8b5))
