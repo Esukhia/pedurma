@@ -17,8 +17,8 @@ from pathlib import Path
 
 import pyewts
 from antx import transfer
-from docx import Document
 
+from pedurma.docx_serializer import get_docx_text
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
 from pedurma.text_report import get_text_report
@@ -28,11 +28,7 @@ from pedurma.texts import (
     get_pecha_paths,
     get_pedurma_text_obj,
 )
-from pedurma.utils import (
-    from_editor,
-    notes_to_original_view,
-    optimized_diff_match_patch,
-)
+from pedurma.utils import from_editor, optimized_diff_match_patch, translate_tib_number
 
 EWTSCONV = pyewts.pyewts()
 
@@ -349,39 +345,6 @@ def is_circle_number(footnotes_marker):
             "⑳": "20",
         }
         value = circle_num.get(number[0])
-    return value
-
-
-def translate_tib_number(footnotes_marker):
-    """Translate tibetan numeral in footnotes marker to roman number.
-
-    Args:
-        footnotes_marker (str): footnotes marker
-    Returns:
-        str: footnotes marker having numbers in roman numeral
-    """
-    value = ""
-    if re.search(r"\d+\S+(\d+)", footnotes_marker):
-        return value
-    tib_num = {
-        "༠": "0",
-        "༡": "1",
-        "༢": "2",
-        "༣": "3",
-        "༤": "4",
-        "༥": "5",
-        "༦": "6",
-        "༧": "7",
-        "༨": "8",
-        "༩": "9",
-    }
-    numbers = re.finditer(r"\d", footnotes_marker)
-    if numbers:
-        for number in numbers:
-            if re.search(r"[༠-༩]", number[0]):
-                value += tib_num.get(number[0])
-            else:
-                value += number[0]
     return value
 
 
@@ -1072,45 +1035,6 @@ def get_reconstructed_text(text_id, pecha_paths=None):
     return preview_text, google_pecha_id
 
 
-def split_text(content):
-
-    chunks = re.split(r"(\(\d+\) <.*?>)", content)
-
-    return chunks
-
-
-def create_docx(text_id, chunks, path):
-    document = Document()
-    p = document.add_paragraph()
-
-    for chunk in chunks:
-        if chunk and "<" in chunk:
-            sub_text = p.add_run(chunk)
-            sub_text.font.subscript = True
-            # sub_text.font.bold = True
-            sub_text.font.name = "Jomolhari"
-        else:
-            normal_text = p.add_run(chunk)
-            normal_text.font.name = "Jomolhari"
-    output_path = path / f"{text_id}.docx"
-    document.save(str(output_path))
-    return output_path
-
-
-def get_docx_text(text_id, preview_text, output_path=None):
-    if not output_path:
-        (Path.home() / ".collation_docx").mkdir(parents=True, exist_ok=True)
-        output_path = Path.home() / ".collation_docx"
-    collation_text = ""
-    for vol_id, text in preview_text.items():
-        collation_text += f"{text}\n\n"
-    collation_text = collation_text.replace("\n", "")
-    collation_text = re.sub(r"(\d+-\d+)", r"\n\g<1>\n", collation_text)
-    chunks = split_text(collation_text)
-    docx_path = create_docx(text_id, chunks, output_path)
-    return docx_path
-
-
 def get_preview_text(text_id, docx_output_path, pecha_paths=None):
     preview_text_info = {
         "preview_text": None,
@@ -1122,7 +1046,7 @@ def get_preview_text(text_id, docx_output_path, pecha_paths=None):
     preview_text_info["preview_text"] = preview_text
     preview_text_info["google_pecha_id"] = google_pecha_id
     preview_text_info["docx_output_path"] = get_docx_text(
-        text_id, preview_text, docx_output_path
+        text_id, preview_text, docx_output_path, type_="with_footnotes"
     )
     preview_text_info["text_report"] = get_text_report(
         text_id, pecha_paths, preview_text
