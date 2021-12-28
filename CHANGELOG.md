@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.67 (2021-12-28)
+### Fix
+* **docx:** Docx serializer updated ([`0654844`](https://github.com/Esukhia/pedurma/commit/06548444c7edb52ac5cfd8280c85ed3a9f8a029a))
+
 ## v0.1.66 (2021-12-24)
 ### Fix
 * **text:** Start and end page number added ([`6c33ada`](https://github.com/Esukhia/pedurma/commit/6c33ada2c37373ff289f0993a6e84de4e36995b6))
