@@ -21,14 +21,13 @@ def create_docx_with_footnotes(text_id, collated_text, path):
 
     for chunk in chunks:
         if chunk and "<" in chunk:
-            chunk = re.sub(r"\(\d+\) ", "", chunk)
-            super_text = p.add_run(chunk)
-            super_text.font.superscript = True
-            super_text.font.name = "Jomolhari"
+            sub_text = p.add_run(chunk)
+            sub_text.font.subscript = True
+            sub_text.font.name = "Jomolhari"
         else:
             normal_text = p.add_run(chunk)
             normal_text.font.name = "Jomolhari"
-    output_path = path / f"{text_id}_format_01.docx"
+    output_path = path / f"{text_id}.docx"
     document.save(str(output_path))
     return output_path
 
@@ -77,7 +76,7 @@ def creat_docx_footnotes_at_end_of_page(text_id, collated_text, path):
     pages = get_pages(collated_text)
     for page in pages:
         document = parse_page(page, document)
-    output_path = path / f"{text_id}_format_02.docx"
+    output_path = path / f"{text_id}.docx"
     document.save(str(output_path))
     return output_path
 
