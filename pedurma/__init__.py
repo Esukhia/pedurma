@@ -1,3 +1,4 @@
+from .docx_serializer import *
 from .notes import *
 from .pagination_update import *
 from .pecha import *

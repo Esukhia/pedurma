@@ -36,6 +36,39 @@ def get_pages(vol_text):
     return result
 
 
+def translate_tib_number(footnotes_marker):
+    """Translate tibetan numeral in footnotes marker to roman number.
+
+    Args:
+        footnotes_marker (str): footnotes marker
+    Returns:
+        str: footnotes marker having numbers in roman numeral
+    """
+    value = ""
+    if re.search(r"\d+\S+(\d+)", footnotes_marker):
+        return value
+    tib_num = {
+        "༠": "0",
+        "༡": "1",
+        "༢": "2",
+        "༣": "3",
+        "༤": "4",
+        "༥": "5",
+        "༦": "6",
+        "༧": "7",
+        "༨": "8",
+        "༩": "9",
+    }
+    numbers = re.finditer(r"\d", footnotes_marker)
+    if numbers:
+        for number in numbers:
+            if re.search(r"[༠-༩]", number[0]):
+                value += tib_num.get(number[0])
+            else:
+                value += number[0]
+    return value
+
+
 def from_yaml(yml_path):
     return yaml.load(yml_path.read_text(encoding="utf-8"), Loader=yaml.CLoader)
 

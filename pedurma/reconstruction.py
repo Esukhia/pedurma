@@ -17,8 +17,8 @@ from pathlib import Path
 
 import pyewts
 from antx import transfer
-from docx_serializer import get_docx_text
 
+from pedurma.docx_serializer import get_docx_text
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
 from pedurma.text_report import get_text_report
@@ -28,11 +28,7 @@ from pedurma.texts import (
     get_pecha_paths,
     get_pedurma_text_obj,
 )
-from pedurma.utils import (
-    from_editor,
-    notes_to_original_view,
-    optimized_diff_match_patch,
-)
+from pedurma.utils import from_editor, optimized_diff_match_patch, translate_tib_number
 
 EWTSCONV = pyewts.pyewts()
 
@@ -349,39 +345,6 @@ def is_circle_number(footnotes_marker):
             "⑳": "20",
         }
         value = circle_num.get(number[0])
-    return value
-
-
-def translate_tib_number(footnotes_marker):
-    """Translate tibetan numeral in footnotes marker to roman number.
-
-    Args:
-        footnotes_marker (str): footnotes marker
-    Returns:
-        str: footnotes marker having numbers in roman numeral
-    """
-    value = ""
-    if re.search(r"\d+\S+(\d+)", footnotes_marker):
-        return value
-    tib_num = {
-        "༠": "0",
-        "༡": "1",
-        "༢": "2",
-        "༣": "3",
-        "༤": "4",
-        "༥": "5",
-        "༦": "6",
-        "༧": "7",
-        "༨": "8",
-        "༩": "9",
-    }
-    numbers = re.finditer(r"\d", footnotes_marker)
-    if numbers:
-        for number in numbers:
-            if re.search(r"[༠-༩]", number[0]):
-                value += tib_num.get(number[0])
-            else:
-                value += number[0]
     return value
 
 

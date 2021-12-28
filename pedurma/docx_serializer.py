@@ -2,6 +2,9 @@ import re
 from pathlib import Path
 
 from docx import Document
+from docx.shared import Pt
+
+from pedurma.utils import translate_tib_number
 
 
 def split_text(content):
@@ -11,7 +14,8 @@ def split_text(content):
     return chunks
 
 
-def create_docx_with_footnotes(text_id, chunks, path):
+def create_docx_with_footnotes(text_id, collated_text, path):
+    chunks = split_text(collated_text)
     document = Document()
     p = document.add_paragraph()
 
@@ -19,7 +23,6 @@ def create_docx_with_footnotes(text_id, chunks, path):
         if chunk and "<" in chunk:
             sub_text = p.add_run(chunk)
             sub_text.font.subscript = True
-            # sub_text.font.bold = True
             sub_text.font.name = "Jomolhari"
         else:
             normal_text = p.add_run(chunk)
@@ -52,20 +55,25 @@ def parse_page(page, document):
             super_text = p.add_run(f" {footnote_number} ")
             super_text.font.superscript = True
             super_text.font.name = "Jomolhari"
+            super_text.font.size = Pt(14)
         else:
             normal_text = p.add_run(chunk)
             normal_text.font.name = "Jomolhari"
+            normal_text.font.size = Pt(14)
     notes = re.finditer(r"\((\d+)\) <(.*?)>", page)
     p.add_run("\n---------------\n")
     for note in notes:
-        note_text = p.add_run(f"{note.group(1)} {note.group(2)}\n")
+        note_num = translate_tib_number(note.group(1))
+        note_text = p.add_run(f"{note_num} {note.group(2)}\n")
         note_text.font.name = "Jomolhari"
+        note_text.font.size = Pt(14)
+    document.add_page_break()
     return document
 
 
-def creat_docx_footnotes_at_end_of_page(text_id, collation_text, path):
+def creat_docx_footnotes_at_end_of_page(text_id, collated_text, path):
     document = Document()
-    pages = get_pages(collation_text)
+    pages = get_pages(collated_text)
     for page in pages:
         document = parse_page(page, document)
     output_path = path / f"{text_id}.docx"
@@ -73,20 +81,19 @@ def creat_docx_footnotes_at_end_of_page(text_id, collation_text, path):
     return output_path
 
 
-def get_docx_text(text_id, preview_text, output_path=None, type_="with_footnote"):
+def get_docx_text(text_id, preview_text, output_path=None, type_="with_footnotes"):
     if not output_path:
         (Path.home() / ".collation_docx").mkdir(parents=True, exist_ok=True)
         output_path = Path.home() / ".collation_docx"
-    collation_text = ""
+    collated_text = ""
     for vol_id, text in preview_text.items():
-        collation_text += f"{text}\n\n"
-    collation_text = collation_text.replace("\n", "")
-    collation_text = re.sub(r"(\d+-\d+)", r"\n\g<1>\n", collation_text)
+        collated_text += f"{text}\n\n"
+    collated_text = collated_text.replace("\n", "")
+    collated_text = re.sub(r"(\d+-\d+)", r"\n\g<1>\n", collated_text)
     if type_ == "with_footnotes":
-        chunks = split_text(collation_text)
-        docx_path = create_docx_with_footnotes(text_id, chunks, output_path)
+        docx_path = create_docx_with_footnotes(text_id, collated_text, output_path)
     else:
         docx_path = creat_docx_footnotes_at_end_of_page(
-            text_id, collation_text, output_path
+            text_id, collated_text, output_path
         )
     return docx_path
