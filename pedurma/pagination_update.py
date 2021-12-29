@@ -145,15 +145,14 @@ def update_pagination(pecha_id, text_id, pedurma_edit_notes, index, pecha_path):
         yield vol, pagination_layer
 
 
-def update_text_pagination(text_id, pedurma_edit_notes):
+def update_text_pagination(text_id, pedurma_edit_notes, text_mapping=None):
     """Update pagination of pecha with note ref
 
     Args:
-        pecha_id (str): pecha uuid
         text_id (str): text id
         pedurma_edit_notes (obj): pedurma edit notes obj
     """
-    pecha_id = get_pecha_id(text_id)
+    pecha_id = get_pecha_id(text_id, text_mapping)
     pecha_path = download_pecha(pecha_id, needs_update=False)
     index = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/index.yml"))
     for vol, new_pagination in update_pagination(
