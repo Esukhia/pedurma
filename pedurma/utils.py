@@ -77,12 +77,13 @@ def to_yaml(dict_):
     return yaml.dump(dict_, sort_keys=False, allow_unicode=True, Dumper=yaml.CDumper)
 
 
-def get_pecha_id(text_id):
-    if text_id.startswith("T"):
-        return config.KANGYUR_ARCHIVE_ID
-    elif text_id.startswith():
-        return config.TENGYUR_ARCHIVE_ID
-    return ""
+def get_pecha_id(text_id, text_mapping=None):
+    if not text_mapping:
+        text_mapping = requests.get(config.TEXT_LIST_URL)
+        text_mapping = json.loads(text_mapping.text)
+    text_info = text_mapping.get(text_id, {})
+    pecha_id = text_info.get("namsel", "")
+    return pecha_id
 
 
 def to_editor(note):

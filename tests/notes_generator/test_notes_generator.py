@@ -27,7 +27,9 @@ text_meta = {
 
 def test_notes_generator_crossvol():
     text_id = "D1118"
-    hfml_texts = from_yaml((Path(__file__).parent / "data" / "hfmls" / f"{text_id}.yml"))
+    hfml_texts = from_yaml(
+        (Path(__file__).parent / "data" / "hfmls" / f"{text_id}.yml")
+    )
     result = get_pedurma_edit_notes(hfml_texts, text_meta)
     expected_result = [
         PedurmaNoteEdit(
@@ -85,7 +87,9 @@ def test_notes_generator_crossvol():
 
 def test_notes_generator():
     text_id = "D1119"
-    hfml_texts = from_yaml((Path(__file__).parent / "data" / "hfmls" / f"{text_id}.yml"))
+    hfml_texts = from_yaml(
+        (Path(__file__).parent / "data" / "hfmls" / f"{text_id}.yml")
+    )
     result = get_pedurma_edit_notes(hfml_texts, text_meta)
     expected_result = [
         PedurmaNoteEdit(
@@ -111,6 +115,6 @@ def test_notes_generator():
 
 @pytest.mark.skip(reason="tested functional")
 def test_get_pedurma_edit_notes_from_text_id():
-    text_id = "D1111"
+    text_id = "D1115"
     pedurma_edit_notes = get_pedurma_text_edit_notes(text_id)
     assert pedurma_edit_notes
