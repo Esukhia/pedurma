@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.70 (2021-12-29)
+### Fix
+* **proofread:** Proofread module with test added ([`9f9727f`](https://github.com/Esukhia/pedurma/commit/9f9727ffcd10361e1bf0c5022152d87111cdc206))
+
 ## v0.1.69 (2021-12-28)
 ### Fix
 * **preview:** Preview save module seperated ([`0718e01`](https://github.com/Esukhia/pedurma/commit/0718e01dae3cc230d5c42b161f19bf5ec02761c1))
