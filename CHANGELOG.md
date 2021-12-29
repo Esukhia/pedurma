@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.71 (2021-12-29)
+### Fix
+* **note:** Get pecha id update for note ref update ([`7dee116`](https://github.com/Esukhia/pedurma/commit/7dee116bbf760c36df4245f8ffb247bd0cad0890))
+
 ## v0.1.70 (2021-12-29)
 ### Fix
 * **proofread:** Proofread module with test added ([`9f9727f`](https://github.com/Esukhia/pedurma/commit/9f9727ffcd10361e1bf0c5022152d87111cdc206))
