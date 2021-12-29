@@ -95,3 +95,10 @@ class Pecha(PechaInDBBase):
 
 class PechaInDB(PechaInDBBase):
     pass
+
+
+class ProofreadNotePage(BaseModel):
+    manual: str
+    google: str
+    img_link: AnyHttpUrl
+    page_num: int
