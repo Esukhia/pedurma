@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.73 (2021-12-30)
+### Fix
+* **preview:** Default page is passed if no note ([`0f4befd`](https://github.com/Esukhia/pedurma/commit/0f4befd94c5e11ba5cd28054d941cfa1bfeb9aab))
+
 ## v0.1.72 (2021-12-30)
 ### Fix
 * **note_page:** Note page return in list ([`cbc8355`](https://github.com/Esukhia/pedurma/commit/cbc8355d080a59764091bbf5cc7f9e6892c64ce9))
