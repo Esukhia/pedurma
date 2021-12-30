@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.72 (2021-12-30)
+### Fix
+* **note_page:** Note page return in list ([`cbc8355`](https://github.com/Esukhia/pedurma/commit/cbc8355d080a59764091bbf5cc7f9e6892c64ce9))
+
 ## v0.1.71 (2021-12-29)
 ### Fix
 * **note:** Get pecha id update for note ref update ([`7dee116`](https://github.com/Esukhia/pedurma/commit/7dee116bbf760c36df4245f8ffb247bd0cad0890))
