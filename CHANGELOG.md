@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.74 (2021-12-30)
+### Fix
+* **proofread:** Text path ([`b6e627e`](https://github.com/Esukhia/pedurma/commit/b6e627ec8576742c8a1bc271d8f50e2564f2e871))
+
 ## v0.1.73 (2021-12-30)
 ### Fix
 * **preview:** Default page is passed if no note ([`0f4befd`](https://github.com/Esukhia/pedurma/commit/0f4befd94c5e11ba5cd28054d941cfa1bfeb9aab))
