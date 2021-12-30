@@ -986,10 +986,7 @@ def get_vol_preview(dg_body, namsel_body, dg_note_text, namsel_note_text, vol_nu
     for body_page in body_pages:
         pg_num = get_page_num(body_page, vol_num)
         cur_pg_footnotes = footnotes.get(pg_num, [])
-        if cur_pg_footnotes:
-            preview_text += merge_footnotes_per_page(body_page, cur_pg_footnotes) + "\n"
-        else:
-            preview_text += body_page + "\n"
+        preview_text += merge_footnotes_per_page(body_page, cur_pg_footnotes) + "\n"
     return preview_text
 
 
