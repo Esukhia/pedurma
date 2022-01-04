@@ -79,7 +79,7 @@ def to_yaml(dict_):
 
 def get_pecha_id(text_id, text_mapping=None):
     if not text_mapping:
-        text_mapping = requests.get(config.TEXT_LIST_URL)
+        text_mapping = requests.get(config.NOTE_REF_NOT_FOUND_TEXT_LIST_URL)
         text_mapping = json.loads(text_mapping.text)
     text_info = text_mapping.get(text_id, {})
     pecha_id = text_info.get("namsel", "")
