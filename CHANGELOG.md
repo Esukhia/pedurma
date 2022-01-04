@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.75 (2022-01-04)
+### Fix
+* **note_ref:** No note ref found text list updated ([`0825f0f`](https://github.com/Esukhia/pedurma/commit/0825f0fa3faf21f22d8d4fb19b1479b3eae96335))
+
 ## v0.1.74 (2021-12-30)
 ### Fix
 * **proofread:** Text path ([`b6e627e`](https://github.com/Esukhia/pedurma/commit/b6e627ec8576742c8a1bc271d8f50e2564f2e871))
