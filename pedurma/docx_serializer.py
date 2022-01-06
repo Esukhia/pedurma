@@ -1,3 +1,4 @@
+import os
 import re
 from pathlib import Path
 
@@ -47,38 +48,37 @@ def get_pages(text):
     return result
 
 
-def parse_page(page, document):
-    p = document.add_paragraph()
+def parse_page(page, page_num):
+    page_ann = re.search(r"(\d+-\d+)", page)[0]
+    page = page.replace(page_ann, "")
+    page_html = "<p>"
     chunks = split_text(page)
     for chunk in chunks:
         if chunk and "<" in chunk:
             footnote_number = re.search(r"\((\d+)\) <.*?>", chunk).group(1)
-            super_text = p.add_run(f" {footnote_number} ")
-            super_text.font.superscript = True
-            super_text.font.name = "Jomolhari"
-            super_text.font.size = Pt(14)
+            footnote_number = translate_tib_number(footnote_number)
+            page_html += f'<a href="#footnote-{page_num}-{footnote_number}"><sup>[{footnote_number}]</sup></a>'
         else:
-            normal_text = p.add_run(chunk)
-            normal_text.font.name = "Jomolhari"
-            normal_text.font.size = Pt(14)
+            page_html += chunk
+    page_html += f"</p><p>{page_ann}</p><p>------------------------</p>"
     notes = re.finditer(r"\((\d+)\) <(.*?)>", page)
-    p.add_run("\n---------------\n")
     for note in notes:
         note_num = translate_tib_number(note.group(1))
-        note_text = p.add_run(f"{note_num} {note.group(2)}\n")
-        note_text.font.name = "Jomolhari"
-        note_text.font.size = Pt(14)
-    document.add_page_break()
-    return document
+        page_html += f'<p id="footnote-{page_num}-{note_num}"><sup>[{note_num}]</sup> {note.group(2)}</p>'
+    page_html += '<div style="page-break-after: always"></div>'
+    return page_html
 
 
 def creat_docx_footnotes_at_end_of_page(text_id, collated_text, path):
-    document = Document()
+    collated_text_html = ""
     pages = get_pages(collated_text)
-    for page in pages:
-        document = parse_page(page, document)
-    output_path = path / f"{text_id}_format_02.docx"
-    document.save(str(output_path))
+    for page_num, page in enumerate(pages, 1):
+        collated_text_html += parse_page(page, page_num)
+    html_path = path / f"{text_id}.html"
+    html_path.write_text(collated_text_html, encoding="utf-8")
+    output_path = path / f"{text_id}.docx"
+    os.system(f"ebook-convert {html_path} {output_path} --docx-no-toc")
+    html_path.unlink()
     return output_path
 
 
