@@ -4,6 +4,7 @@ from pathlib import Path
 
 from docx import Document
 from docx.shared import Pt
+from pypandoc import convert_text
 
 from pedurma.utils import translate_tib_number
 
@@ -48,37 +49,39 @@ def get_pages(text):
     return result
 
 
-def parse_page(page, page_num):
+def parse_page(page, note_walker):
     page_ann = re.search(r"(\d+-\d+)", page)[0]
     page = page.replace(page_ann, "")
-    page_html = "<p>"
+    page_md = ""
     chunks = split_text(page)
     for chunk in chunks:
         if chunk and "<" in chunk:
-            footnote_number = re.search(r"\((\d+)\) <.*?>", chunk).group(1)
-            footnote_number = translate_tib_number(footnote_number)
-            page_html += f'<a href="#footnote-{page_num}-{footnote_number}"><sup>[{footnote_number}]</sup></a>'
+            page_md += f"[^{note_walker}]"
+            note_walker += 1
         else:
-            page_html += chunk
-    page_html += f"</p><p>{page_ann}</p><p>------------------------</p>"
-    notes = re.finditer(r"\((\d+)\) <(.*?)>", page)
-    for note in notes:
-        note_num = translate_tib_number(note.group(1))
-        page_html += f'<p id="footnote-{page_num}-{note_num}"><sup>[{note_num}]</sup> {note.group(2)}</p>'
-    page_html += '<div style="page-break-after: always"></div>'
-    return page_html
+            page_md += chunk
+    page_md += f"\n{page_ann}\n"
+    return page_md, note_walker
+
+
+def parse_note(collated_text):
+    note_md = "\n"
+    notes = re.finditer(r"\((\d+)\) <(.*?)>", collated_text)
+    for note_walker, note in enumerate(notes, 1):
+        note_md += f"[^{note_walker}]: {note.group(2)}\n"
+    return note_md
 
 
 def creat_docx_footnotes_at_end_of_page(text_id, collated_text, path):
-    collated_text_html = ""
+    collated_text_md = ""
+    note_walker = 1
     pages = get_pages(collated_text)
-    for page_num, page in enumerate(pages, 1):
-        collated_text_html += parse_page(page, page_num)
-    html_path = path / f"{text_id}.html"
-    html_path.write_text(collated_text_html, encoding="utf-8")
-    output_path = path / f"{text_id}.docx"
-    os.system(f"ebook-convert {html_path} {output_path} --docx-no-toc")
-    html_path.unlink()
+    for page in pages:
+        page_md, note_walker = parse_page(page, note_walker)
+        collated_text_md += page_md
+    collated_text_md += parse_note(collated_text)
+    output_path = path / f"{text_id}_format_02.docx"
+    convert_text(collated_text_md, "docx", "markdown", outputfile=str(output_path))
     return output_path
 
 
