@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.77 (2022-01-07)
+### Fix
+* **docx:** Format two is updated to docx footnote compatability ([`8d31f00`](https://github.com/Esukhia/pedurma/commit/8d31f0071b415b750da60c54e282c9c6eaab0f8b))
+
 ## v0.1.76 (2022-01-06)
 ### Fix
 * **docx:** Format2 docx updated ([`b21aad1`](https://github.com/Esukhia/pedurma/commit/b21aad1eedf7d6fea818d23ec6930907cee4c01b))
