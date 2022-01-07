@@ -1,9 +1,11 @@
 import re
-import setuptools
 from pathlib import Path
+
+import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+
 
 def get_version(prop, project):
     project = Path(__file__).parent / project / "__init__.py"
@@ -33,8 +35,9 @@ setuptools.setup(
     install_requires=[
         "antx>=0.1.8, <1.0",
         "openpecha[transifex]>=0.7.58, <1.0",
+        "pypandoc>=1.7.2, <1.0",
         "pylibyaml>=0.1.0, <1.0",
-        "python-docx>=0.8.11, <9.0"
+        "python-docx>=0.8.11, <9.0",
     ],
     python_requires=">=3.8",
     tests_require=["pytest"],
