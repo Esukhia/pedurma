@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.76 (2022-01-06)
+### Fix
+* **docx:** Format2 docx updated ([`b21aad1`](https://github.com/Esukhia/pedurma/commit/b21aad1eedf7d6fea818d23ec6930907cee4c01b))
+
 ## v0.1.75 (2022-01-04)
 ### Fix
 * **note_ref:** No note ref found text list updated ([`0825f0f`](https://github.com/Esukhia/pedurma/commit/0825f0fa3faf21f22d8d4fb19b1479b3eae96335))
