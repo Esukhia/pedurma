@@ -11,7 +11,7 @@ from pedurma.utils import translate_tib_number
 
 def split_text(content):
 
-    chunks = re.split(r"(\(\d+\) <.*?>)", content)
+    chunks = re.split(r"(\(\d+\) <.+?>)", content)
 
     return chunks
 
@@ -64,11 +64,19 @@ def parse_page(page, note_walker):
     return page_md, note_walker
 
 
+def reformat_note_text(note_text):
+    pub_abv = {"«པེ་»": "P", "«སྣར་»": "N", "«ཅོ་»": "C", "«སྡེ་»": "D"}
+    for tib_abv, eng_abv in pub_abv.items():
+        note_text = note_text.replace(tib_abv, f" {eng_abv} ")
+    return note_text
+
+
 def parse_note(collated_text):
     note_md = "\n"
-    notes = re.finditer(r"\((\d+)\) <(.*?)>", collated_text)
+    notes = re.finditer(r"\((\d+)\) <(.+?)>", collated_text)
     for note_walker, note in enumerate(notes, 1):
-        note_md += f"[^{note_walker}]: {note.group(2)}\n"
+        note_text = reformat_note_text(note.group(2))
+        note_md += f"[^{note_walker}]: {note_text}\n"
     return note_md
 
 

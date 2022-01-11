@@ -2,7 +2,7 @@ from pathlib import Path
 
 from openpecha.utils import download_pecha
 
-from pedurma.texts import get_text_info
+from pedurma.texts import get_pecha_paths, get_text_info
 from pedurma.utils import from_yaml, get_pecha_id, to_yaml
 
 
@@ -139,7 +139,7 @@ def update_pagination(pecha_id, text_id, pedurma_edit_notes, index, pecha_path):
     for span in text_info["span"]:
         vol = span["vol"]
         pagination_layer = from_yaml(
-            Path(f"{pecha_path}/{pecha_id}.opf/layers/v{int(vol):03}/Pagination.yml")
+            (pecha_path / f"{pecha_id}.opf/layers/v{int(vol):03}/Pagination.yml")
         )
         pagination_layer = update_pg_ref(vol, pedurma_edit_notes, pagination_layer)
         yield vol, pagination_layer
@@ -152,13 +152,15 @@ def update_text_pagination(text_id, pedurma_edit_notes, text_mapping=None):
         text_id (str): text id
         pedurma_edit_notes (obj): pedurma edit notes obj
     """
-    pecha_id = get_pecha_id(text_id, text_mapping)
-    pecha_path = download_pecha(pecha_id, needs_update=False)
-    index = from_yaml(Path(f"{pecha_path}/{pecha_id}.opf/index.yml"))
-    for vol, new_pagination in update_pagination(
-        pecha_id, text_id, pedurma_edit_notes, index, pecha_path
-    ):
-        new_pagination_yml = to_yaml(new_pagination)
-        Path(
-            f"{pecha_path}/{pecha_id}.opf/layers/v{int(vol):03}/Pagination.yml"
-        ).write_text(new_pagination_yml, encoding="utf-8")
+    pecha_paths = get_pecha_paths(text_id, text_mapping)
+    for pecha_type, pecha_path in pecha_paths.items():
+        pecha_path = Path(pecha_path)
+        pecha_id = pecha_path.stem
+        index = from_yaml((pecha_path / f"{pecha_id}.opf/index.yml"))
+        for vol, new_pagination in update_pagination(
+            pecha_id, text_id, pedurma_edit_notes, index, pecha_path
+        ):
+            new_pagination_yml = to_yaml(new_pagination)
+            (
+                pecha_path / f"{pecha_id}.opf/layers/v{int(vol):03}/Pagination.yml"
+            ).write_text(new_pagination_yml, encoding="utf-8")
