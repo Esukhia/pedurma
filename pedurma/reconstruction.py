@@ -862,7 +862,10 @@ def merge_footnotes_per_page(page, foot_notes):
             except Exception:
                 note = ""
             marker_walker = get_tib_num(marker_walker)
-            repl2 = f"({marker_walker}) <{note}>"
+            if note:
+                repl2 = f"({marker_walker}) <{note}>"
+            else:
+                repl2 = ""
         if marker:
             preview_page = preview_page.replace(marker, repl2, 1)
     preview_page = re.sub("<p(.+?)>", r"\n\g<1>", preview_page)
