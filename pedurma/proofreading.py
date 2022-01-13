@@ -11,10 +11,10 @@ def get_note_page_img_link(text_id, pg_num, repo_path):
 
 def get_note_page(text_id, cur_pg_num, repo_path=None):
     manual_note = (
-        repo_path / text_id / "manual_notes" / f"{cur_pg_num}.txt"
+        repo_path / text_id / "manual_notes" / f"{cur_pg_num:04}.txt"
     ).read_text(encoding="utf-8")
     google_note = (
-        repo_path / text_id / "google_notes" / f"{cur_pg_num}.txt"
+        repo_path / text_id / "google_notes" / f"{cur_pg_num:04}.txt"
     ).read_text(encoding="utf-8")
     img_link = get_note_page_img_link(text_id, cur_pg_num, repo_path)
 
@@ -37,7 +37,7 @@ def get_note_pages(text_id, repo_path):
 def update_note_page(text_id, page: ProofreadNotePage, repo_path=None):
     new_manual_note_page = page.manual
     cur_pg_num = page.page_num
-    (repo_path / text_id / "manual_notes"  / f"{cur_pg_num}.txt").write_text(
+    (repo_path / text_id / "manual_notes" / f"{cur_pg_num}.txt").write_text(
         new_manual_note_page, encoding="utf-8"
     )
     print(f"INFO: {cur_pg_num} updated")
