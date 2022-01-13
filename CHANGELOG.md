@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.79 (2022-01-13)
+### Fix
+* **proofread:** File name access changed ([`aee7152`](https://github.com/Esukhia/pedurma/commit/aee71520162ca54030b39c94b986a9f5452d6780))
+
 ## v0.1.78 (2022-01-11)
 ### Fix
 * **docx:** Docx format 2 updated ([`9b90de5`](https://github.com/Esukhia/pedurma/commit/9b90de5a1ee925b625a4f16ec56cb79447874337))
