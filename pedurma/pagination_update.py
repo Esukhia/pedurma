@@ -1,9 +1,8 @@
 from pathlib import Path
 
-from openpecha.utils import download_pecha
-
-from pedurma.texts import get_pecha_paths, get_text_info
-from pedurma.utils import from_yaml, get_pecha_id, to_yaml
+from pedurma.notes import get_pecha_paths
+from pedurma.texts import get_text_info
+from pedurma.utils import from_yaml, to_yaml
 
 
 def get_start_page(pagination, start):

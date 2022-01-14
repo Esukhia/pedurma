@@ -1,9 +1,12 @@
+import json
 import re
 from pathlib import Path
 
+import requests
 from openpecha.utils import download_pecha
 
 from pedurma import config
+from pedurma.exceptions import TextMappingNotFound
 from pedurma.pecha import PedurmaNoteEdit
 from pedurma.texts import get_durchen, get_hfml_text, get_link, get_vol_meta
 from pedurma.utils import from_yaml, get_pecha_id
@@ -92,6 +95,32 @@ def get_pages_to_edit(durchen_pages, vol_meta):
     for page_ann, page_content in durchen_pages.items():
         pages_to_edit.append(process_page(page_ann, page_content, vol_meta))
     return pages_to_edit
+
+
+def get_pecha_paths(text_id, text_mapping=None):
+    """Return instace pecha path of the given text id
+
+    Args:
+        text_id (str): text id
+        text_mapping (dict, optional): text id ad key and another dictionary as value where key is instance name and value is intance pecha id. Defaults to None.
+
+    Raises:
+        TextMappingNotFound: if text id doesn't exist in the mapping file raise this expection
+
+    Returns:
+        dict: instance name and pecha path
+    """
+    pecha_paths = {"namsel": None, "google": None}
+    if not text_mapping:
+        text_mapping = requests.get(config.NOTE_REF_NOT_FOUND_TEXT_LIST_URL)
+        text_mapping = json.loads(text_mapping.text)
+    text_info = text_mapping.get(text_id, {})
+    if text_info:
+        pecha_paths["namsel"] = download_pecha(text_info["namsel"])
+        pecha_paths["google"] = download_pecha(text_info["google"])
+    else:
+        raise TextMappingNotFound
+    return pecha_paths
 
 
 def get_pedurma_edit_notes(hfml_text, text_meta):
