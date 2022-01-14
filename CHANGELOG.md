@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.81 (2022-01-14)
+### Fix
+* **proofread:** Note update file name changed ([`8bcca0c`](https://github.com/Esukhia/pedurma/commit/8bcca0c7547f3e954be36eb90dfd72100177fe5d))
+
 ## v0.1.80 (2022-01-14)
 ### Fix
 * **note:** Get pecha path update ([`14caac4`](https://github.com/Esukhia/pedurma/commit/14caac4549f1a1bc80dc97fce60db33b89e85727))
