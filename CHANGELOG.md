@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.82 (2022-01-15)
+### Fix
+* **proofread:** Empty manual note page handled ([`33ce3ad`](https://github.com/Esukhia/pedurma/commit/33ce3ad06b135bb686322f8c973363e539177d42))
+
 ## v0.1.81 (2022-01-14)
 ### Fix
 * **proofread:** Note update file name changed ([`8bcca0c`](https://github.com/Esukhia/pedurma/commit/8bcca0c7547f3e954be36eb90dfd72100177fe5d))
