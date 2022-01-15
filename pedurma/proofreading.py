@@ -10,9 +10,12 @@ def get_note_page_img_link(text_id, pg_num, repo_path):
 
 
 def get_note_page(text_id, cur_pg_num, repo_path=None):
-    manual_note = (
-        repo_path / text_id / "manual_notes" / f"{cur_pg_num:04}.txt"
-    ).read_text(encoding="utf-8")
+    try:
+        manual_note = (
+            repo_path / text_id / "manual_notes" / f"{cur_pg_num:04}.txt"
+        ).read_text(encoding="utf-8")
+    except Exception:
+        manual_note = ""
     google_note = (
         repo_path / text_id / "google_notes" / f"{cur_pg_num:04}.txt"
     ).read_text(encoding="utf-8")
