@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.84 (2022-01-19)
+### Fix
+* **hot-fix:** Docx serializer updated ([`ec6213c`](https://github.com/Esukhia/pedurma/commit/ec6213c293e2f493f2522e57461e416e619d0647))
+
 ## v0.1.83 (2022-01-19)
 ### Fix
 * **docx:** Note serializer in docx updated ([`4e3d0a0`](https://github.com/Esukhia/pedurma/commit/4e3d0a0d657c151234b6ce61c55a1826ec31f993))
