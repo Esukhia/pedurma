@@ -64,33 +64,67 @@ def parse_page(page, note_walker):
     return page_md, note_walker
 
 
-def reformat_note_text(note_text):
-    pub_abv = {"«པེ་»": "P", "«སྣར་»": "N", "«ཅོ་»": "C", "«སྡེ་»": "D"}
-    for tib_abv, eng_abv in pub_abv.items():
-        note_text = note_text.replace(tib_abv, f" {eng_abv} ")
-    return note_text
+def reformat_note_text(note_text, lang="bo"):
+    reformated_note_text = ""
+    note_parts = re.split("(«.+?»)", note_text)
+    notes = {}
+    cur_pub = ""
+    for note_part in note_parts[1:]:
+        if note_part:
+            if "«" in note_part:
+                cur_pub += note_part
+            else:
+                notes[cur_pub] = note_part
+                cur_pub = ""
+    for pub, note in notes.items():
+        reformated_note_text = f"{note} {pub}"
+    if lang == "en":
+        pub_abv = {"«པེ་»": "P", "«སྣར་»": "N", "«ཅོ་»": "C", "«སྡེ་»": "D"}
+        for tib_abv, eng_abv in pub_abv.items():
+            reformated_note_text = reformated_note_text.replace(tib_abv, f" {eng_abv} ")
+    else:
+        full_names = {
+            "«སྡེ་»": "སྡེ་དགེ",
+            "«ཅོ་»": "ཅོ་ནེ",
+            "«པེ་»": "པེ་ཅིན",
+            "«སྣར་»": "སྣར་ཐང་",
+        }
+        for tib_abv, full_name in full_names.items():
+            reformated_note_text = reformated_note_text.replace(
+                tib_abv, f" {full_name} "
+            )
+    return reformated_note_text
 
 
-def parse_note(collated_text):
+def parse_note(collated_text, lang):
     note_md = "\n"
     notes = re.finditer(r"\((\d+)\) <(.+?)>", collated_text)
     for note_walker, note in enumerate(notes, 1):
-        note_text = reformat_note_text(note.group(2))
+        note_text = reformat_note_text(note.group(2), lang)
         note_md += f"[^{note_walker}]: {note_text}\n"
     return note_md
 
 
 def creat_docx_footnotes_at_end_of_page(text_id, collated_text, path):
-    collated_text_md = ""
+    collated_text_md_nam = ""
+    collated_text_md_kuma = ""
     note_walker = 1
     pages = get_pages(collated_text)
     for page in pages:
         page_md, note_walker = parse_page(page, note_walker)
-        collated_text_md += page_md
-    collated_text_md += parse_note(collated_text)
-    output_path = path / f"{text_id}_format_02.docx"
-    convert_text(collated_text_md, "docx", "markdown", outputfile=str(output_path))
-    return output_path
+        collated_text_md_kuma += page_md
+    collated_text_md_nam = collated_text_md_kuma
+    collated_text_md_kuma += parse_note(collated_text, lang="en")
+    collated_text_md_nam += parse_note(collated_text, lang="bo")
+    output_path_nam = path / f"{text_id}_format_namgyal.docx"
+    output_path_kuma = path / f"{text_id}_format_kumarajiva.docx"
+    convert_text(
+        collated_text_md_nam, "docx", "markdown", outputfile=str(output_path_nam)
+    )
+    convert_text(
+        collated_text_md_kuma, "docx", "markdown", outputfile=str(output_path_kuma)
+    )
+    return output_path_kuma
 
 
 def get_docx_text(text_id, preview_text, output_path=None, type_="with_footnotes"):
