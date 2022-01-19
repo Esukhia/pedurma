@@ -81,9 +81,13 @@ def reformat_namgyal_mon_format(notes):
 
 def reformat_kumarajiva_format(notes):
     reformated_note_text = ""
-    for pub, note in notes.items():
+    for note_walker, (pub, note) in enumerate(notes.items()):
         pub = re.sub("»«", "»,«", pub)
-        reformated_note_text = f"{pub}: {note};"
+        if len(notes) > 1 and note_walker >= 0 and note_walker < len(notes) - 1:
+            reformated_note_text = f"{pub}: {note};"
+        else:
+            reformated_note_text += f"{pub}: {note}"
+
     pub_abv = {"«པེ་»": "P", "«སྣར་»": "N", "«ཅོ་»": "C", "«སྡེ་»": "D"}
     for tib_abv, eng_abv in pub_abv.items():
         reformated_note_text = reformated_note_text.replace(tib_abv, f"{eng_abv}")

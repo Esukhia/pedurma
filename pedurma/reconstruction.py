@@ -863,6 +863,7 @@ def merge_footnotes_per_page(page, foot_notes):
                 note = ""
             marker_walker = get_tib_num(marker_walker)
             if note:
+                note = re.sub(r"\d+", "", note)
                 repl2 = f"({marker_walker}) <{note}>"
             else:
                 repl2 = ""
