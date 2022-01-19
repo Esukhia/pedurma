@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.85 (2022-01-19)
+### Fix
+* **hot-fix:** Noise cleaned in note ([`1300b75`](https://github.com/Esukhia/pedurma/commit/1300b757a3390ed014c459da36b86b130a4008f9))
+
 ## v0.1.84 (2022-01-19)
 ### Fix
 * **hot-fix:** Docx serializer updated ([`ec6213c`](https://github.com/Esukhia/pedurma/commit/ec6213c293e2f493f2522e57461e416e619d0647))
