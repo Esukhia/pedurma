@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.83 (2022-01-19)
+### Fix
+* **docx:** Note serializer in docx updated ([`4e3d0a0`](https://github.com/Esukhia/pedurma/commit/4e3d0a0d657c151234b6ce61c55a1826ec31f993))
+
 ## v0.1.82 (2022-01-15)
 ### Fix
 * **proofread:** Empty manual note page handled ([`33ce3ad`](https://github.com/Esukhia/pedurma/commit/33ce3ad06b135bb686322f8c973363e539177d42))

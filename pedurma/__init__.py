@@ -11,4 +11,4 @@ from .save_text import *
 from .texts import *
 from .utils import *
 
-__version__ = "0.1.82"
+__version__ = "0.1.83"
