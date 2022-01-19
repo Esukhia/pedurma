@@ -64,6 +64,32 @@ def parse_page(page, note_walker):
     return page_md, note_walker
 
 
+def reformat_namgyal_mon_format(notes):
+    reformated_note_text = ""
+    for pub, note in notes.items():
+        reformated_note_text = f"{note} {pub}"
+    full_names = {
+        "«སྡེ་»": "སྡེ་དགེ།",
+        "«ཅོ་»": "ཅོ་ནེ།",
+        "«པེ་»": "པེ་ཅིན།",
+        "«སྣར་»": "སྣར་ཐང་།",
+    }
+    for tib_abv, full_name in full_names.items():
+        reformated_note_text = reformated_note_text.replace(tib_abv, f" {full_name} ")
+    return reformated_note_text
+
+
+def reformat_kumarajiva_format(notes):
+    reformated_note_text = ""
+    for pub, note in notes.items():
+        pub = re.sub("»«", "»,«", pub)
+        reformated_note_text = f"{pub}: {note};"
+    pub_abv = {"«པེ་»": "P", "«སྣར་»": "N", "«ཅོ་»": "C", "«སྡེ་»": "D"}
+    for tib_abv, eng_abv in pub_abv.items():
+        reformated_note_text = reformated_note_text.replace(tib_abv, f"{eng_abv}")
+    return reformated_note_text
+
+
 def reformat_note_text(note_text, lang="bo"):
     reformated_note_text = ""
     note_parts = re.split("(«.+?»)", note_text)
@@ -76,23 +102,10 @@ def reformat_note_text(note_text, lang="bo"):
             else:
                 notes[cur_pub] = note_part
                 cur_pub = ""
-    for pub, note in notes.items():
-        reformated_note_text = f"{note} {pub}"
-    if lang == "en":
-        pub_abv = {"«པེ་»": "P", "«སྣར་»": "N", "«ཅོ་»": "C", "«སྡེ་»": "D"}
-        for tib_abv, eng_abv in pub_abv.items():
-            reformated_note_text = reformated_note_text.replace(tib_abv, f" {eng_abv} ")
+    if lang == "bo":
+        reformated_note_text = reformat_namgyal_mon_format(notes)
     else:
-        full_names = {
-            "«སྡེ་»": "སྡེ་དགེ",
-            "«ཅོ་»": "ཅོ་ནེ",
-            "«པེ་»": "པེ་ཅིན",
-            "«སྣར་»": "སྣར་ཐང་",
-        }
-        for tib_abv, full_name in full_names.items():
-            reformated_note_text = reformated_note_text.replace(
-                tib_abv, f" {full_name} "
-            )
+        reformated_note_text = reformat_kumarajiva_format(notes)
     return reformated_note_text
 
 
