@@ -130,7 +130,7 @@ def creat_docx_footnotes_at_end_of_page(text_id, collated_text, path):
     for page in pages:
         page_md, note_walker = parse_page(page, note_walker)
         collated_text_md_kuma += page_md
-    collated_text_md_kuma = collated_text_md_kuma.replace("1-10000", "")
+    collated_text_md_kuma = collated_text_md_kuma.replace("1-100000", "")
     collated_text_md_nam = collated_text_md_kuma
     collated_text_md_kuma += parse_note(collated_text, lang="en")
     collated_text_md_nam += parse_note(collated_text, lang="bo")
