@@ -55,7 +55,7 @@ def parse_page(page, note_walker):
     page_md = ""
     chunks = split_text(page)
     for chunk in chunks:
-        if chunk and "<" in chunk:
+        if chunk and re.search(r"\(\d+\) <.+?>", chunk):
             page_md += f"[^{note_walker}]"
             note_walker += 1
         else:
