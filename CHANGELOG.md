@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.87 (2022-01-20)
+### Fix
+* **hot-fix:** Chunk regex update ([`0ed64cd`](https://github.com/Esukhia/pedurma/commit/0ed64cdae2432d50f41f7f6533b8c3cc2a41d49f))
+
 ## v0.1.86 (2022-01-20)
 ### Fix
 * **docx:** Speacial pg ann rm ([`ca1e696`](https://github.com/Esukhia/pedurma/commit/ca1e696aba47f8a6ba820451441cac79dccb8582))
