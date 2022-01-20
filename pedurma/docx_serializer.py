@@ -22,7 +22,7 @@ def create_docx_with_footnotes(text_id, collated_text, path):
     p = document.add_paragraph()
 
     for chunk in chunks:
-        if chunk and "<" in chunk:
+        if chunk and re.search(r"\(\d+\) <.+?>", chunk):
             chunk = re.sub(r"\(\d+\) ", "", chunk)
             super_text = p.add_run(chunk)
             super_text.font.superscript = True
