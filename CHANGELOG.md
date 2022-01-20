@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.86 (2022-01-20)
+### Fix
+* **docx:** Speacial pg ann rm ([`ca1e696`](https://github.com/Esukhia/pedurma/commit/ca1e696aba47f8a6ba820451441cac79dccb8582))
+* **docx:** Speacial pg ann rm ([`c802ba4`](https://github.com/Esukhia/pedurma/commit/c802ba4c0cd670520dbe74ee7ab27edc9251a296))
+* **hot-fix:** Chunk split bug fixed ([`2dfe9c9`](https://github.com/Esukhia/pedurma/commit/2dfe9c95316a443f4c6c1d2fc70f952985b84d69))
+
 ## v0.1.85 (2022-01-19)
 ### Fix
 * **hot-fix:** Noise cleaned in note ([`1300b75`](https://github.com/Esukhia/pedurma/commit/1300b757a3390ed014c459da36b86b130a4008f9))
