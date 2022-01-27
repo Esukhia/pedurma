@@ -6,8 +6,6 @@ from docx import Document
 from docx.shared import Pt
 from pypandoc import convert_text
 
-from pedurma.utils import translate_tib_number
-
 
 def split_text(content):
 
