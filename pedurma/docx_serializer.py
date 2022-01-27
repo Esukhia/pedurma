@@ -17,6 +17,7 @@ def split_text(content):
 
 
 def create_docx_with_footnotes(text_id, collated_text, path):
+    collated_text = collated_text.replace("1-100000", "")
     chunks = split_text(collated_text)
     document = Document()
     p = document.add_paragraph()
@@ -113,11 +114,30 @@ def reformat_note_text(note_text, lang="bo"):
     return reformated_note_text
 
 
+def reformat_title_note_text(note_text, lang):
+    reformated_note_text = note_text
+    if lang == "bo":
+        abv_replacement = {
+            "«སྡེ་»": "སྡེ་དགེ།",
+            "«ཅོ་»": "ཅོ་ནེ།",
+            "«པེ་»": "པེ་ཅིན།",
+            "«སྣར་»": "སྣར་ཐང་།",
+        }
+    else:
+        abv_replacement = {"«པེ་»": "P", "«སྣར་»": "N", "«ཅོ་»": "C", "«སྡེ་»": "D"}
+    for abv, abv_alt in abv_replacement.items():
+        reformated_note_text = reformated_note_text.replace(abv, f"{abv_alt}")
+    return reformated_note_text
+
+
 def parse_note(collated_text, lang):
     note_md = "\n"
     notes = re.finditer(r"\((\d+)\) <(.+?)>", collated_text)
     for note_walker, note in enumerate(notes, 1):
-        note_text = reformat_note_text(note.group(2), lang)
+        if note_walker == 1:
+            note_text = reformat_title_note_text(note.group(2), lang)
+        else:
+            note_text = reformat_note_text(note.group(2), lang)
         note_md += f"[^{note_walker}]: {note_text}\n"
     return note_md
 
