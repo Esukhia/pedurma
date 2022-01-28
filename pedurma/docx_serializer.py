@@ -113,6 +113,15 @@ def reformat_note_text(note_text, lang="bo"):
 
 
 def reformat_title_note_text(note_text, lang):
+    """Reformat the title note text
+
+    Args:
+        note_text (str): note text
+        lang (str): languange code
+
+    Returns:
+        str: reformated title note text
+    """
     reformated_note_text = note_text
     if lang == "bo":
         abv_replacement = {
