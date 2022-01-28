@@ -66,7 +66,7 @@ def parse_page(page, note_walker):
 def reformat_namgyal_mon_format(notes):
     reformated_note_text = ""
     for pub, note in notes.items():
-        reformated_note_text = f"{note} {pub}"
+        reformated_note_text += f"{note} {pub}"
     full_names = {
         "«སྡེ་»": "སྡེ་དགེ།",
         "«ཅོ་»": "ཅོ་ནེ།",
@@ -83,7 +83,7 @@ def reformat_kumarajiva_format(notes):
     for note_walker, (pub, note) in enumerate(notes.items()):
         pub = re.sub("»«", "»,«", pub)
         if len(notes) > 1 and note_walker >= 0 and note_walker < len(notes) - 1:
-            reformated_note_text = f"{pub}: {note};"
+            reformated_note_text += f"{pub}: {note};"
         else:
             reformated_note_text += f"{pub}: {note}"
 
