@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.88 (2022-01-28)
+### Fix
+* **doc:** Doc added to function ([`9c8308f`](https://github.com/Esukhia/pedurma/commit/9c8308f1f8ff3500b1e864785770ad71d59ad546))
+
 ## v0.1.87 (2022-01-20)
 ### Fix
 * **hot-fix:** Chunk regex update ([`0ed64cd`](https://github.com/Esukhia/pedurma/commit/0ed64cdae2432d50f41f7f6533b8c3cc2a41d49f))
