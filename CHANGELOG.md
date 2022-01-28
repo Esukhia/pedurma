@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.89 (2022-01-28)
+### Fix
+* **hot-fix:** Reformated note text accumation bug fixed ([`cdfbba1`](https://github.com/Esukhia/pedurma/commit/cdfbba1d48d045a7452767387300b8fe4cc6d5ff))
+
 ## v0.1.88 (2022-01-28)
 ### Fix
 * **doc:** Doc added to function ([`9c8308f`](https://github.com/Esukhia/pedurma/commit/9c8308f1f8ff3500b1e864785770ad71d59ad546))
