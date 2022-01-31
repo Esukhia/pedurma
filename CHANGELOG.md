@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.90 (2022-01-31)
+### Fix
+* **hot-fix:** Handle mid syl else case covered ([`cd41aa6`](https://github.com/Esukhia/pedurma/commit/cd41aa6703da4272a6d1e6b4a7f3ddc0ed91f5ae))
+
 ## v0.1.89 (2022-01-28)
 ### Fix
 * **hot-fix:** Reformated note text accumation bug fixed ([`cdfbba1`](https://github.com/Esukhia/pedurma/commit/cdfbba1d48d045a7452767387300b8fe4cc6d5ff))
