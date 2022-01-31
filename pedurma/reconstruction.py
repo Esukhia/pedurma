@@ -243,8 +243,8 @@ def handle_mid_syl(
         marker_type (str): marker type can be marker or candidate marker
     """
     # make it marker if marker found  (revision)
+    diff_ = rm_noise(diff[1])
     if double_mid_syl_marker(result):
-        diff_ = rm_noise(diff[1])
         if left_diff[1][-1] == " ":
             lasttwo = left_diff[1][-2:]
             result[-1][1] = result[-1][1][:-2]
@@ -271,6 +271,8 @@ def handle_mid_syl(
                     result[-1][1] = result[-1][1][: -len(lastsyl)]
                     result.append([1, diff_, f"{marker_type}"])
                     diffs[i + 1][1] = lastsyl + diffs[i + 1][1]
+    else:
+        result.append([1, diff_, f"{marker_type}"])
 
 
 def tseg_shifter(result, diffs, left_diff_text, i, right_diff_text):
