@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.91 (2022-02-04)
+### Fix
+* **hot-fix:** Reconstruction mid syl bug fixed ([`156bf13`](https://github.com/Esukhia/pedurma/commit/156bf13314dbbb4fc259202454b49dde139a5626))
+
 ## v0.1.90 (2022-01-31)
 ### Fix
 * **hot-fix:** Handle mid syl else case covered ([`cd41aa6`](https://github.com/Esukhia/pedurma/commit/cd41aa6703da4272a6d1e6b4a7f3ddc0ed91f5ae))
