@@ -266,11 +266,13 @@ def handle_mid_syl(
                 diffs[i + 1][1] = diffs[i + 1][1][len(first_syl) :]
                 result.append([1, diff_, f"{marker_type}"])
             else:
-                if left_diff[0] != (0 or 1):
+                if left_diff[0] == -1:
                     lastsyl = left_diff[1].split("་")[-1]
                     result[-1][1] = result[-1][1][: -len(lastsyl)]
                     result.append([1, diff_, f"{marker_type}"])
                     diffs[i + 1][1] = lastsyl + diffs[i + 1][1]
+                else:
+                    result.append([1, diff_, f"{marker_type}"])
     else:
         result.append([1, diff_, f"{marker_type}"])
 
