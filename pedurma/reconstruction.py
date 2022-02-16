@@ -167,7 +167,7 @@ def is_punct(char):
     Returns:
         flag: true if char is punctuation false if not
     """
-    if char in ["་", "།", "༔", ":", "། །", "༄", "༅", "\u0F7F", " "]:
+    if char in ["་", "།", "༔", ":", "། །", "༄", "༅", "\u0F7F", " ", "༑"]:
         return True
     else:
         return False
