@@ -165,7 +165,7 @@ def is_punct(char):
         diff (str): character from diff
 
     Returns:
-        flag: true if char is punctuation false if not
+        flag: true if char is punctuation false if not 
     """
     if char in ["་", "།", "༔", ":", "། །", "༄", "༅", "\u0F7F", " ", "༑"]:
         return True
