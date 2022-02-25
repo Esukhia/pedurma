@@ -30,7 +30,7 @@ def test_notes_generator_crossvol():
     hfml_texts = from_yaml(
         (Path(__file__).parent / "data" / "hfmls" / f"{text_id}.yml")
     )
-    result = get_pedurma_edit_notes(hfml_texts, text_meta)
+    result = get_pedurma_edit_notes(hfml_texts, text_meta, bdrc_img=False)
     expected_result = [
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
@@ -90,7 +90,7 @@ def test_notes_generator():
     hfml_texts = from_yaml(
         (Path(__file__).parent / "data" / "hfmls" / f"{text_id}.yml")
     )
-    result = get_pedurma_edit_notes(hfml_texts, text_meta)
+    result = get_pedurma_edit_notes(hfml_texts, text_meta, bdrc_img=False)
     expected_result = [
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470009.jpg/full/max/0/default.jpg",
@@ -116,5 +116,5 @@ def test_notes_generator():
 @pytest.mark.skip(reason="tested functional")
 def test_get_pedurma_edit_notes_from_text_id():
     text_id = "D1115"
-    pedurma_edit_notes = get_pedurma_text_edit_notes(text_id)
+    pedurma_edit_notes = get_pedurma_text_edit_notes(text_id, bdrc_img=False)
     assert pedurma_edit_notes

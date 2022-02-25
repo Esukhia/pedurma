@@ -8,7 +8,13 @@ from openpecha.utils import download_pecha
 from pedurma import config
 from pedurma.exceptions import TextMappingNotFound
 from pedurma.pecha import PedurmaNoteEdit
-from pedurma.texts import get_durchen, get_hfml_text, get_link, get_vol_meta
+from pedurma.texts import (
+    get_durchen,
+    get_hfml_text,
+    get_img_filenames,
+    get_link,
+    get_vol_meta,
+)
 from pedurma.utils import from_yaml, get_pecha_id
 
 
@@ -72,9 +78,9 @@ def get_page_refs(page_content):
         return ("0", "0")
 
 
-def process_page(page_ann, page_content, vol_meta):
+def process_page(page_ann, page_content, vol_meta, img_num_2_filename):
     durchen_image_num = get_page_num(page_ann)
-    pg_link = get_link(durchen_image_num, vol_meta)
+    pg_link = get_link(durchen_image_num, vol_meta, img_num_2_filename)
     unwanted_annotations = [r"〔[𰵀-󴉱]?\d+〕", r"\[\w+\.\d+\]", r"<d", r"d>"]
     page_content = rm_annotations(page_content, unwanted_annotations)
     durchen_pg_num = get_durchen_pg_num(page_content)
@@ -90,10 +96,12 @@ def process_page(page_ann, page_content, vol_meta):
     return page_obj
 
 
-def get_pages_to_edit(durchen_pages, vol_meta):
+def get_pages_to_edit(durchen_pages, vol_meta, img_num_2_filename):
     pages_to_edit = []
     for page_ann, page_content in durchen_pages.items():
-        pages_to_edit.append(process_page(page_ann, page_content, vol_meta))
+        pages_to_edit.append(
+            process_page(page_ann, page_content, vol_meta, img_num_2_filename)
+        )
     return pages_to_edit
 
 
@@ -123,21 +131,24 @@ def get_pecha_paths(text_id, text_mapping=None):
     return pecha_paths
 
 
-def get_pedurma_edit_notes(hfml_text, text_meta):
+def get_pedurma_edit_notes(hfml_text, text_meta, bdrc_img):
     pedurma_edit_notes = []
     for vol, text_content in hfml_text.items():
         vol_meta = get_vol_meta(vol, text_meta)
+        img_num_2_filename = get_img_filenames(vol_meta, bdrc_img)
         durchen = get_durchen(text_content)
         durchen_pages = get_durchen_pages(durchen)
-        pedurma_edit_notes += get_pages_to_edit(durchen_pages, vol_meta)
+        pedurma_edit_notes += get_pages_to_edit(
+            durchen_pages, vol_meta, img_num_2_filename
+        )
     return pedurma_edit_notes
 
 
-def get_pedurma_text_edit_notes(text_id, text_mapping=None):
+def get_pedurma_text_edit_notes(text_id, text_mapping=None, bdrc_img=True):
     pecha_id = get_pecha_id(text_id, text_mapping)
     pecha_path = download_pecha(pecha_id, needs_update=False)
     pecha_path = Path(pecha_path) / f"{pecha_id}.opf"
     meta_data = from_yaml((pecha_path / "meta.yml"))
     hfmls = get_hfml_text(pecha_path, text_id)
-    pedurma_edit_notes = get_pedurma_edit_notes(hfmls, meta_data)
+    pedurma_edit_notes = get_pedurma_edit_notes(hfmls, meta_data, bdrc_img)
     return pedurma_edit_notes

@@ -108,7 +108,7 @@ def get_page_id(img_num, pagination_layer):
     return ""
 
 
-def get_link(img_num, vol_meta):
+def get_link(img_num, vol_meta, img_num_2_filename):
     """Return bdrc image link using imgnum and vol mete data
 
     Args:
@@ -118,8 +118,11 @@ def get_link(img_num, vol_meta):
     Returns:
         str: image link
     """
-    image_grp_id = vol_meta["image_group_id"]
-    link = f"https://iiif.bdrc.io/bdr:{image_grp_id}::{image_grp_id}{int(img_num):04}.jpg/full/max/0/default.jpg"
+    image_grp_id = vol_meta.get("image_group_id", "")
+    image_file_name = img_num_2_filename.get(img_num, "")
+    if not image_file_name:
+        image_file_name = f"{image_grp_id}{int(img_num):04}.jpg"
+    link = f"https://iiif.bdrc.io/bdr:{image_grp_id}::{image_file_name}/full/max/0/default.jpg"
     return link
 
 
@@ -201,7 +204,7 @@ def get_page_num(page):
     return page_num
 
 
-def get_page_obj(page, vol_meta, tag, pagination_layer):
+def get_page_obj(page, vol_meta, img_num_2_filename, tag, pagination_layer):
     """Return page object by processing page hfml text
 
     Args:
@@ -217,7 +220,7 @@ def get_page_obj(page, vol_meta, tag, pagination_layer):
     page_num = 0
     page_id = get_page_id(img_num, pagination_layer)
     page_content = get_clean_page(page)
-    page_link = get_link(img_num, vol_meta)
+    page_link = get_link(img_num, vol_meta, img_num_2_filename)
     note_ref = get_note_refs(img_num, pagination_layer)
     if page_content == "":
         page_obj = None
@@ -251,7 +254,7 @@ def add_start_page_number(pages):
     return pages, start_page_number
 
 
-def get_page_obj_list(text, vol_meta, pagination_layer, tag="text"):
+def get_page_obj_list(text, vol_meta, img_num_2_filename, pagination_layer, tag="text"):
     """Return page object list of the given hfml text according to tag
 
     Args:
@@ -267,7 +270,7 @@ def get_page_obj_list(text, vol_meta, pagination_layer, tag="text"):
     start_page_number = 0
     pages = get_pages(text)
     for page in pages:
-        pg_obj = get_page_obj(page, vol_meta, tag, pagination_layer)
+        pg_obj = get_page_obj(page, vol_meta, img_num_2_filename, tag, pagination_layer)
         if pg_obj:
             page_obj_list.append(pg_obj)
     if tag == "text":
@@ -401,7 +404,7 @@ def get_last_pg_content(first_note_pg, pages):
     return last_pg_content
 
 
-def get_last_page(cur_vol_pages, cur_vol_notes, vol_meta, start_page_number):
+def get_last_page(cur_vol_pages, cur_vol_notes, start_page_number):
     """Generate last extra page object
 
     Args:
@@ -432,7 +435,24 @@ def get_last_page(cur_vol_pages, cur_vol_notes, vol_meta, start_page_number):
     return [last_page]
 
 
-def construct_text_obj(hfmls, pecha_meta, opf_path):
+def get_img_filenames(vol_meta, bdrc_img):
+    img_num_2_filename = {}
+    if bdrc_img:
+        img_grp_id = vol_meta["image_group_id"]
+        img_grp_response = requests.get(
+            f"http://iiifpres.bdrc.io/il/v:bdr:{img_grp_id}"
+        )
+        if img_grp_response.status_code == 200:
+            img_grp_images = json.loads(img_grp_response.text)
+            for img_file in img_grp_images:
+                img_filename = img_file.get("filename", "")
+                if img_filename:
+                    img_num = int(img_filename[-8:-4])
+                    img_num_2_filename[img_num] = img_filename
+    return img_num_2_filename
+
+
+def construct_text_obj(hfmls, pecha_meta, opf_path, bdrc_img):
     """Generate text obj from text hfmls
 
     Args:
@@ -448,6 +468,7 @@ def construct_text_obj(hfmls, pecha_meta, opf_path):
     for vol_num, hfml_text in hfmls.items():
         start_page_number = 1
         vol_meta = get_vol_meta(vol_num, pecha_meta)
+        img_num_2_filename = get_img_filenames(vol_meta, bdrc_img)
         pagination_layer = load_yaml(
             Path(f"{opf_path}/{pecha_meta['id']}.opf/layers/{vol_num}/Pagination.yml")
         )
@@ -455,18 +476,16 @@ def construct_text_obj(hfmls, pecha_meta, opf_path):
         body_text = get_body_text(hfml_text)
 
         cur_vol_pages, start_page_number = get_page_obj_list(
-            body_text, vol_meta, pagination_layer, tag="text"
+            body_text, vol_meta, img_num_2_filename, pagination_layer, tag="text"
         )
         pages += cur_vol_pages
         if durchen:
             cur_vol_notes, _ = get_page_obj_list(
-                durchen, vol_meta, pagination_layer, tag="note"
+                durchen, vol_meta, img_num_2_filename, pagination_layer, tag="note"
             )
             notes += cur_vol_notes
         if notes:
-            pages += get_last_page(
-                cur_vol_pages, cur_vol_notes, vol_meta, start_page_number
-            )
+            pages += get_last_page(cur_vol_pages, cur_vol_notes, start_page_number)
     notes = notes_to_editor_view(notes)
     text_obj = Text(id=pecha_meta["text_uuid"], pages=pages, notes=notes)
     return text_obj
@@ -610,13 +629,14 @@ def get_pecha_paths(text_id, text_mapping=None):
     return pecha_paths
 
 
-def get_text_obj(pecha_id, text_id, pecha_path=None):
+def get_text_obj(pecha_id, text_id, pecha_path=None, bdrc_img=True):
     """Return text obj of given text id belonging in given pecha path
 
     Args:
         pecha_id (str): pecha id
         text_id (str): text id
         pecha_path (str, optional): pecha path. Defaults to None.
+        bdrc_img(boolean): if true image link will be generated using bdrc api else using img grp id and img num
 
     Returns:
         obj: text object
@@ -628,11 +648,11 @@ def get_text_obj(pecha_id, text_id, pecha_path=None):
     hfmls = get_hfml_text(f"{pecha_path}/{pecha_id}.opf/", text_id, index)
     text_uuid, text = get_text_info(text_id, index)
     pecha_meta["text_uuid"] = text_uuid
-    text = construct_text_obj(hfmls, pecha_meta, pecha_path)
+    text = construct_text_obj(hfmls, pecha_meta, pecha_path, bdrc_img)
     return text
 
 
-def get_pedurma_text_obj(text_id, pecha_paths=None):
+def get_pedurma_text_obj(text_id, pecha_paths=None, bdrc_img=True):
     """Return pedurma text object of given text id
 
     Args:
@@ -647,7 +667,7 @@ def get_pedurma_text_obj(text_id, pecha_paths=None):
     text = {}
     for pecha_src, pecha_path in pecha_paths.items():
         pecha_id = Path(pecha_path).stem
-        text[pecha_src] = get_text_obj(pecha_id, text_id, pecha_path)
+        text[pecha_src] = get_text_obj(pecha_id, text_id, pecha_path, bdrc_img)
     pedurma_text = PedurmaText(
         text_id=text_id, namsel=text["namsel"], google=text["google"]
     )
