@@ -436,6 +436,15 @@ def get_last_page(cur_vol_pages, cur_vol_notes, start_page_number):
 
 
 def get_img_filenames(vol_meta, bdrc_img):
+    """returns image number and its image file name
+
+    Args:
+        vol_meta (dict): volume meta data
+        bdrc_img (boolean): if true image link will be generated using bdrc api else using img grp id and img num
+
+    Returns:
+        dict : image number and its file name
+    """
     img_num_2_filename = {}
     if bdrc_img:
         img_grp_id = vol_meta["image_group_id"]
@@ -459,6 +468,7 @@ def construct_text_obj(hfmls, pecha_meta, opf_path, bdrc_img):
         hfmls (dict): vol as key and text hfml as value
         pecha_meta (dict): pecha meta data
         opf_path (str): opf path
+        bdrc_img(boolean): if true image link will be generated using bdrc api else using img grp id and img num
 
     Returns:
         obj: text object
@@ -658,6 +668,7 @@ def get_pedurma_text_obj(text_id, pecha_paths=None, bdrc_img=True):
     Args:
         text_id (str): text id
         pecha_paths (str, optional): pecha path. Defaults to None.
+        bdrc_img(boolean): if true image link will be generated using bdrc api else using img grp id and img num
 
     Returns:
         obj: pedurma text object
