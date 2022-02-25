@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.93 (2022-02-25)
+### Fix
+* **doc:** Documatation updated ([`fe6cce8`](https://github.com/Esukhia/pedurma/commit/fe6cce885fd1d25b401fa2eaf0181308e46f6728))
+
 ## v0.1.92 (2022-02-16)
 ### Fix
 * **hot-fix:** Pongshad added ([`a1b2ec1`](https://github.com/Esukhia/pedurma/commit/a1b2ec176998d868fdc0292a4a516e01e1188477))
