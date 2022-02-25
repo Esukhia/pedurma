@@ -2,14 +2,14 @@ from pathlib import Path
 
 from pedurma.pecha import NotesPage, Page, Text
 from pedurma.texts import get_pedurma_text_obj, get_text_obj
-from pedurma.utils import from_editor, notes_to_editor_view, to_editor
+from pedurma.utils import from_editor, to_editor
 
 
 def test_text_obj_serializer_corssvol():
     text_id = "D1115"
     pecha_id = "P000002"
     opf_path = str(Path(__file__).parent / "data" / pecha_id)
-    text_obj = get_text_obj(pecha_id, text_id, pecha_path=opf_path)
+    text_obj = get_text_obj(pecha_id, text_id, pecha_path=opf_path, bdrc_img=False)
     expected_text_obj = Text(
         id="259260e8e3544fc1a9a27d7dffc72df6",
         pages=[
@@ -112,7 +112,7 @@ def test_text_obj_serializer():
     text_id = "D1116"
     pecha_id = "P000002"
     opf_path = Path(__file__).parent / "data" / pecha_id
-    text_obj = get_text_obj(pecha_id, text_id, pecha_path=opf_path)
+    text_obj = get_text_obj(pecha_id, text_id, pecha_path=opf_path, bdrc_img=False)
     expected_text_obj = Text(
         id="cf52cbae1a7640b688b24135fe566920",
         pages=[
@@ -206,7 +206,7 @@ def test_pedurma_text_obj():
             )
         ],
     )
-    pedurma_text = get_pedurma_text_obj(text_id, pecha_paths)
+    pedurma_text = get_pedurma_text_obj(text_id, pecha_paths, bdrc_img=False)
     assert pedurma_text.namsel == expected_namsel_text_obj
 
 

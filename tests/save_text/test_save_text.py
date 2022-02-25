@@ -187,11 +187,11 @@ def test_save_pedurma_text():
     pecha_id = "P0003"
     namsel_pecha_path = "./tests/save_text/data/P0003_namsel"
     google_pecha_path = "./tests/save_text/data/P0003_google"
-    namsel_text_obj = get_text_obj(pecha_id, text_id, namsel_pecha_path)
+    namsel_text_obj = get_text_obj(pecha_id, text_id, namsel_pecha_path, bdrc_img=False)
     namsel_text_obj.pages[
         0
     ].content = "༄ཚོ། །རྒྱ་གར་སྐད་དུ།\nསྟ་བ་ནཱ་མ། བོད་སྐད་དུ།\nཔར་འོས་པ་བསྔགས་"
-    google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path)
+    google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path, bdrc_img=False)
     google_text_obj.pages[
         -2
     ].content = "རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་llལ་སོགས།"
@@ -208,8 +208,12 @@ def test_save_pedurma_text():
         },
     }
     save_pedurma_text(pedurma_text_obj=None, pedurma_text_mapping=pedurma_text_mapping)
-    new_namsel_text_obj = get_text_obj(pecha_id, text_id, namsel_pecha_path)
-    new_google_text_obj = get_text_obj(pecha_id, text_id, google_pecha_path)
+    new_namsel_text_obj = get_text_obj(
+        pecha_id, text_id, namsel_pecha_path, bdrc_img=False
+    )
+    new_google_text_obj = get_text_obj(
+        pecha_id, text_id, google_pecha_path, bdrc_img=False
+    )
     assert new_google_text_obj == google_text_obj
     assert new_namsel_text_obj == namsel_text_obj
     os.system("rm -r ./tests/save_text/data/P0003_namsel")
