@@ -30,10 +30,12 @@ def save_text_report(text_id, text_report, output_path):
     print("INFO: Text report saved")
 
 
-def get_preview_text(text_id, output_path, pecha_paths=None):
+def get_preview_text(text_id, output_path, pecha_paths=None, bdrc_img=True):
     (Path(output_path) / text_id).mkdir(parents=True, exist_ok=True)
     output_path = output_path / text_id
-    preview_text, google_pecha_id = get_reconstructed_text(text_id, pecha_paths)
+    preview_text, google_pecha_id = get_reconstructed_text(
+        text_id, pecha_paths, bdrc_img
+    )
     text_report = get_text_report(text_id, pecha_paths, preview_text)
     save_preview_text(text_id, preview_text, output_path)
     save_text_report(text_id, text_report, output_path)
