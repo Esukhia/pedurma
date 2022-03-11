@@ -15,7 +15,7 @@ def test_get_preview_text():
     expected_output_path = Path.home() / text_id
     expected_pecha_id = "P972"
     preview_output_path, google_pecha_id = get_preview_text(
-        text_id, output_path, pecha_paths
+        text_id, output_path, pecha_paths, bdrc_img=False
     )
     assert expected_output_path == preview_output_path
     assert expected_pecha_id == google_pecha_id

@@ -867,7 +867,7 @@ def merge_footnotes_per_page(page, foot_notes):
                 note = ""
             marker_walker = get_tib_num(marker_walker)
             if note:
-                note = re.sub(r"\d+", "", note)
+                # note = re.sub(r"\d+", "", note)
                 repl2 = f"({marker_walker}) <{note}>"
             else:
                 repl2 = ""
@@ -1003,10 +1003,10 @@ def pecha_path_2_id(pecha_path):
     return pecha_path_obj.stem
 
 
-def get_reconstructed_text(text_id, pecha_paths=None):
+def get_reconstructed_text(text_id, pecha_paths=None, bdrc_img=True):
     if pecha_paths is None:
         pecha_paths = get_pecha_paths(text_id)
-    pedurmatext = get_pedurma_text_obj(text_id, pecha_paths)
+    pedurmatext = get_pedurma_text_obj(text_id, pecha_paths, bdrc_img)
     google_pecha_id = pecha_path_2_id(pecha_paths["google"])
     derge_google_text_obj = pedurmatext.google
     namsel_text_obj = pedurmatext.namsel

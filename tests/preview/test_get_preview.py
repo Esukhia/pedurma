@@ -14,7 +14,7 @@ def get_dummy_preview():
     namsel_pecha_path = str(Path(__file__).parent / "data" / "P973")
     text_id = "D1119"
     pecha_paths = {"namsel": namsel_pecha_path, "google": dg_pecha_path}
-    preview_text = get_reconstructed_text(text_id, pecha_paths)
+    preview_text = get_reconstructed_text(text_id, pecha_paths, bdrc_img=False)
     return preview_text
 
 
