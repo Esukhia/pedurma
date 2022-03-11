@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.94 (2022-03-11)
+### Fix
+* **reconstruction:** Numbers accpected in notes ([`9542daf`](https://github.com/Esukhia/pedurma/commit/9542dafcb49d0089e2f280b7ea0c9130bc47bc95))
+
 ## v0.1.93 (2022-02-25)
 ### Fix
 * **doc:** Documatation updated ([`fe6cce8`](https://github.com/Esukhia/pedurma/commit/fe6cce885fd1d25b401fa2eaf0181308e46f6728))
