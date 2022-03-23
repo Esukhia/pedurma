@@ -809,7 +809,8 @@ def postprocess_footnotes(footnotes, vol_num):
                     if "<" not in marker:
                         marker_l.append(marker)
         body_pg_num = get_page_ref_number(page_ref)
-        footnote_result[body_pg_num] = marker_l
+        if footnote_result.get(body_pg_num, 0) == 0:
+            footnote_result[body_pg_num] = marker_l
     return footnote_result
 
 
