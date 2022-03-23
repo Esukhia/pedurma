@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.95 (2022-03-23)
+### Fix
+* **footnote:** Extra durchen page bug fixed ([`0eca004`](https://github.com/Esukhia/pedurma/commit/0eca004f403fe37b3c6dcfe0479b6b71c82cafbc))
+
 ## v0.1.94 (2022-03-11)
 ### Fix
 * **reconstruction:** Numbers accpected in notes ([`9542daf`](https://github.com/Esukhia/pedurma/commit/9542dafcb49d0089e2f280b7ea0c9130bc47bc95))
