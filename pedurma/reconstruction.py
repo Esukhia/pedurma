@@ -985,11 +985,20 @@ def get_body_pages(body_result, vol):
     return result
 
 
+def get_reconstructed_body(namsel_body, dg_body, vol_num):
+    reconstructed_body = ""
+    namsel_pages = re.split(r"-\*-\*-\*-\*-", namsel_body)
+    dg_pages = re.split(r"-\*-\*-\*-\*-", dg_body)
+    for namsel_page, dg_page in zip(namsel_pages, dg_pages):
+        reconstructed_body += reconstruct_body(namsel_page, dg_page, vol_num)
+    return reconstructed_body
+
+
 def get_vol_preview(dg_body, namsel_body, dg_note_text, namsel_note_text, vol_num):
     preview_text = ""
     namsel_body = transfer(dg_body, [["pedurma", "(#)"]], namsel_body, output="txt")
     dg_body = dg_body.replace("#", "")
-    body_result = reconstruct_body(namsel_body, dg_body, vol_num)
+    body_result = get_reconstructed_body(namsel_body, dg_body, vol_num)
     footnotes = reconstruct_footnote(namsel_note_text, dg_note_text, vol_num)
     body_pages = get_body_pages(body_result, vol_num)
     for body_page in body_pages:
@@ -1036,6 +1045,6 @@ def get_reconstructed_text(text_id, pecha_paths=None, bdrc_img=True):
             namsel_body = ""
             cur_vol_preview = ""
             continue
-        dg_body += dg_page.content
-        namsel_body += namsel_page.content
+        dg_body += f"{dg_page.content}-*-*-*-*-"
+        namsel_body += f"{namsel_page.content}-*-*-*-*-"
     return preview_text, google_pecha_id
