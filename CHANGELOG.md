@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.96 (2022-04-25)
+### Fix
+* **reconstruction:** Pagewise body reconstruction implemented for cleaner diff ([`dfb267a`](https://github.com/Esukhia/pedurma/commit/dfb267ac0e57a6945aca5e81a030e5666d4a3070))
+
 ## v0.1.95 (2022-03-23)
 ### Fix
 * **footnote:** Extra durchen page bug fixed ([`0eca004`](https://github.com/Esukhia/pedurma/commit/0eca004f403fe37b3c6dcfe0479b6b71c82cafbc))
