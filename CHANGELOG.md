@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.97 (2022-05-03)
+### Fix
+* **reconstruction:** Note shad normalization added with title note removal ([`4d7db2e`](https://github.com/Esukhia/pedurma/commit/4d7db2e0ba5b034fbe4fc0e6adee87b4d5ff2295))
+
 ## v0.1.96 (2022-04-25)
 ### Fix
 * **reconstruction:** Pagewise body reconstruction implemented for cleaner diff ([`dfb267a`](https://github.com/Esukhia/pedurma/commit/dfb267ac0e57a6945aca5e81a030e5666d4a3070))
