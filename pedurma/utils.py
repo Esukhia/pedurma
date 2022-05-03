@@ -246,3 +246,27 @@ class optimized_diff_match_patch:
         diffs = self._unescape_lr(diffs)
         self._delete_text(text1_path, text2_path)
         return diffs
+
+
+def extract_notes(note_text):
+    note_text = re.sub(r".+?<", "", note_text)
+    note_text = note_text.replace(">", "")
+    note_parts = re.split(r"(«.+?»)", note_text)
+    notes = []
+    for note_part in note_parts:
+        if "»" in note_part:
+            continue
+        elif note_part:
+            notes.append(note_part)
+    return notes
+
+
+def remove_title_notes(collated_text):
+    notes = re.findall(r"\(\d+\) <.+?>", collated_text)
+    try:
+        title_note = notes[0]
+        collated_text = collated_text.replace(title_note, "")
+    except Exception:
+        collated_text = collated_text
+
+    return collated_text

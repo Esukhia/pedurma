@@ -12,12 +12,14 @@ text B.
 
 import re
 from collections import defaultdict
+from encodings import normalize_encoding
 from itertools import zip_longest
 from pathlib import Path
 
 import pyewts
 from antx import transfer
 
+from pedurma.docx_serializer import split_text
 from pedurma.exceptions import PageNumMissing
 from pedurma.preprocess import preprocess_google_notes, preprocess_namsel_notes
 from pedurma.texts import (
@@ -26,7 +28,13 @@ from pedurma.texts import (
     get_pecha_paths,
     get_pedurma_text_obj,
 )
-from pedurma.utils import from_editor, optimized_diff_match_patch, translate_tib_number
+from pedurma.utils import (
+    extract_notes,
+    from_editor,
+    optimized_diff_match_patch,
+    remove_title_notes,
+    translate_tib_number,
+)
 
 EWTSCONV = pyewts.pyewts()
 
@@ -994,6 +1002,57 @@ def get_reconstructed_body(namsel_body, dg_body, vol_num):
     return reconstructed_body
 
 
+def get_normalized_note(note_text, right_context):
+    normalized_note_text = note_text
+    notes = extract_notes(note_text)
+    for note in notes:
+        normalized_note = ""
+        if (
+            right_context
+            and note[-1] == "།"
+            and right_context[0] != "།"
+            and right_context[0] != " "
+        ):
+            if len(note) > 2 and note[-2] == "་":
+                normalized_note = note[:-1]
+                normalized_note_text = re.sub(
+                    note, normalized_note, normalized_note_text
+                )
+            else:
+                normalized_note = note[:-1] + "་"
+                normalized_note_text = re.sub(
+                    note, normalized_note, normalized_note_text
+                )
+        elif right_context[0] == "།":
+            if len(note) > 2 and note[-2] == "་":
+                normalized_note = note[:-1]
+                normalized_note_text = re.sub(
+                    note, normalized_note, normalized_note_text
+                )
+            else:
+                normalized_note = note[:-1]
+                normalized_note_text = re.sub(
+                    note, normalized_note, normalized_note_text
+                )
+    return normalized_note_text
+
+
+def get_normalized_notes_text(collated_text):
+    normalized_collated_text = ""
+    chunks = split_text(collated_text)
+    left_context = chunks[0]
+    for chunk_walker, chunk in enumerate(chunks):
+        if re.search(r"\(\d+\) \<.+?\>", chunk):
+            try:
+                right_context = chunks[chunk_walker + 1]
+            except Exception:
+                right_context = ""
+            normalized_collated_text += get_normalized_note(chunk, right_context)
+        else:
+            normalized_collated_text += chunk
+    return normalized_collated_text
+
+
 def get_vol_preview(dg_body, namsel_body, dg_note_text, namsel_note_text, vol_num):
     preview_text = ""
     namsel_body = transfer(dg_body, [["pedurma", "(#)"]], namsel_body, output="txt")
@@ -1005,6 +1064,8 @@ def get_vol_preview(dg_body, namsel_body, dg_note_text, namsel_note_text, vol_nu
         pg_num = get_page_num(body_page, vol_num)
         cur_pg_footnotes = footnotes.get(pg_num, [])
         preview_text += merge_footnotes_per_page(body_page, cur_pg_footnotes) + "\n"
+    preview_text = get_normalized_notes_text(preview_text)
+    preview_text = remove_title_notes(preview_text)
     return preview_text
 
 
