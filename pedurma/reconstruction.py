@@ -1002,10 +1002,22 @@ def get_reconstructed_body(namsel_body, dg_body, vol_num):
     return reconstructed_body
 
 
+def add_shad_to_note_without_punct(note):
+    if note[-1] != "།" and note[-1] != "་":
+        note += "།"
+    elif note[-1] == "་" and note[-1] == "ང":
+        note = note[:-1] + "།"
+    return note
+
+
 def get_normalized_note(note_text, right_context):
     normalized_note_text = note_text
-    notes = extract_notes(note_text)
+    normalized_note_text = normalized_note_text.replace("+", "a")
+    notes = extract_notes(normalized_note_text)
     for note in notes:
+        reformated_note = add_shad_to_note_without_punct(note)
+        normalized_note_text = re.sub(note, reformated_note, normalized_note_text)
+        note = reformated_note
         normalized_note = ""
         if (
             right_context
@@ -1024,16 +1036,9 @@ def get_normalized_note(note_text, right_context):
                     note, normalized_note, normalized_note_text
                 )
         elif right_context[0] == "།":
-            if len(note) > 2 and note[-2] == "་":
-                normalized_note = note[:-1]
-                normalized_note_text = re.sub(
-                    note, normalized_note, normalized_note_text
-                )
-            else:
-                normalized_note = note[:-1]
-                normalized_note_text = re.sub(
-                    note, normalized_note, normalized_note_text
-                )
+            normalized_note = note[:-1]
+            normalized_note_text = re.sub(note, normalized_note, normalized_note_text)
+    normalized_note_text = normalized_note_text.replace("a", "+")
     return normalized_note_text
 
 
