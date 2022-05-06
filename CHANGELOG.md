@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.98 (2022-05-06)
+### Fix
+* **reconstruction:** Note normalization without punct case handled ([`55eb1d3`](https://github.com/Esukhia/pedurma/commit/55eb1d33af88fe50be611869e40b2aa099496171))
+
 ## v0.1.97 (2022-05-03)
 ### Fix
 * **reconstruction:** Note shad normalization added with title note removal ([`4d7db2e`](https://github.com/Esukhia/pedurma/commit/4d7db2e0ba5b034fbe4fc0e6adee87b4d5ff2295))
