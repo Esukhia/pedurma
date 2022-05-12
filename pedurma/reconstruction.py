@@ -1052,7 +1052,10 @@ def get_normalized_notes_text(collated_text):
                 right_context = chunks[chunk_walker + 1]
             except Exception:
                 right_context = ""
-            normalized_collated_text += get_normalized_note(chunk, right_context)
+            try:
+                normalized_collated_text += get_normalized_note(chunk, right_context)
+            except Exception:
+                normalized_collated_text += chunk
         else:
             normalized_collated_text += chunk
     return normalized_collated_text
