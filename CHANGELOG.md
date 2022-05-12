@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.99 (2022-05-12)
+### Fix
+* **reconstruction:** Note normalization exception handled ([`4e669e5`](https://github.com/Esukhia/pedurma/commit/4e669e5ae250546fbe00fb741f3100fd0d460810))
+
 ## v0.1.98 (2022-05-06)
 ### Fix
 * **reconstruction:** Note normalization without punct case handled ([`55eb1d3`](https://github.com/Esukhia/pedurma/commit/55eb1d33af88fe50be611869e40b2aa099496171))
