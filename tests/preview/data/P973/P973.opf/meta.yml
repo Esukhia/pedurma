@@ -3,11 +3,11 @@ source_metadata:
   id: bdr:W1PD95844
   title: བསྟན་འགྱུར། ༼དཔེ་བསྡུར་མ༽
   author: ''
-  volumes:
-    dbf9e8e4682d45d08efdfe3955b19314:
+  base:
+    v001:
       image_group_id: I1PD95846
       title: ''
-      volume_number: 1
+      order: 1
       total_pages: 1539
       base_file: v001.txt
 vol2fn:

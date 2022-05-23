@@ -8,8 +8,10 @@ from pedurma.text_report import get_text_report
 
 
 def save_preview_text(text_id, preview_text, output_path):
-    for vol_id, vol_text in preview_text.items():
-        (output_path / f"{text_id}_{vol_id}.txt").write_text(vol_text, encoding="utf-8")
+    for base_name, collated_text in preview_text.items():
+        (output_path / f"{text_id}_{base_name}.txt").write_text(
+            collated_text, encoding="utf-8"
+        )
     print("INFO: Preview saved")
 
 

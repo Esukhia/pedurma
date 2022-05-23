@@ -108,17 +108,17 @@ def get_page_id(img_num, pagination_layer):
     return ""
 
 
-def get_link(img_num, vol_meta, img_num_2_filename):
+def get_link(img_num, base_meta, img_num_2_filename):
     """Return bdrc image link using imgnum and vol mete data
 
     Args:
         img_num (int): image number
-        vol_meta (dict): vol meta data
+        base_meta (dict): vol meta data
 
     Returns:
         str: image link
     """
-    image_grp_id = vol_meta.get("image_group_id", "")
+    image_grp_id = base_meta.get("image_group_id", "")
     image_file_name = img_num_2_filename.get(img_num, "")
     if not image_file_name:
         image_file_name = f"{image_grp_id}{int(img_num):04}.jpg"
@@ -204,12 +204,12 @@ def get_page_num(page):
     return page_num
 
 
-def get_page_obj(page, vol_meta, img_num_2_filename, tag, pagination_layer):
+def get_page_obj(page, base_meta, img_num_2_filename, tag, pagination_layer):
     """Return page object by processing page hfml text
 
     Args:
         page (str): page hfml
-        vol_meta (dict): volume meta data
+        base_meta (dict): volume meta data
         tag (str): tag can be either text or note
         pagination_layer (dict): pagination layer
 
@@ -220,7 +220,7 @@ def get_page_obj(page, vol_meta, img_num_2_filename, tag, pagination_layer):
     page_num = 0
     page_id = get_page_id(img_num, pagination_layer)
     page_content = get_clean_page(page)
-    page_link = get_link(img_num, vol_meta, img_num_2_filename)
+    page_link = get_link(img_num, base_meta, img_num_2_filename)
     note_ref = get_note_refs(img_num, pagination_layer)
     if page_content == "":
         page_obj = None
@@ -231,7 +231,8 @@ def get_page_obj(page, vol_meta, img_num_2_filename, tag, pagination_layer):
                 page_no=page_num,
                 content=page_content,
                 name=f"Page {img_num}",
-                vol=vol_meta["volume_number"],
+                vol=base_meta["order"],
+                base_name=base_meta["base_file"][:-4],
                 image_link=page_link,
             )
         else:
@@ -240,7 +241,8 @@ def get_page_obj(page, vol_meta, img_num_2_filename, tag, pagination_layer):
                 page_no=page_num,
                 content=page_content,
                 name=f"Page {img_num}",
-                vol=vol_meta["volume_number"],
+                vol=base_meta["order"],
+                base_name=base_meta["base_file"][:-4],
                 image_link=page_link,
                 note_ref=note_ref,
             )
@@ -254,12 +256,14 @@ def add_start_page_number(pages):
     return pages, start_page_number
 
 
-def get_page_obj_list(text, vol_meta, img_num_2_filename, pagination_layer, tag="text"):
+def get_page_obj_list(
+    text, base_meta, img_num_2_filename, pagination_layer, tag="text"
+):
     """Return page object list of the given hfml text according to tag
 
     Args:
         text (hfml): hfml text
-        vol_meta (dict): volume meta data
+        base_meta (dict): volume meta data
         pagination_layer (dict): pagiantion layer
         tag (str, optional): if note return list of note obj else page object. Defaults to "text".
 
@@ -270,7 +274,9 @@ def get_page_obj_list(text, vol_meta, img_num_2_filename, pagination_layer, tag=
     start_page_number = 0
     pages = get_pages(text)
     for page in pages:
-        pg_obj = get_page_obj(page, vol_meta, img_num_2_filename, tag, pagination_layer)
+        pg_obj = get_page_obj(
+            page, base_meta, img_num_2_filename, tag, pagination_layer
+        )
         if pg_obj:
             page_obj_list.append(pg_obj)
     if tag == "text":
@@ -278,55 +284,52 @@ def get_page_obj_list(text, vol_meta, img_num_2_filename, pagination_layer, tag=
     return page_obj_list, start_page_number
 
 
-def get_vol_meta(vol_num, pecha_meta):
+def get_base_meta(base_name, pecha_meta):
     """Extract volume meta from pecha meta data using volume number
 
     Args:
-        vol_num (int): volume number
+        base_name (int): volume number
         pecha_meta (dict): pecha meta data
 
     Returns:
         dict: volume meta of the given volume number
     """
-    vol_meta = {}
-    vol_num = int(vol_num[1:])
-    text_vols = pecha_meta["source_metadata"].get("volumes", {})
-    if text_vols:
-        for vol_id, vol in text_vols.items():
-            if vol["volume_number"] == vol_num:
-                vol_meta = vol
-    return vol_meta
+    base_meta = {}
+    bases = pecha_meta["source_metadata"].get("base", {})
+    if bases:
+        base_meta = bases.get(base_name, {})
+    return base_meta
 
 
-def get_first_note_pg(notes, vol_meta):
+def get_first_note_pg(notes, base_meta):
     """Return first note page object of the working volume
 
     Args:
         notes (list): list of notes object
-        vol_meta (dict): working volume meta data
+        base_meta (dict): working volume meta data
 
     Returns:
         obj: note object
     """
     for note in notes:
-        if int(note.vol) == vol_meta["volume_number"]:
+        if int(note.vol) == base_meta["order"]:
             return note
     return None
 
 
-def get_cur_vol_notes(notes, vol_meta):
+def get_cur_vol_notes(notes, base_meta):
     """Return list of notes obj which belogs to vol mentioned in vol meta
 
     Args:
         notes (list[note obj]): list of note objects
-        vol_meta (dict): contents volume meta data
+        base_meta (dict): contents volume meta data
 
     Returns:
         list: list of notes object
     """
     cur_vol_notes = []
     for note in notes:
-        if int(note.vol) == vol_meta["volume_number"]:
+        if int(note.vol) == base_meta["order"]:
             cur_vol_notes.append(note)
     return cur_vol_notes
 
@@ -336,7 +339,7 @@ def get_last_page_note_ref(cur_vol_notes):
 
     Args:
         notes (list): list of note object
-        vol_meta (dict): volume meta data
+        base_meta (dict): volume meta data
 
     Returns:
         lsit: list of note refs
@@ -410,7 +413,7 @@ def get_last_page(cur_vol_pages, cur_vol_notes, start_page_number):
     Args:
         pages (list): list of page object
         notes (list): list of note object
-        vol_meta (dict): volume meta data
+        base_meta (dict): volume meta data
 
     Returns:
         object: page object
@@ -429,17 +432,18 @@ def get_last_page(cur_vol_pages, cur_vol_notes, start_page_number):
         content=pg_content,
         name=first_note_pg.name,
         vol=first_note_pg.vol,
+        base_name=first_note_pg.base_name,
         image_link=first_note_pg.image_link,
         note_ref=note_refs,
     )
     return [last_page]
 
 
-def get_img_filenames(vol_meta, bdrc_img):
+def get_img_filenames(base_meta, bdrc_img):
     """returns image number and its image file name
 
     Args:
-        vol_meta (dict): volume meta data
+        base_meta (dict): volume meta data
         bdrc_img (boolean): if true image link will be generated using bdrc api else using img grp id and img num
 
     Returns:
@@ -447,7 +451,7 @@ def get_img_filenames(vol_meta, bdrc_img):
     """
     img_num_2_filename = {}
     if bdrc_img:
-        img_grp_id = vol_meta["image_group_id"]
+        img_grp_id = base_meta["image_group_id"]
         img_grp_response = requests.get(
             f"http://iiifpres.bdrc.io/il/v:bdr:{img_grp_id}"
         )
@@ -475,23 +479,23 @@ def construct_text_obj(hfmls, pecha_meta, opf_path, bdrc_img):
     """
     pages = []
     notes = []
-    for vol_num, hfml_text in hfmls.items():
+    for base_name, hfml_text in hfmls.items():
         start_page_number = 1
-        vol_meta = get_vol_meta(vol_num, pecha_meta)
-        img_num_2_filename = get_img_filenames(vol_meta, bdrc_img)
+        base_meta = get_base_meta(base_name, pecha_meta)
+        img_num_2_filename = get_img_filenames(base_meta, bdrc_img)
         pagination_layer = load_yaml(
-            Path(f"{opf_path}/{pecha_meta['id']}.opf/layers/{vol_num}/Pagination.yml")
+            Path(f"{opf_path}/{pecha_meta['id']}.opf/layers/{base_name}/Pagination.yml")
         )
         durchen = get_durchen(hfml_text)
         body_text = get_body_text(hfml_text)
 
         cur_vol_pages, start_page_number = get_page_obj_list(
-            body_text, vol_meta, img_num_2_filename, pagination_layer, tag="text"
+            body_text, base_meta, img_num_2_filename, pagination_layer, tag="text"
         )
         pages += cur_vol_pages
         if durchen:
             cur_vol_notes, _ = get_page_obj_list(
-                durchen, vol_meta, img_num_2_filename, pagination_layer, tag="note"
+                durchen, base_meta, img_num_2_filename, pagination_layer, tag="note"
             )
             notes += cur_vol_notes
         if notes:
@@ -599,9 +603,9 @@ def serialize_text_obj(text):
     pages = text.pages
     notes = text.notes
     for page in pages:
-        text_hfml[f"v{int(page.vol):03}"] += f"{page.content}\n\n"
+        text_hfml[page.base_name] += f"{page.content}\n\n"
     for note in notes:
-        text_hfml[f"v{int(note.vol):03}"] += f"{note.content}\n\n"
+        text_hfml[note.base_name] += f"{note.content}\n\n"
     return text_hfml
 
 

@@ -101,11 +101,11 @@ def is_valid_page_to_edit(prev_pg_to_edit, pg_to_edit):
         return False
 
 
-def update_pg_ref(vol, pages_to_edit, pagination_layer):
+def update_pg_ref(base_name, pages_to_edit, pagination_layer):
     """Add page ref to page annotations
 
     Args:
-        vol (int): volume number
+        base_name (str): volume number
         pages_to_edit (obj): pages to edit object
         pagination_layer (dict): old pagination layer
 
@@ -114,7 +114,7 @@ def update_pg_ref(vol, pages_to_edit, pagination_layer):
     """
     prev_pg_edit = pages_to_edit[0]
     for page_to_edit in pages_to_edit:
-        if vol == page_to_edit.vol:
+        if base_name == page_to_edit.base_name:
             if is_valid_page_to_edit(prev_pg_edit, page_to_edit):
                 pagination_layer = add_note_pg_ref(page_to_edit, pagination_layer)
         prev_pg_edit = page_to_edit
@@ -136,12 +136,14 @@ def update_pagination(pecha_id, text_id, pedurma_edit_notes, index, pecha_path):
     """
     text_uuid, text_info = get_text_info(text_id, index)
     for span in text_info["span"]:
-        vol = span["vol"]
+        base_name = span["base"]
         pagination_layer = from_yaml(
-            (pecha_path / f"{pecha_id}.opf/layers/v{int(vol):03}/Pagination.yml")
+            (pecha_path / f"{pecha_id}.opf/layers/{base_name}/Pagination.yml")
         )
-        pagination_layer = update_pg_ref(vol, pedurma_edit_notes, pagination_layer)
-        yield vol, pagination_layer
+        pagination_layer = update_pg_ref(
+            base_name, pedurma_edit_notes, pagination_layer
+        )
+        yield base_name, pagination_layer
 
 
 def update_text_pagination(text_id, pedurma_edit_notes, text_mapping=None):
@@ -156,10 +158,10 @@ def update_text_pagination(text_id, pedurma_edit_notes, text_mapping=None):
         pecha_path = Path(pecha_path)
         pecha_id = pecha_path.stem
         index = from_yaml((pecha_path / f"{pecha_id}.opf/index.yml"))
-        for vol, new_pagination in update_pagination(
+        for base_name, new_pagination in update_pagination(
             pecha_id, text_id, pedurma_edit_notes, index, pecha_path
         ):
             new_pagination_yml = to_yaml(new_pagination)
             (
-                pecha_path / f"{pecha_id}.opf/layers/v{int(vol):03}/Pagination.yml"
+                pecha_path / f"{pecha_id}.opf/layers/{base_name}/Pagination.yml"
             ).write_text(new_pagination_yml, encoding="utf-8")

@@ -26,6 +26,7 @@ def test_get_preview_page():
         content=gb_pg_yml["content"],
         name=gb_pg_yml["name"],
         vol=gb_pg_yml["vol"],
+        base_name=gb_pg_yml["base_name"],
         image_link=gb_pg_yml["image_link"],
         note_ref=gb_pg_yml["note_ref"],
     )
@@ -36,6 +37,7 @@ def test_get_preview_page():
         content=nb_pg_yml["content"],
         name=nb_pg_yml["name"],
         vol=nb_pg_yml["vol"],
+        base_name=nb_pg_yml["base_name"],
         image_link=nb_pg_yml["image_link"],
         note_ref=nb_pg_yml["note_ref"],
     )
@@ -49,6 +51,7 @@ def test_get_preview_page():
             content=gd_pg_yml["content"],
             name=gd_pg_yml["name"],
             vol=gd_pg_yml["vol"],
+            base_name=gd_pg_yml["base_name"],
             image_link=gd_pg_yml["image_link"],
         )
     ]
@@ -62,6 +65,7 @@ def test_get_preview_page():
             content=nd_pg_yml["content"],
             name=nd_pg_yml["name"],
             vol=nd_pg_yml["vol"],
+            base_name=nd_pg_yml["base_name"],
             image_link=nd_pg_yml["image_link"],
         )
     ]
@@ -85,6 +89,7 @@ def test_page_num_missing():
             content=gb_pg_yml["content"],
             name=gb_pg_yml["name"],
             vol=gb_pg_yml["vol"],
+            base_name=gb_pg_yml["base_name"],
             image_link=gb_pg_yml["image_link"],
             note_ref=gb_pg_yml["note_ref"],
         )
@@ -97,6 +102,7 @@ def test_page_num_missing():
             content=nb_pg_yml["content"],
             name=nb_pg_yml["name"],
             vol=nb_pg_yml["vol"],
+            base_name=nb_pg_yml["base_name"],
             image_link=nb_pg_yml["image_link"],
             note_ref=nb_pg_yml["note_ref"],
         )
@@ -110,6 +116,7 @@ def test_page_num_missing():
                 content=gd_pg_yml["content"],
                 name=gd_pg_yml["name"],
                 vol=gd_pg_yml["vol"],
+                base_name=gd_pg_yml["base_name"],
                 image_link=gd_pg_yml["image_link"],
             )
         ]
@@ -123,6 +130,7 @@ def test_page_num_missing():
                 content=nd_pg_yml["content"],
                 name=nd_pg_yml["name"],
                 vol=nd_pg_yml["vol"],
+                base_name=nd_pg_yml["base_name"],
                 image_link=nd_pg_yml["image_link"],
             )
         ]

@@ -8,9 +8,11 @@ from pedurma.utils import from_yaml
 def test_pagination_update_crossvol():
     pecha_id = "c1f25688a5da47c1be49a5c0eb0326a5"
     text_id = "D1118"
-    pecha_path = (Path(__file__).parent / "data")
-    
-    index = from_yaml((Path(__file__).parent / "data" / f"{pecha_id}.opf" / "index.yml"))
+    pecha_path = Path(__file__).parent / "data"
+
+    index = from_yaml(
+        (Path(__file__).parent / "data" / f"{pecha_id}.opf" / "index.yml")
+    )
     pages_to_edit = [
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
@@ -19,6 +21,7 @@ def test_pagination_update_crossvol():
             ref_start_page_no="1",
             ref_end_page_no="3",
             vol=1,
+            base_name="v001",
         ),
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460005.jpg/full/max/0/default.jpg",
@@ -27,6 +30,7 @@ def test_pagination_update_crossvol():
             ref_start_page_no="4",
             ref_end_page_no="4",
             vol=1,
+            base_name="v001",
         ),
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
@@ -35,6 +39,7 @@ def test_pagination_update_crossvol():
             ref_start_page_no="1",
             ref_end_page_no="3",
             vol=2,
+            base_name="v002",
         ),
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
@@ -43,20 +48,31 @@ def test_pagination_update_crossvol():
             ref_start_page_no="0",
             ref_end_page_no="0",
             vol=2,
+            base_name="v002",
         ),
     ]
-    for vol, new_pagination_layer in update_pagination(
+    for base_name, new_pagination_layer in update_pagination(
         pecha_id, text_id, pages_to_edit, index, pecha_path
     ):
-        expected_layer = from_yaml((Path(__file__).parent / "data" / "paginations" / text_id / f"v{int(vol):03}.yml"))
+        expected_layer = from_yaml(
+            (
+                Path(__file__).parent
+                / "data"
+                / "paginations"
+                / text_id
+                / f"{base_name}.yml"
+            )
+        )
         assert new_pagination_layer == expected_layer
 
 
 def test_pagination_update():
     pecha_id = "e5248654f5e44f8e9216f3f38ed75ee8"
     text_id = "D1119"
-    pecha_path = (Path(__file__).parent / "data")
-    index = from_yaml((Path(__file__).parent / "data" / f"{pecha_id}.opf" / "index.yml"))
+    pecha_path = Path(__file__).parent / "data"
+    index = from_yaml(
+        (Path(__file__).parent / "data" / f"{pecha_id}.opf" / "index.yml")
+    )
     pages_to_edit = [
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
@@ -65,6 +81,7 @@ def test_pagination_update():
             ref_start_page_no="7",
             ref_end_page_no="8",
             vol=2,
+            base_name="v002",
         ),
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
@@ -73,20 +90,31 @@ def test_pagination_update():
             ref_start_page_no="0",
             ref_end_page_no="0",
             vol=2,
+            base_name="v002",
         ),
     ]
-    for vol, new_pagination_layer in update_pagination(
+    for base_name, new_pagination_layer in update_pagination(
         pecha_id, text_id, pages_to_edit, index, pecha_path
     ):
-        expected_layer = from_yaml((Path(__file__).parent / "data" / "paginations" / text_id / f"v{int(vol):03}.yml"))
+        expected_layer = from_yaml(
+            (
+                Path(__file__).parent
+                / "data"
+                / "paginations"
+                / text_id
+                / f"{base_name}.yml"
+            )
+        )
         assert new_pagination_layer == expected_layer
 
 
 def test_invalid_pg_ref():
     pecha_id = "e5248654f5e44f8e9216f3f38ed75ee8"
     text_id = "D1119"
-    pecha_path = (Path(__file__).parent / "data")
-    index = from_yaml((Path(__file__).parent / "data" / f"{pecha_id}.opf" / "index.yml"))
+    pecha_path = Path(__file__).parent / "data"
+    index = from_yaml(
+        (Path(__file__).parent / "data" / f"{pecha_id}.opf" / "index.yml")
+    )
     pages_to_edit = [
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
@@ -95,6 +123,7 @@ def test_invalid_pg_ref():
             ref_start_page_no="9",
             ref_end_page_no="8",
             vol=2,
+            base_name="v002",
         ),
         PedurmaNoteEdit(
             image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
@@ -103,10 +132,20 @@ def test_invalid_pg_ref():
             ref_start_page_no="7",
             ref_end_page_no="10",
             vol=2,
+            base_name="v002",
         ),
     ]
-    for vol, new_pagination_layer in update_pagination(
+    for base_name, new_pagination_layer in update_pagination(
         pecha_id, text_id, pages_to_edit, index, pecha_path
     ):
-        expected_layer = from_yaml((Path(__file__).parent / "data" / f"{pecha_id}.opf" / "layers" / "v002" / "Pagination.yml"))
+        expected_layer = from_yaml(
+            (
+                Path(__file__).parent
+                / "data"
+                / f"{pecha_id}.opf"
+                / "layers"
+                / base_name
+                / "Pagination.yml"
+            )
+        )
         assert new_pagination_layer == expected_layer

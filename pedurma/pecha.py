@@ -10,6 +10,7 @@ class PageBase(BaseModel):
     content: str
     name: str
     vol: str
+    base_name: str
     image_link: Optional[str] = None
 
 
@@ -53,6 +54,7 @@ class PedurmaNoteEdit(BaseModel):
     ref_start_page_no: str
     ref_end_page_no: str
     vol: int
+    base_name: str
 
 
 class EditorContent(BaseModel):
