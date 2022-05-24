@@ -9,71 +9,70 @@ from pedurma.texts import get_pecha_paths, remove_last_pages, serialize_text_obj
 from pedurma.utils import from_yaml, notes_to_original_view
 
 
-def get_old_vol(pecha_opf_path, pecha_id, text_vol_span):
+def get_old_base(pecha_opf_path, pecha_id, text_base_span):
     """Generate old base text in which text is located
 
     Args:
         pecha_opf_path (str): pecha opf path
         pecha_id (str): pecha id 
-        text_vol_span (list): list of volume ids in which text is located
+        text_base_span (list): list of volume ids in which text is located
 
     Returns:
         dict: volid as key and base as value
     """
-    old_vols = {}
-    for vol_id in text_vol_span:
-        old_vols[vol_id] = Path(
-            f"{pecha_opf_path}/{pecha_id}.opf/base/{vol_id}.txt"
+    old_bases = {}
+    for base_name in text_base_span:
+        old_bases[base_name] = Path(
+            f"{pecha_opf_path}/{pecha_id}.opf/base/{base_name}.txt"
         ).read_text(encoding="utf-8")
-    return old_vols
+    return old_bases
 
 
-def get_old_text_base(old_pecha_idx, old_vol_base, text_id, text_vol_num):
+def get_old_text_base(old_pecha_idx, old_base, text_id, base_name):
     """Return old text base
 
     Args:
         old_pecha_idx (dict): old index
-        old_vol_base (dict): old vol base and its vol id
+        old_base (dict): old vol base and its vol id
         text_id (str): text id
-        text_vol_num (str): text vol id
+        text_base (str): text vol id
 
     Returns:
         str: text basetext in that volume
     """
     text_span = old_pecha_idx["annotations"][text_id]["span"]
-    for vol_span in text_span:
-        if vol_span["vol"] == text_vol_num:
-            return old_vol_base[vol_span["start"] : vol_span["end"] + 1]
+    for base_span in text_span:
+        if base_span["base"] == base_name:
+            return old_base[base_span["start"] : base_span["end"] + 1]
     return ""
 
 
-def get_new_vol(old_vols, old_pecha_idx, text_obj):
+def get_new_base(old_bases, old_pecha_idx, text_obj):
     """Return new base text by replacing updated text from text object
 
     Args:
-        old_vols (dict): old vol and its id
+        old_bases (dict): old vol and its id
         old_pecha_idx (dict): old pecha index
         text_obj (obj): text object
 
     Returns:
         dict: new basetext and its id
     """
-    new_vols = {}
+    new_bases = {}
     new_text = serialize_text_obj(text_obj)
-    for vol_id, new_text_base in new_text.items():
-        vol_num = int(vol_id[1:])
-        old_vol_base = old_vols[vol_id]
+    for base_name, new_text_base in new_text.items():
+        old_base = old_bases[base_name]
         old_text_base = get_old_text_base(
-            old_pecha_idx, old_vol_base, text_obj.id, vol_num
+            old_pecha_idx, old_base, text_obj.id, base_name
         )
         old_text_base = old_text_base.strip()
         new_text_base = new_text_base.strip()
-        new_vol_base = old_vol_base.replace(old_text_base, new_text_base)
-        new_vols[vol_id] = new_vol_base
-    return new_vols
+        new_base = old_base.replace(old_text_base, new_text_base)
+        new_bases[base_name] = new_base
+    return new_bases
 
 
-def get_text_vol_span(pecha_idx, text_uuid):
+def get_text_base_span(pecha_idx, text_uuid):
     """Return list of volume ids in which text span
 
     Args:
@@ -83,11 +82,11 @@ def get_text_vol_span(pecha_idx, text_uuid):
     Returns:
         list: vol ids
     """
-    text_vol_span = []
+    text_base_span = []
     for span in pecha_idx["annotations"][text_uuid]["span"]:
-        vol_num = span["vol"]
-        text_vol_span.append(f"v{int(vol_num):03}")
-    return text_vol_span
+        base_name = span["base"]
+        text_base_span.append(base_name)
+    return text_base_span
 
 
 def update_base(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
@@ -99,14 +98,14 @@ def update_base(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
         text_obj (obj): text object
         old_pecha_idx (dict): old pecha index
     """
-    text_vol_span = get_text_vol_span(old_pecha_idx, text_obj.id)
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
-    new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
-    for vol_id, new_vol_base in new_vols.items():
-        Path(f"{pecha_opf_path}/{pecha_id}.opf/base/{vol_id}.txt").write_text(
-            new_vol_base, encoding="utf-8"
+    text_base_span = get_text_base_span(old_pecha_idx, text_obj.id)
+    old_bases = get_old_base(pecha_opf_path, pecha_id, text_base_span)
+    new_bases = get_new_base(old_bases, old_pecha_idx, text_obj)
+    for base_name, new_base in new_bases.items():
+        Path(f"{pecha_opf_path}/{pecha_id}.opf/base/{base_name}.txt").write_text(
+            new_base, encoding="utf-8"
         )
-        print(f"INFO: {vol_id} base updated..")
+        print(f"INFO: {base_name} base updated..")
 
 
 def get_old_layers(pecha_opf_path, pecha_id, vol_id):
@@ -151,46 +150,51 @@ def update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater):
             print(f"INFO: {vol_id} {layer_name} has been updated...")
 
 
-def update_old_layers(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
-    """Update all the layers related to text object
+# def update_old_layers(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
+#     """Update all the layers related to text object
 
-    Args:
-        pecha_opf_path (str): pecha opf path
-        pecha_id (str): pecha id
-        text_obj (obj): text object
-        old_pecha_idx (dict): old pecha index
-    """
-    text_vol_span = get_text_vol_span(old_pecha_idx, text_obj.id)
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
-    new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
-    for (vol_id, old_vol_base), (_, new_vol_base) in zip(
-        old_vols.items(), new_vols.items()
-    ):
-        updater = Blupdate(old_vol_base, new_vol_base)
-        old_layers = get_old_layers(pecha_opf_path, pecha_id, vol_id)
-        update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater)
+#     Args:
+#         pecha_opf_path (str): pecha opf path
+#         pecha_id (str): pecha id
+#         text_obj (obj): text object
+#         old_pecha_idx (dict): old pecha index
+#     """
+#     text_base_span = get_text_base_span(old_pecha_idx, text_obj.id)
+#     old_vols = get_old_vol(pecha_opf_path, pecha_id, text_base_span)
+#     new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
+#     for (vol_id, old_vol_base), (_, new_vol_base) in zip(
+#         old_vols.items(), new_vols.items()
+#     ):
+#         updater = Blupdate(old_vol_base, new_vol_base)
+#         old_layers = get_old_layers(pecha_opf_path, pecha_id, vol_id)
+#         update_layer(pecha_opf_path, pecha_id, vol_id, old_layers, updater)
 
 
-def update_other_text_index(old_pecha_idx, text_id, cur_vol_offset, vol_num):
+def update_other_text_index(
+    old_pecha_idx, text_id, cur_base_offset, base_name, pecha_meta
+):
     check_flag = False
     for text_uuid, text in old_pecha_idx["annotations"].items():
         if check_flag:
             for vol_walker, vol_span in enumerate(text["span"]):
-                if vol_span["vol"] == vol_num:
+                if vol_span["base"] == base_name:
                     old_pecha_idx["annotations"][text_uuid]["span"][vol_walker][
                         "start"
-                    ] += cur_vol_offset
+                    ] += cur_base_offset
                     old_pecha_idx["annotations"][text_uuid]["span"][vol_walker][
                         "end"
-                    ] += cur_vol_offset
-                elif vol_span["vol"] > vol_num:
+                    ] += cur_base_offset
+                elif (
+                    pecha_meta["source_metadata"]["base"][vol_span["base"]]["order"]
+                    > pecha_meta["source_metadata"]["base"][base_name]["order"]
+                ):
                     return old_pecha_idx
         if text_uuid == text_id:
             check_flag = True
     return old_pecha_idx
 
 
-def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
+def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx, pecha_meta):
     """Update pecha index according to text obj content
 
     Args:
@@ -202,37 +206,40 @@ def update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx):
     Returns:
         dict: new pecha index
     """
-    text_vol_span = get_text_vol_span(old_pecha_idx, text_obj.id)
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
-    new_vols = get_new_vol(old_vols, old_pecha_idx, text_obj)
-    for (vol_id, old_vol_base), (_, new_vol_base) in zip(
-        old_vols.items(), new_vols.items()
+    text_base_span = get_text_base_span(old_pecha_idx, text_obj.id)
+    old_bases = get_old_base(pecha_opf_path, pecha_id, text_base_span)
+    new_bases = get_new_base(old_bases, old_pecha_idx, text_obj)
+    for (base_name, old_base), (_, new_base) in zip(
+        old_bases.items(), new_bases.items()
     ):
+        cur_base_order = pecha_meta["source_metadata"]["base"][base_name]["order"]
         check_next_text = True
-        vol_num = int(vol_id[1:])
-        cur_vol_offset = len(new_vol_base) - len(old_vol_base)
-        if cur_vol_offset != 0:
-            for vol_walker, vol_span in enumerate(
+        cur_base_offset = len(new_base) - len(old_base)
+        if cur_base_offset != 0:
+            for base_walker, base_span in enumerate(
                 old_pecha_idx["annotations"][text_obj.id]["span"]
             ):
-                if vol_span["vol"] == vol_num:
-                    old_pecha_idx["annotations"][text_obj.id]["span"][vol_walker][
+                if base_span["base"] == base_name:
+                    old_pecha_idx["annotations"][text_obj.id]["span"][base_walker][
                         "end"
-                    ] += cur_vol_offset
-                elif vol_span["vol"] > vol_num:
+                    ] += cur_base_offset
+                elif (
+                    pecha_meta["source_metadata"]["base"][base_span["base"]]["order"]
+                    > cur_base_order
+                ):
                     check_next_text = False
                     break
             if check_next_text:
                 old_pecha_idx = update_other_text_index(
-                    old_pecha_idx, text_obj.id, cur_vol_offset, vol_num
+                    old_pecha_idx, text_obj.id, cur_base_offset, base_name, pecha_meta
                 )
     return old_pecha_idx
 
 
-def update_durchen_span(durchen_layer, text, vol_num, char_walker):
+def update_durchen_span(durchen_layer, text, base_name, char_walker):
     durchen_start = char_walker
     for note in text.notes:
-        if note.vol == vol_num:
+        if note.base_name == base_name:
             char_walker += len(note.content) + 2
     durchen_end = char_walker - 3
     for id, ann in durchen_layer["annotations"].items():
@@ -243,22 +250,22 @@ def update_durchen_span(durchen_layer, text, vol_num, char_walker):
 
 
 def update_durchen_layer(text, pecha_id, pecha_opf_path):
-    vol_num = text.pages[0].vol
+    base_name = text.pages[0].base_name
     durchen_layer, durchen_path = get_layer(
-        pecha_opf_path, pecha_id, vol_num, "Durchen"
+        pecha_opf_path, pecha_id, base_name, "Durchen"
     )
     char_walker = 0
     for page in text.pages:
-        if vol_num != page.vol:
-            update_durchen_span(durchen_layer, text, vol_num, char_walker)
+        if base_name != page.base_name:
+            update_durchen_span(durchen_layer, text, base_name, char_walker)
             char_walker = 0
-            vol_num = page.vol
+            base_name = page.base_name
             dump_yaml(durchen_layer, durchen_path)
             durchen_layer, durchen_path = get_layer(
-                pecha_opf_path, pecha_id, vol_num, "Durchen"
+                pecha_opf_path, pecha_id, base_name, "Durchen"
             )
         char_walker += len(page.content) + 2
-    update_durchen_span(durchen_layer, text, vol_num, char_walker)
+    update_durchen_span(durchen_layer, text, base_name, char_walker)
     dump_yaml(durchen_layer, durchen_path)
 
 
@@ -279,12 +286,12 @@ def update_note_span(pagination_layer, text, prev_page_end):
             )
 
 
-def get_layer(pecha_opf_path, pecha_id, vol_num, layer_name):
+def get_layer(pecha_opf_path, pecha_id, base_name, layer_name):
     layer_path = (
         Path(pecha_opf_path)
         / f"{pecha_id}.opf"
         / "layers"
-        / f"v{int(vol_num):03}"
+        / base_name
         / f"{layer_name}.yml"
     )
     layer = load_yaml(layer_path)
@@ -303,20 +310,20 @@ def get_layer(pecha_opf_path, pecha_id, vol_num, layer_name):
 
 
 def update_page_layer(text, pecha_id, pecha_opf_path):
-    vol_num = text.pages[0].vol
+    base_name = text.pages[0].base_name
     pagination_layer, pagination_path = get_layer(
-        pecha_opf_path, pecha_id, vol_num, "Pagination"
+        pecha_opf_path, pecha_id, base_name, "Pagination"
     )
     pagination_annotations = pagination_layer.get("annotations", {})
     prev_page_end = 0
     for page in text.pages:
-        if vol_num != page.vol:
+        if base_name != page.base_name:
             update_note_span(pagination_layer, text, prev_page_end)
             prev_page_end = 0
-            vol_num = page.vol
+            base_name = page.base_name
             dump_yaml(pagination_layer, pagination_path)
             pagination_layer, pagination_path = get_layer(
-                pecha_opf_path, pecha_id, vol_num, "Pagination"
+                pecha_opf_path, pecha_id, base_name, "Pagination"
             )
             pagination_annotations = pagination_layer.get("annotations", {})
         old_page_ann = pagination_annotations[page.id]
@@ -342,10 +349,13 @@ def save_text(pecha_id, text_obj, pecha_opf_path=None, **kwargs):
     if not pecha_opf_path:
         pecha_opf_path = download_pecha(pecha_id, **kwargs)
     old_pecha_idx = from_yaml(Path(f"{pecha_opf_path}/{pecha_id}.opf/index.yml"))
+    pecha_meta = from_yaml(Path(f"{pecha_opf_path}/{pecha_id}.opf/meta.yml"))
     prev_pecha_idx = copy.deepcopy(old_pecha_idx)
     text_obj = remove_last_pages(text_obj)
-    new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, old_pecha_idx)
-    update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
+    new_pecha_idx = update_index(
+        pecha_opf_path, pecha_id, text_obj, old_pecha_idx, pecha_meta
+    )
+    # update_old_layers(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_base(pecha_opf_path, pecha_id, text_obj, prev_pecha_idx)
     update_page_layer(text_obj, pecha_id, pecha_opf_path)
     update_durchen_layer(text_obj, pecha_id, pecha_opf_path)

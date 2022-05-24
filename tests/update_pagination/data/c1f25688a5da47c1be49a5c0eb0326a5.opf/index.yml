@@ -6,17 +6,17 @@ annotations:
     parts: {}
     work_id: D1118
     span:
-    - vol: 1
+    - base: v001
       start: 0
       end: 6843
-    - vol: 2
+    - base: v002
       start: 0
       end: 6513
   0747b72e0bad4a07b16eb8327309f0ef:
     parts: {}
     work_id: D1119
     span:
-    - vol: 2
+    - base: v002
       start: 6514
       end: 10472
   

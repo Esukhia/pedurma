@@ -9,11 +9,11 @@ from pedurma import config
 from pedurma.exceptions import TextMappingNotFound
 from pedurma.pecha import PedurmaNoteEdit
 from pedurma.texts import (
+    get_base_meta,
     get_durchen,
     get_hfml_text,
     get_img_filenames,
     get_link,
-    get_vol_meta,
 )
 from pedurma.utils import from_yaml, get_pecha_id
 
@@ -78,9 +78,9 @@ def get_page_refs(page_content):
         return ("0", "0")
 
 
-def process_page(page_ann, page_content, vol_meta, img_num_2_filename):
+def process_page(page_ann, page_content, base_meta, img_num_2_filename):
     durchen_image_num = get_page_num(page_ann)
-    pg_link = get_link(durchen_image_num, vol_meta, img_num_2_filename)
+    pg_link = get_link(durchen_image_num, base_meta, img_num_2_filename)
     unwanted_annotations = [r"〔[𰵀-󴉱]?\d+〕", r"\[\w+\.\d+\]", r"<d", r"d>"]
     page_content = rm_annotations(page_content, unwanted_annotations)
     durchen_pg_num = get_durchen_pg_num(page_content)
@@ -91,16 +91,17 @@ def process_page(page_ann, page_content, vol_meta, img_num_2_filename):
         page_no=durchen_pg_num,
         ref_start_page_no=pg_ref_first,
         ref_end_page_no=pg_ref_last,
-        vol=vol_meta["volume_number"],
+        vol=base_meta["order"],
+        base_name=base_meta["base_file"][:-4],
     )
     return page_obj
 
 
-def get_pages_to_edit(durchen_pages, vol_meta, img_num_2_filename):
+def get_pages_to_edit(durchen_pages, base_meta, img_num_2_filename):
     pages_to_edit = []
     for page_ann, page_content in durchen_pages.items():
         pages_to_edit.append(
-            process_page(page_ann, page_content, vol_meta, img_num_2_filename)
+            process_page(page_ann, page_content, base_meta, img_num_2_filename)
         )
     return pages_to_edit
 
@@ -133,13 +134,13 @@ def get_pecha_paths(text_id, text_mapping=None):
 
 def get_pedurma_edit_notes(hfml_text, text_meta, bdrc_img):
     pedurma_edit_notes = []
-    for vol, text_content in hfml_text.items():
-        vol_meta = get_vol_meta(vol, text_meta)
-        img_num_2_filename = get_img_filenames(vol_meta, bdrc_img)
+    for base_name, text_content in hfml_text.items():
+        base_meta = get_base_meta(base_name, text_meta)
+        img_num_2_filename = get_img_filenames(base_meta, bdrc_img)
         durchen = get_durchen(text_content)
         durchen_pages = get_durchen_pages(durchen)
         pedurma_edit_notes += get_pages_to_edit(
-            durchen_pages, vol_meta, img_num_2_filename
+            durchen_pages, base_meta, img_num_2_filename
         )
     return pedurma_edit_notes
 

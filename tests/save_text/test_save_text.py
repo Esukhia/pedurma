@@ -5,9 +5,9 @@ from openpecha.utils import dump_yaml
 
 from pedurma.pecha import NotesPage, Page, Text
 from pedurma.save_text import (
-    get_new_vol,
-    get_old_vol,
-    get_text_vol_span,
+    get_new_base,
+    get_old_base,
+    get_text_base_span,
     save_pedurma_text,
     update_durchen_layer,
     update_index,
@@ -27,6 +27,7 @@ def get_dummy_text():
                 content="ཉ༄ཚོ། །རྒྱ་གར་སྐད་དུ།\nསྟ་བ་ནཱ་མ། བོད་སྐད་དུ།\nཔར་འོས་པ་བསྔགས་",
                 name="Page 1",
                 vol="1",
+                base_name="v001",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460001.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
@@ -36,6 +37,7 @@ def get_dummy_text():
                 content="གཏམ་འདི་ཙམ\nའདི་ཉིད་སྨྲ་བར་\nདང་-། །ཁྱོད་མ",
                 name="Page 2",
                 vol="1",
+                base_name="v001",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460002.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
@@ -45,6 +47,7 @@ def get_dummy_text():
                 content="འདོད་གང་དག་\nསྐྱབས་འགྲོ་བ།\nསྟོང་གིས་ཀྱང་།",
                 name="Page 3",
                 vol="1",
+                base_name="v001",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460003.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
@@ -54,6 +57,7 @@ def get_dummy_text():
                 content="རྒྱ་གར་1གྱི་\nབསྡུར་མཆན།\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
                 name="Page 4",
                 vol="1",
+                base_name="v001",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a", "--"],
             ),
@@ -63,6 +67,7 @@ def get_dummy_text():
                 content="་་༄ལོ། །རྒྱ་གར་སྐད་དུ།\nདབྱིངས་སུ་བསྟོད་པ།\nའཚལ་ལོ། །གང་ཞིག་",
                 name="Page 1",
                 vol="2",
+                base_name="v002",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470001.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
@@ -72,6 +77,7 @@ def get_dummy_text():
                 content="མཐོང་ངོ་། །ཕྱོགས་\nདེ་དང་དེ་ཡི་ཕྱོགས་\nཏིང་འཛིན་རྡོ་རྗེ་ཡིས",
                 name="Page 2",
                 vol="2",
+                base_name="v002",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470002.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
@@ -81,6 +87,7 @@ def get_dummy_text():
                 content="རིམ་གྱིས་སྦྱངས་\nམེད་ཉི་མ་ཟླ་བ་ཡང་།\n་རྡུལ་kལ་སོགས།",
                 name="Page 3",
                 vol="2",
+                base_name="v002",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470003.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
@@ -90,6 +97,7 @@ def get_dummy_text():
                 content="འབྱོར་ཆེན་པོ་3དེར་\nབསྡུར་མཆན།\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་",
                 name="Page 4",
                 vol="2",
+                base_name="v002",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd", "--"],
             ),
@@ -101,6 +109,7 @@ def get_dummy_text():
                 content="རྒྱ་གར་གྱི་\nབསྡུར་མཆན།\n༢༦༤ ༧པེ་〉〉་\nབཞུགས་གོ།",
                 name="Page 4",
                 vol="1",
+                base_name="v001",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
             ),
             NotesPage(
@@ -109,6 +118,7 @@ def get_dummy_text():
                 content="འབྱོར་ཆེན་པོ་དེར་\nབསྡུར་མཆན།\nསྡུག་བསྔལ་གྱིས་\nདེ་ཡི་སྐུ་ལས་",
                 name="Page 4",
                 vol="2",
+                base_name="v002",
                 image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
             ),
         ],
@@ -121,9 +131,9 @@ def test_update_base():
     text_obj = get_dummy_text()
     text_obj = remove_last_pages(text_obj)
     pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf" / "index.yml"))
-    text_vol_span = get_text_vol_span(pecha_idx, text_obj.id)
-    old_vols = get_old_vol(pecha_opf_path, pecha_id, text_vol_span)
-    new_vols = get_new_vol(old_vols, pecha_idx, text_obj)
+    text_vol_span = get_text_base_span(pecha_idx, text_obj.id)
+    old_vols = get_old_base(pecha_opf_path, pecha_id, text_vol_span)
+    new_vols = get_new_base(old_vols, pecha_idx, text_obj)
     expected_vol = (Path(__file__).parent / "data" / "expected_v002.txt").read_text(
         encoding="utf-8"
     )
@@ -172,7 +182,10 @@ def test_update_index():
     text_obj = get_dummy_text()
     text_obj = remove_last_pages(text_obj)
     pecha_idx = from_yaml((pecha_opf_path / f"{pecha_id}.opf" / "index.yml"))
-    new_pecha_idx = update_index(pecha_opf_path, pecha_id, text_obj, pecha_idx)
+    pecha_meta = from_yaml((pecha_opf_path / f"{pecha_id}.opf" / "meta.yml"))
+    new_pecha_idx = update_index(
+        pecha_opf_path, pecha_id, text_obj, pecha_idx, pecha_meta
+    )
     new_pecha_idx = to_yaml(new_pecha_idx)
     expected_idx = (Path(__file__).parent / "data" / "expected_index.yml").read_text(
         encoding="utf-8"

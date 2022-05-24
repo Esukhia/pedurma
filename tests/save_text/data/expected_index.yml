@@ -5,10 +5,10 @@ annotations:
   259260e8e3544fc1a9a27d7dffc72df6:
     parts: {}
     span:
-    - vol: 1
+    - base: v001
       start: 0
       end: 191
-    - vol: 2
+    - base: v002
       start: 0
       end: 229
     work_id: D1115
