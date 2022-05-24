@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.100 (2022-05-24)
+### Fix
+* **text:** Doc updated ([`04d9a82`](https://github.com/Esukhia/pedurma/commit/04d9a82177608a1d79d739a3bb44f60e3a90a93d))
+
 ## v0.1.99 (2022-05-12)
 ### Fix
 * **reconstruction:** Note normalization exception handled ([`4e669e5`](https://github.com/Esukhia/pedurma/commit/4e669e5ae250546fbe00fb741f3100fd0d460810))
