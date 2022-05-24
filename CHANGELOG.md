@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.101 (2022-05-24)
+### Fix
+* **setup:** Openpecha version updated ([`5cab1d4`](https://github.com/Esukhia/pedurma/commit/5cab1d4514e827616ac63fecb06cbb76fad07307))
+
 ## v0.1.100 (2022-05-24)
 ### Fix
 * **text:** Doc updated ([`04d9a82`](https://github.com/Esukhia/pedurma/commit/04d9a82177608a1d79d739a3bb44f60e3a90a93d))
