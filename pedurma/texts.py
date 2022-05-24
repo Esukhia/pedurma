@@ -109,7 +109,7 @@ def get_page_id(img_num, pagination_layer):
 
 
 def get_link(img_num, base_meta, img_num_2_filename):
-    """Return bdrc image link using imgnum and vol mete data
+    """Return bdrc image link using imgnum and base meta data
 
     Args:
         img_num (int): image number
