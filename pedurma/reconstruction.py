@@ -1010,11 +1010,27 @@ def add_shad_to_note_without_punct(note):
     return note
 
 
+def is_punct_note(note):
+    puncts = ["༎༎", "༎ ༎", "༎"]
+    for punct in puncts:
+        if note == punct:
+            return True
+    return False
+
+
+def skip_notes(note):
+    if "༕" in note or "!" in note or is_punct_note(note):
+        return True
+    return False
+
+
 def get_normalized_note(note_text, right_context):
     normalized_note_text = note_text
     normalized_note_text = normalized_note_text.replace("+", "a")
     notes = extract_notes(normalized_note_text)
     for note in notes:
+        if skip_notes(note):
+            continue
         reformated_note = add_shad_to_note_without_punct(note)
         normalized_note_text = re.sub(note, reformated_note, normalized_note_text)
         note = reformated_note
