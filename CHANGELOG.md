@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.102 (2022-05-25)
+### Fix
+* **hot-fix:** Punct notes are skipped for normalization ([`9546e62`](https://github.com/Esukhia/pedurma/commit/9546e626aa66a87c3e36327ae6cb48b942bc0380))
+
 ## v0.1.101 (2022-05-24)
 ### Fix
 * **setup:** Openpecha version updated ([`5cab1d4`](https://github.com/Esukhia/pedurma/commit/5cab1d4514e827616ac63fecb06cbb76fad07307))
