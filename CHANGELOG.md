@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.103 (2022-05-27)
+### Fix
+* **hot-fix:** Skip imporper notes for punct normalization ([`d6d28fa`](https://github.com/Esukhia/pedurma/commit/d6d28fa8e1e57d7d79fc8f20c84bcdb40d7e921c))
+
 ## v0.1.102 (2022-05-25)
 ### Fix
 * **hot-fix:** Punct notes are skipped for normalization ([`9546e62`](https://github.com/Esukhia/pedurma/commit/9546e626aa66a87c3e36327ae6cb48b942bc0380))
