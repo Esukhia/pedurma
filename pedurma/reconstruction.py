@@ -1003,6 +1003,7 @@ def get_reconstructed_body(namsel_body, dg_body, vol_num):
 
 
 def add_shad_to_note_without_punct(note):
+    note = note.strip()
     if note[-1] != "།" and note[-1] != "་":
         note += "།"
     elif note[-1] == "་" and note[-1] == "ང":
@@ -1019,7 +1020,7 @@ def is_punct_note(note):
 
 
 def is_doubtful_note(note):
-    if "༕" in note or "!" in note:
+    if "༕" in note or "!" in note or ")>" in note:
         return True
     else:
         return False
