@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.104 (2022-06-03)
+### Fix
+* **hot-fix:** Get base_meta update to handle basename in int ([`14755d5`](https://github.com/Esukhia/pedurma/commit/14755d551ec83bdca36e5203ba409dbc6e8387fd))
+
 ## v0.1.103 (2022-05-27)
 ### Fix
 * **hot-fix:** Skip imporper notes for punct normalization ([`d6d28fa`](https://github.com/Esukhia/pedurma/commit/d6d28fa8e1e57d7d79fc8f20c84bcdb40d7e921c))
