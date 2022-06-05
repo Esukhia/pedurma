@@ -297,7 +297,9 @@ def get_base_meta(base_name, pecha_meta):
     base_meta = {}
     bases = pecha_meta["source_metadata"].get("base", {})
     if bases:
-        base_meta = bases.get(str(base_name), {})
+        base_meta = bases.get(base_name, {})
+    if not base_meta:
+        base_meta = bases.get(int(base_name), {})
     return base_meta
 
 
