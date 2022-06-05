@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.105 (2022-06-05)
+### Fix
+* **hot-fix:** Base name int bug fixed ([`c373735`](https://github.com/Esukhia/pedurma/commit/c3737356f9eeea305a2f53975673c3e52a7d40ba))
+
 ## v0.1.104 (2022-06-03)
 ### Fix
 * **hot-fix:** Get base_meta update to handle basename in int ([`14755d5`](https://github.com/Esukhia/pedurma/commit/14755d551ec83bdca36e5203ba409dbc6e8387fd))
