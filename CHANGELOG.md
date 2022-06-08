@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.106 (2022-06-08)
+### Fix
+* **reconstruction:** Notes are added behing shad ([`7fee7ef`](https://github.com/Esukhia/pedurma/commit/7fee7eff800bf83b4d1cbee0b04efe2a91813368))
+
 ## v0.1.105 (2022-06-05)
 ### Fix
 * **hot-fix:** Base name int bug fixed ([`c373735`](https://github.com/Esukhia/pedurma/commit/c3737356f9eeea305a2f53975673c3e52a7d40ba))
