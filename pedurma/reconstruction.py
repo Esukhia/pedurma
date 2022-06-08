@@ -1069,6 +1069,7 @@ def get_normalized_note(note_text, right_context):
 
 def get_normalized_notes_text(collated_text):
     normalized_collated_text = ""
+    collated_text = re.sub(r"(\([༡-༩]\) <[^>]+?>)།", r"།\g<1>", collated_text)
     chunks = split_text(collated_text)
     left_context = chunks[0]
     for chunk_walker, chunk in enumerate(chunks):
