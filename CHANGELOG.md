@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.107 (2022-06-13)
+### Fix
+* **hot-fix:** Text list url updated ([`1b3ce10`](https://github.com/Esukhia/pedurma/commit/1b3ce10824b8ca343b2650b0816df043d380f019))
+
 ## v0.1.106 (2022-06-08)
 ### Fix
 * **reconstruction:** Notes are added behing shad ([`7fee7ef`](https://github.com/Esukhia/pedurma/commit/7fee7eff800bf83b4d1cbee0b04efe2a91813368))
