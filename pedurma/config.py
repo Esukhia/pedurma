@@ -1,5 +1,5 @@
-TEXT_LIST_URL = "https://raw.githubusercontent.com/OpenPecha-dev/editable-text/main/t_text_list.json"
-NOTE_REF_NOT_FOUND_TEXT_LIST_URL = "https://raw.githubusercontent.com/OpenPecha-dev/editable-text/main/no_note_ref.json"
+TEXT_LIST_URL = "https://raw.githubusercontent.com/OpenPecha/text-lists-for-pedurma-editor/main/t_text_list.json"
+NOTE_REF_NOT_FOUND_TEXT_LIST_URL = "https://raw.githubusercontent.com/OpenPecha/text-lists-for-pedurma-editor/main/no_note_ref.json"
 KANGYUR_ARCHIVE_ID = "870326402308432ba173ee3d9043224a"
 TENGYUR_ARCHIVE_ID = "187ed94f85154ea5b1ac374a651e1770"
 
