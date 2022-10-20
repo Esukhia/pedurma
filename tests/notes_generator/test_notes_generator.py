@@ -35,7 +35,7 @@ def test_notes_generator_crossvol():
     result = get_pedurma_edit_notes(hfml_texts, text_meta, bdrc_img=False)
     expected_result = [
         PedurmaNoteEdit(
-            image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
+            image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
             image_no=4,
             page_no=304,
             ref_start_page_no="264",
@@ -44,7 +44,7 @@ def test_notes_generator_crossvol():
             base_name="v001",
         ),
         PedurmaNoteEdit(
-            image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460005.jpg/full/max/0/default.jpg",
+            image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460005.jpg/full/max/0/default.jpg",
             image_no=5,
             page_no=305,
             ref_start_page_no="280",
@@ -53,7 +53,7 @@ def test_notes_generator_crossvol():
             base_name="v001",
         ),
         PedurmaNoteEdit(
-            image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460006.jpg/full/max/0/default.jpg",
+            image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460006.jpg/full/max/0/default.jpg",
             image_no=6,
             page_no=306,
             ref_start_page_no="301",
@@ -62,7 +62,7 @@ def test_notes_generator_crossvol():
             base_name="v001",
         ),
         PedurmaNoteEdit(
-            image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
+            image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
             image_no=4,
             page_no=187,
             ref_start_page_no="180",
@@ -71,7 +71,7 @@ def test_notes_generator_crossvol():
             base_name="v002",
         ),
         PedurmaNoteEdit(
-            image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
+            image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
             image_no=5,
             page_no=188,
             ref_start_page_no="1",
@@ -80,7 +80,7 @@ def test_notes_generator_crossvol():
             base_name="v002",
         ),
         PedurmaNoteEdit(
-            image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
+            image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
             image_no=6,
             page_no=189,
             ref_start_page_no="0",
@@ -101,7 +101,7 @@ def test_notes_generator():
     result = get_pedurma_edit_notes(hfml_texts, text_meta, bdrc_img=False)
     expected_result = [
         PedurmaNoteEdit(
-            image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470009.jpg/full/max/0/default.jpg",
+            image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470009.jpg/full/max/0/default.jpg",
             image_no=9,
             page_no=595,
             ref_start_page_no="589",
@@ -110,7 +110,7 @@ def test_notes_generator():
             base_name="v002",
         ),
         PedurmaNoteEdit(
-            image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470010.jpg/full/max/0/default.jpg",
+            image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470010.jpg/full/max/0/default.jpg",
             image_no=10,
             page_no=596,
             ref_start_page_no="595",

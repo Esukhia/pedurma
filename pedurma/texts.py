@@ -122,7 +122,7 @@ def get_link(img_num, base_meta, img_num_2_filename):
     image_file_name = img_num_2_filename.get(img_num, "")
     if not image_file_name:
         image_file_name = f"{image_grp_id}{int(img_num):04}.jpg"
-    link = f"https://iiif.bdrc.io/bdr:{image_grp_id}::{image_file_name}/full/max/0/default.jpg"
+    link = f"https://iiif-dev.bdrc.io/bdr:{image_grp_id}::{image_file_name}/full/max/0/default.jpg"
     return link
 
 

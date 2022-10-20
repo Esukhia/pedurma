@@ -20,7 +20,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 1",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460001.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460001.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
             Page(
@@ -30,7 +30,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 2",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460002.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460002.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
             Page(
@@ -40,7 +40,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 3",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460003.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460003.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
             Page(
@@ -50,7 +50,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 4",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a", "--"],
             ),
             Page(
@@ -60,7 +60,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 1",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470001.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470001.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
             Page(
@@ -70,7 +70,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 2",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470002.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470002.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
             Page(
@@ -80,7 +80,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 3",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470003.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470003.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
             Page(
@@ -90,7 +90,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 4",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd", "--"],
             ),
         ],
@@ -102,7 +102,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 4",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
             ),
             NotesPage(
                 id="05d117045b0c4ea5aee3aeba558e94bd",
@@ -111,7 +111,7 @@ def test_text_obj_serializer_corssvol():
                 name="Page 4",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
             ),
         ],
     )
@@ -133,7 +133,7 @@ def test_text_obj_serializer():
                 name="Page 5",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
                 note_ref=["9efa117a2b9444ac8cb09c198d21cdd8"],
             ),
             Page(
@@ -143,7 +143,7 @@ def test_text_obj_serializer():
                 name="Page 6",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
                 note_ref=["9efa117a2b9444ac8cb09c198d21cdd8"],
             ),
             Page(
@@ -153,7 +153,7 @@ def test_text_obj_serializer():
                 name="Page 7",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
                 note_ref=["9efa117a2b9444ac8cb09c198d21cdd8", "--"],
             ),
         ],
@@ -165,7 +165,7 @@ def test_text_obj_serializer():
                 name="Page 7",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
             )
         ],
     )
@@ -188,7 +188,7 @@ def test_pedurma_text_obj():
                 name="Page 5",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470005.jpg/full/max/0/default.jpg",
                 note_ref=["9efa117a2b9444ac8cb09c198d21cdd8"],
             ),
             Page(
@@ -198,7 +198,7 @@ def test_pedurma_text_obj():
                 name="Page 6",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470006.jpg/full/max/0/default.jpg",
                 note_ref=["9efa117a2b9444ac8cb09c198d21cdd8"],
             ),
             Page(
@@ -208,7 +208,7 @@ def test_pedurma_text_obj():
                 name="Page 7",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
                 note_ref=["9efa117a2b9444ac8cb09c198d21cdd8", "--"],
             ),
         ],
@@ -220,7 +220,7 @@ def test_pedurma_text_obj():
                 name="Page 7",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470007.jpg/full/max/0/default.jpg",
             )
         ],
     )
