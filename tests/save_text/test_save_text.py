@@ -28,7 +28,7 @@ def get_dummy_text():
                 name="Page 1",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460001.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460001.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
             Page(
@@ -38,7 +38,7 @@ def get_dummy_text():
                 name="Page 2",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460002.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460002.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
             Page(
@@ -48,7 +48,7 @@ def get_dummy_text():
                 name="Page 3",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460003.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460003.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a"],
             ),
             Page(
@@ -58,7 +58,7 @@ def get_dummy_text():
                 name="Page 4",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
                 note_ref=["46d97ed3d9ca4ddabc3c413f306df03a", "--"],
             ),
             Page(
@@ -68,7 +68,7 @@ def get_dummy_text():
                 name="Page 1",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470001.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470001.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
             Page(
@@ -78,7 +78,7 @@ def get_dummy_text():
                 name="Page 2",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470002.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470002.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
             Page(
@@ -88,7 +88,7 @@ def get_dummy_text():
                 name="Page 3",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470003.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470003.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd"],
             ),
             Page(
@@ -98,7 +98,7 @@ def get_dummy_text():
                 name="Page 4",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
                 note_ref=["05d117045b0c4ea5aee3aeba558e94bd", "--"],
             ),
         ],
@@ -110,7 +110,7 @@ def get_dummy_text():
                 name="Page 4",
                 vol="1",
                 base_name="v001",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460004.jpg/full/max/0/default.jpg",
             ),
             NotesPage(
                 id="05d117045b0c4ea5aee3aeba558e94bd",
@@ -119,7 +119,7 @@ def get_dummy_text():
                 name="Page 4",
                 vol="2",
                 base_name="v002",
-                image_link="https://iiif.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
+                image_link="https://iiif-dev.bdrc.io/bdr:I1PD95847::I1PD958470004.jpg/full/max/0/default.jpg",
             ),
         ],
     )

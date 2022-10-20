@@ -22,9 +22,9 @@ def test_get_page():
         text_id=text_id,
         page_id=page_id,
         content="༄༅༅། །རྒྱ་གར་སྐད་དུ། ནི་རུ་#པ་མ་སྟ་བཾ།#𰶧 བོད་སྐད་དུ། དཔེ་མེད་",
-        page_image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460229.jpg/full/max/0/default.jpg",
+        page_image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460229.jpg/full/max/0/default.jpg",
         note="'1':\n  《པེ་》: ལྟར་བཀོད།\n  《སྣར་》: ལྟར་བཀོད།\n  《སྡེ》: ''\n  《ཅོ་》: ''\n",
-        note_image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460231.jpg/full/max/0/default.jpg",
+        note_image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460231.jpg/full/max/0/default.jpg",
     )
     assert pg_obj == expected_pg_obj
 
@@ -34,9 +34,7 @@ def test_save_page():
     page_id = "0230"
     base_path = Path(__file__).parent / "data" / "page_with_note"
     project_name = "nalanda"
-    note_pg_link = (
-        "https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460231.jpg/full/max/0/default.jpg"
-    )
+    note_pg_link = "https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460231.jpg/full/max/0/default.jpg"
     # create empty page
     (base_path / project_name / f"{text_id}/pages/{page_id}.txt").write_text(
         "", encoding="utf-8"
@@ -51,7 +49,7 @@ def test_save_page():
         text_id=text_id,
         page_id=page_id,
         content="༄༅༅། །རྒྱ་གར་སྐད་དུ། ནི་རུ་#པ་མ་སྟ་བཾ།#𰶧 བོད་སྐད་དུ། དཔེ་མེད་",
-        page_image_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460230.jpg/full/max/0/default.jpg",
+        page_image_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460230.jpg/full/max/0/default.jpg",
         note="'1':\n  《པེ་》: ལྟར་བཀོད།\n  《སྣར་》: ལྟར་བཀོད།\n  《སྡེ》: ''\n  《ཅོ་》: ''\n",
         note_image_link=note_pg_link,
     )
