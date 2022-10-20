@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.108 (2022-10-20)
+### Fix
+* **img_link:** Updated img link with iiif-dev ([`436fa8b`](https://github.com/Esukhia/pedurma/commit/436fa8b3198d55dd3b124290da4a404f6dec4546))
+
 ## v0.1.107 (2022-06-13)
 ### Fix
 * **hot-fix:** Text list url updated ([`1b3ce10`](https://github.com/Esukhia/pedurma/commit/1b3ce10824b8ca343b2650b0816df043d380f019))
