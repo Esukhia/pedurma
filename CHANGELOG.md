@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.109 (2023-07-04)
+
+### Fix
+
+* **link:** Page image link generator updated ([`29b2e49`](https://github.com/Esukhia/pedurma/commit/29b2e4937a0f571bec4dfa5d2dcac60066cecd08))
+
 ## v0.1.108 (2022-10-20)
 ### Fix
 * **img_link:** Updated img link with iiif ([`436fa8b`](https://github.com/Esukhia/pedurma/commit/436fa8b3198d55dd3b124290da4a404f6dec4546))
