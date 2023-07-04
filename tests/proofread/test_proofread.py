@@ -10,7 +10,7 @@ def test_get_note_page():
     expected_page = ProofreadNotePage(
         manual="manual_note",
         google="google_note",
-        img_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460720.jpg/full/max/0/default.jpg",
+        img_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460720.jpg/full/max/0/default.jpg",
         page_num=720,
     )
 
@@ -26,7 +26,7 @@ def test_get_note_pages():
         ProofreadNotePage(
             manual="manual_note",
             google="google_note",
-            img_link="https://iiif-dev.bdrc.io/bdr:I1PD95846::I1PD958460720.jpg/full/max/0/default.jpg",
+            img_link="https://iiif.bdrc.io/bdr:I1PD95846::I1PD958460720.jpg/full/max/0/default.jpg",
             page_num=720,
         )
     ]

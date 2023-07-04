@@ -46,7 +46,7 @@ class Pedurma:
         img_group_offset = self.meta["img_grp_offset"]
         pref = self.meta["pref"]
         igroup = f"{pref}{img_group_offset+vol}"
-        link = f"https://iiif-dev.bdrc.io/bdr:{igroup}::{igroup}{int(pg_num):04}.jpg/full/max/0/default.jpg"
+        link = f"https://iiif.bdrc.io/bdr:{igroup}::{igroup}{int(pg_num):04}.jpg/full/max/0/default.jpg"
         return link
 
     def get_page(self, text_id: str, page_id: str) -> PageWithNote:

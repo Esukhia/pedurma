@@ -5,7 +5,7 @@ from pedurma.utils import from_yaml
 def get_note_page_img_link(text_id, pg_num, repo_path):
     text_meta = from_yaml((repo_path / text_id / "meta.yml"))
     image_grp_id = text_meta.get("img_grp_id", "")
-    img_link = f"https://iiif-dev.bdrc.io/bdr:{image_grp_id}::{image_grp_id}{int(pg_num):04}.jpg/full/max/0/default.jpg"
+    img_link = f"https://iiif.bdrc.io/bdr:{image_grp_id}::{image_grp_id}{int(pg_num):04}.jpg/full/max/0/default.jpg"
     return img_link
 
 
